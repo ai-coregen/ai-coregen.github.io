@@ -1,0 +1,33 @@
+---
+interface Props {
+  number: string;
+  title: string;
+  description: string;
+  isLast?: boolean;
+}
+
+const { number, title, description, isLast = false } = Astro.props;
+---
+
+<div class="flex gap-4 lg:gap-6">
+  <!-- Line + Circle -->
+  <div class="flex flex-col items-center">
+    <div
+      class="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-base lg:text-lg shrink-0"
+    >
+      {number}
+    </div>
+    {
+      !isLast && (
+        <div class="w-[2px] bg-primary-300/50 flex-1 min-h-[40px] mt-2" />
+      )
+    }
+  </div>
+  <!-- Content -->
+  <div class:list={["pb-8 lg:pb-10", isLast && "pb-0"]}>
+    <h4 class="text-neutral-900 font-bold text-lg lg:text-xl mb-1">
+      {title}
+    </h4>
+    <p class="text-neutral-600 text-[0.95rem]">{description}</p>
+  </div>
+</div>

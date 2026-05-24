@@ -1,0 +1,75 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import { subsidy } from "../data/content";
+---
+
+<section class="bg-gradient-subtle py-16 lg:py-24" id="subsidy">
+  <div class="max-w-[1100px] mx-auto px-6">
+    <SectionHeading>
+      {subsidy.heading}
+    </SectionHeading>
+
+    <!-- Before / After -->
+    <div
+      class="max-w-[700px] mx-auto mb-10"
+      data-aos="fade-up"
+    >
+      <div class="relative flex flex-col sm:flex-row items-stretch">
+        <!-- Before -->
+        <div class="flex-1 bg-neutral-100 border-t-4 border-danger rounded-xl sm:rounded-r-none p-6 lg:p-8 text-center">
+          <p class="text-neutral-500 text-sm font-semibold uppercase tracking-wider mb-3">Before</p>
+          <p class="text-neutral-900 font-bold text-lg mb-2">{subsidy.beforeLabel}</p>
+          <div class="text-neutral-400 text-4xl font-black">???</div>
+        </div>
+
+        <!-- Arrow (centered between boxes) -->
+        <div class="flex items-center justify-center z-10 -my-3 sm:my-0 sm:-mx-5">
+          <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center shadow-card">
+            <!-- Desktop: right arrow -->
+            <svg class="hidden sm:block w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+            <!-- Mobile: down arrow -->
+            <svg class="sm:hidden w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- After -->
+        <div class="flex-1 bg-white border-t-4 border-success rounded-xl sm:rounded-l-none p-6 lg:p-8 text-center shadow-card">
+          <p class="text-neutral-500 text-sm font-semibold uppercase tracking-wider mb-3">After</p>
+          <p class="text-neutral-900 font-bold text-lg mb-2">{subsidy.afterLabel}</p>
+          <span class="inline-block bg-gradient-btn text-white font-bold text-lg px-4 py-1.5 rounded-full">
+            {subsidy.afterBadge}
+          </span>
+        </div>
+      </div>
+
+      <p class="text-neutral-500 text-sm text-center mt-4">
+        {subsidy.note}
+      </p>
+    </div>
+
+    <!-- 4 Points -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[700px] mx-auto mb-8">
+      {subsidy.points.map((point, i) => (
+        <div
+          class="flex items-start gap-3 bg-white rounded-lg p-4 shadow-[0_1px_3px_rgba(11,29,51,0.06)]"
+          data-aos="fade-up"
+          data-aos-delay={i * 80}
+        >
+          <svg class="w-5 h-5 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p class="text-neutral-700 text-sm lg:text-[0.95rem]">{point}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Legal -->
+    <p class="text-neutral-500 text-[13px] text-center max-w-[600px] mx-auto">
+      {subsidy.legal}
+    </p>
+  </div>
+</section>

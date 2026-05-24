@@ -1,0 +1,47 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import { services } from "../data/content";
+---
+
+<section class="bg-white py-16 lg:py-24" id="services">
+  <div class="max-w-[1100px] mx-auto px-6">
+    <SectionHeading>
+      {services.heading}
+    </SectionHeading>
+
+    <p
+      class="text-neutral-600 text-base lg:text-lg text-center max-w-[680px] mx-auto mb-12 leading-relaxed"
+      data-aos="fade-up"
+    >
+      {services.leadCopy}
+    </p>
+
+    <!-- Service list -->
+    <div class="max-w-[900px] mx-auto">
+      {services.items.map((item, i) => (
+        <div
+          class:list={[
+            "flex flex-col sm:flex-row items-start gap-4 sm:gap-6 p-6 lg:p-8 rounded-xl border-b border-neutral-200/80 last:border-b-0 transition-colors",
+            i % 2 === 0 ? "bg-primary-50/50" : "bg-white",
+          ]}
+          data-aos="fade-up"
+          data-aos-delay={i * 80}
+        >
+          <!-- Number -->
+          <span class="text-primary-500/30 font-black text-4xl lg:text-5xl leading-none shrink-0 sm:w-16">
+            {item.number}
+          </span>
+          <!-- Content -->
+          <div class="flex-1">
+            <h3 class="text-neutral-900 font-bold text-lg lg:text-xl mb-2">
+              {item.name}
+            </h3>
+            <p class="text-neutral-600 text-[0.95rem] leading-relaxed">
+              {item.description}
+            </p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,90 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import { solution } from "../data/content";
+---
+
+<section class="bg-gradient-subtle py-16 lg:py-24" id="solution">
+  <div class="max-w-[1100px] mx-auto px-6">
+    <SectionHeading>
+      {solution.heading}
+    </SectionHeading>
+
+    <!-- Body text -->
+    <div class="max-w-[720px] mx-auto text-center mb-12" data-aos="fade-up">
+      {solution.body.map((line) => (
+        <p class="text-neutral-700 text-base lg:text-lg leading-relaxed mb-2 last:mb-0">
+          {line}
+        </p>
+      ))}
+    </div>
+
+    <!-- Diagram -->
+    <div class="max-w-[900px] mx-auto mb-12">
+      <!-- 3 boxes + connectors -->
+      <div class="flex flex-col lg:flex-row items-stretch gap-3 lg:gap-0 mb-6">
+        {solution.diagram.map((text, i) => (
+          <>
+            <div
+              class="flex-1 bg-primary-100 border-l-4 border-primary-500 rounded-r-lg p-5 lg:p-6"
+              data-aos="fade-up"
+              data-aos-delay={i * 150}
+            >
+              <p class="text-primary-900 font-semibold text-[0.95rem] lg:text-base">
+                {text}
+              </p>
+            </div>
+            {i < 2 && (
+              <div class="flex items-center justify-center lg:px-3 py-1 lg:py-0">
+                {/* Desktop: horizontal + */}
+                <span class="hidden lg:block text-primary-500 font-bold text-2xl">+</span>
+                {/* Mobile: vertical + */}
+                <span class="lg:hidden text-primary-500 font-bold text-2xl">+</span>
+              </div>
+            )}
+          </>
+        ))}
+      </div>
+
+      <!-- Arrow -->
+      <div class="flex justify-center mb-6" data-aos="fade-up" data-aos-delay="450">
+        <svg class="w-8 h-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+        </svg>
+      </div>
+
+      <!-- Result box -->
+      <div
+        class="bg-primary-500 text-white rounded-xl p-6 lg:p-8 text-center shadow-card"
+        data-aos="fade-up"
+        data-aos-delay="550"
+      >
+        <p class="font-bold text-[clamp(0.95rem,2vw+0.5rem,1.25rem)] tracking-wide">
+          {solution.diagramResult}
+        </p>
+      </div>
+    </div>
+
+    <!-- Concrete examples -->
+    <div class="mx-auto mb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        {solution.examples.map((example, i) => (
+          <div
+            class="flex items-start gap-3 bg-white rounded-lg p-4 shadow-[0_1px_3px_rgba(79,99,247,0.06)]"
+            data-aos="fade-up"
+            data-aos-delay={i * 80}
+          >
+            <svg class="w-5 h-5 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-neutral-700 text-sm lg:text-[0.95rem]">{example}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Closing -->
+    <p class="text-neutral-500 text-sm text-center italic" data-aos="fade-up">
+      {solution.closing}
+    </p>
+  </div>
+</section>

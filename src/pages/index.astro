@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import HeroSection from "../components/HeroSection.astro";
+import ProblemsSection from "../components/ProblemsSection.astro";
+import SolutionSection from "../components/SolutionSection.astro";
+import ProfileSection from "../components/ProfileSection.astro";
+import FeaturesSection from "../components/FeaturesSection.astro";
+import ServicesSection from "../components/ServicesSection.astro";
+import SubsidySection from "../components/SubsidySection.astro";
+import CurriculumSection from "../components/CurriculumSection.astro";
+import FlowSection from "../components/FlowSection.astro";
+import FaqSection from "../components/FaqSection.astro";
+import CtaSection from "../components/CtaSection.astro";
+import Footer from "../components/Footer.astro";
+import { site } from "../data/content";
+---
+
+<Layout title={site.title} description={site.description}>
+  <Header />
+  <main>
+    <HeroSection />
+    <ProblemsSection />
+    <SolutionSection />
+    <ProfileSection />
+    <FeaturesSection />
+    <ServicesSection />
+    <SubsidySection />
+    <CurriculumSection />
+    <FlowSection />
+    <FaqSection />
+    <CtaSection />
+  </main>
+  <Footer />
+</Layout>

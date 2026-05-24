@@ -1,0 +1,20 @@
+---
+interface Props {
+  dark?: boolean;
+  class?: string;
+}
+
+const { dark = false, class: className = "" } = Astro.props;
+---
+
+<div class:list={["text-center mb-12 lg:mb-20", className]}>
+  <div class="w-14 h-1 bg-gradient-btn rounded-full mx-auto mb-5"></div>
+  <h2
+    class:list={[
+      "text-[clamp(1.25rem,3vw+0.5rem,2.5rem)] leading-[1.5] tracking-[0.03em] font-black px-2 sm:px-0",
+      dark ? "text-white" : "text-neutral-900",
+    ]}
+  >
+    <slot />
+  </h2>
+</div>

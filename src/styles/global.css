@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* ===== Design Tokens (Tailwind CSS v4 @theme) ===== */
+/* DigiRise-inspired bright blue-purple palette */
+@theme {
+  /* Primary Blue-Purple (bright, vibrant) */
+  --color-primary-50: #F0F2FF;
+  --color-primary-100: #E0E4FF;
+  --color-primary-200: #C2CAFF;
+  --color-primary-300: #96A3FF;
+  --color-primary-400: #6B7FFF;
+  --color-primary-500: #4F63F7;
+  --color-primary-600: #3D4FDB;
+  --color-primary-700: #3341B8;
+  --color-primary-800: #2A3594;
+  --color-primary-900: #1E2666;
+
+  /* Accent Purple */
+  --color-accent-400: #A78BFA;
+  --color-accent-500: #8B6FE8;
+  --color-accent-600: #7356D3;
+  --color-accent-700: #5C3FBE;
+
+  /* Neutrals */
+  --color-neutral-50: #FAFAFC;
+  --color-neutral-100: #F3F4F8;
+  --color-neutral-200: #E5E7EE;
+  --color-neutral-300: #D1D3DC;
+  --color-neutral-400: #A0A3B1;
+  --color-neutral-500: #6E7182;
+  --color-neutral-600: #52556A;
+  --color-neutral-700: #3A3D52;
+  --color-neutral-800: #262840;
+  --color-neutral-900: #181A2E;
+
+  /* Semantic */
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+
+  /* Font Family */
+  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+
+  /* Shadows */
+  --shadow-card: 0 4px 16px rgba(79, 99, 247, 0.08);
+  --shadow-card-hover: 0 8px 30px rgba(79, 99, 247, 0.15);
+  --shadow-elevated: 0 16px 48px rgba(79, 99, 247, 0.2);
+
+  /* Border Radius */
+  --radius-card: 12px;
+
+  /* Max Width */
+  --container-3xl: 1100px;
+}
+
+/* ===== Gradient Utilities ===== */
+@utility bg-gradient-hero {
+  background: linear-gradient(135deg, #4F63F7 0%, #7B68EE 40%, #9B6FE8 70%, #B07AFF 100%);
+}
+
+@utility bg-gradient-cta {
+  background: linear-gradient(135deg, #4F63F7 0%, #7B68EE 50%, #9B6FE8 100%);
+}
+
+@utility bg-gradient-btn {
+  background: linear-gradient(135deg, #4F63F7 0%, #6B5FE8 100%);
+}
+
+@utility bg-gradient-btn-hover {
+  background: linear-gradient(135deg, #3D4FDB 0%, #5C4FD3 100%);
+}
+
+@utility bg-gradient-subtle {
+  background: linear-gradient(135deg, #F0F2FF 0%, #F5F0FF 100%);
+}
+
+@utility bg-gradient-footer {
+  background: linear-gradient(135deg, #1E2666 0%, #2A2080 100%);
+}
+
+/* ===== Base Styles ===== */
+@layer base {
+  html, body {
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-neutral-700);
+    background-color: #ffffff;
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* ===== Japanese line-break ===== */
+h1, h2, h3 {
+  text-wrap: balance;
+  word-break: auto-phrase;
+}
+
+h4, p, li, span {
+  text-wrap: pretty;
+  word-break: auto-phrase;
+}
+
+/* ===== AOS Overrides ===== */
+[data-aos] {
+  pointer-events: auto !important;
+}

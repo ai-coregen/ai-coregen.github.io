@@ -1,0 +1,26 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import StepNode from "./ui/StepNode.astro";
+import { flow } from "../data/content";
+---
+
+<section class="bg-gradient-subtle py-16 lg:py-24" id="flow">
+  <div class="max-w-[1100px] mx-auto px-6">
+    <SectionHeading>
+      {flow.heading}
+    </SectionHeading>
+
+    <div class="max-w-[600px] mx-auto">
+      {flow.steps.map((step, i) => (
+        <div data-aos="fade-up" data-aos-delay={i * 120}>
+          <StepNode
+            number={step.number}
+            title={step.title}
+            description={step.description}
+            isLast={i === flow.steps.length - 1}
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

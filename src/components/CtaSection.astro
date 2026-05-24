@@ -1,0 +1,50 @@
+---
+import SectionHeading from "./ui/SectionHeading.astro";
+import Button from "./ui/Button.astro";
+import { finalCta } from "../data/content";
+---
+
+<section class="relative bg-gradient-cta py-16 lg:py-24 overflow-hidden" id="cta">
+  <!-- Light effects -->
+  <div
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(255,255,255,0.12)_0%,transparent_50%)]"
+  ></div>
+  <div
+    class="absolute inset-0 opacity-[0.05]"
+    style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 40px 40px;"
+  ></div>
+
+  <div class="relative max-w-[1100px] mx-auto px-6 text-center">
+    <SectionHeading dark>
+      {finalCta.heading}
+    </SectionHeading>
+
+    <p
+      class="text-white/75 text-base lg:text-lg max-w-[600px] mx-auto mb-3 leading-relaxed"
+      data-aos="fade-up"
+      data-aos-delay="100"
+    >
+      {finalCta.subCopy}
+    </p>
+    <p
+      class="text-white/50 text-sm mb-10"
+      data-aos="fade-up"
+      data-aos-delay="150"
+    >
+      {finalCta.disclaimer}
+    </p>
+
+    <div
+      class="flex flex-col sm:flex-row items-center justify-center gap-4"
+      data-aos="fade-up"
+      data-aos-delay="250"
+    >
+      <Button variant="white" class="w-full sm:w-auto">
+        {finalCta.primaryCta}
+      </Button>
+      <Button variant="secondary-dark" class="w-full sm:w-auto">
+        {finalCta.secondaryCta}
+      </Button>
+    </div>
+  </div>
+</section>
