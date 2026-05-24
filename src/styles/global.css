@@ -79,17 +79,17 @@
 
 /* ===== Base Styles ===== */
 @layer base {
-  html, body {
-    overflow-x: hidden;
-  }
-
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* NOTE: overflow-x: hidden must NOT be on <html>.
+       On mobile Safari it creates a new scroll container.
+       Use body only. */
   }
 
   body {
+    overflow-x: hidden;
     font-family: var(--font-sans);
     color: var(--color-neutral-700);
     background-color: #ffffff;
@@ -101,15 +101,32 @@
 /* ===== Japanese line-break ===== */
 h1, h2, h3 {
   text-wrap: balance;
-  word-break: auto-phrase;
 }
 
 h4, p, li, span {
   text-wrap: pretty;
-  word-break: auto-phrase;
 }
 
-/* ===== AOS Overrides ===== */
-[data-aos] {
-  pointer-events: auto !important;
+/* ===== Scroll Animations (IntersectionObserver) ===== */
+/* Replaces AOS library which is broken on mobile Safari */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+[data-animate].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-animate] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

@@ -1,4 +1,6 @@
 ---
+import JaText from "./JaText.astro";
+
 interface Props {
   question: string;
   answer: string;
@@ -15,7 +17,7 @@ const { question, answer } = Astro.props;
   >
     <span class="flex items-start gap-3 pr-4">
       <span class="text-primary-500 font-bold shrink-0">Q.</span>
-      <span class="text-neutral-900 font-semibold text-[1.05rem] lg:text-[1.15rem] leading-relaxed">{question}</span>
+      <JaText tag="span" text={question} class="text-neutral-900 font-semibold text-sm lg:text-[1.15rem] leading-relaxed" />
     </span>
     <svg
       data-chevron
@@ -35,7 +37,7 @@ const { question, answer } = Astro.props;
     style="max-height: 0;"
   >
     <div class="px-6 lg:px-8 pb-5 lg:pb-6 pl-10 lg:pl-[3.75rem]">
-      <p class="text-neutral-700 leading-relaxed">{answer}</p>
+      <JaText tag="p" text={answer} class="text-neutral-700 leading-relaxed" />
     </div>
   </div>
 </div>

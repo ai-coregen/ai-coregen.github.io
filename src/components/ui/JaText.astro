@@ -1,0 +1,37 @@
+---
+/**
+ * Japanese text with natural phrase-boundary line breaks.
+ * Uses Google's budoux to insert <wbr> at phrase boundaries.
+ * Combined with word-break: keep-all, text only breaks at natural points.
+ * Works on ALL browsers (Safari, Chrome, Firefox).
+ */
+import { loadDefaultJapaneseParser } from "budoux";
+
+interface Props {
+  text: string;
+  class?: string;
+  tag?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "li";
+  [key: string]: any;
+}
+
+const { text, class: className = "", tag: Tag = "p", ...attrs } = Astro.props;
+
+const parser = loadDefaultJapaneseParser();
+const chunks = parser.parse(text);
+---
+
+<Tag class:list={["break-keep", className]} {...attrs}>
+  {chunks.map((chunk, i) => (
+    <>
+      {i > 0 && <wbr />}
+      {chunk}
+    </>
+  ))}
+</Tag>
+
+<style>
+  .break-keep {
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+</style>

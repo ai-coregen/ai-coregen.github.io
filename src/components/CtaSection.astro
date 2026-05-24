@@ -1,6 +1,7 @@
 ---
 import SectionHeading from "./ui/SectionHeading.astro";
 import Button from "./ui/Button.astro";
+import JaText from "./ui/JaText.astro";
 import { finalCta } from "../data/content";
 ---
 
@@ -16,28 +17,26 @@ import { finalCta } from "../data/content";
 
   <div class="relative max-w-[1100px] mx-auto px-6 text-center">
     <SectionHeading dark>
-      {finalCta.heading}
+      <JaText tag="span" text={finalCta.heading} class="" />
     </SectionHeading>
 
-    <p
-      class="text-white/75 text-base lg:text-lg max-w-[600px] mx-auto mb-3 leading-relaxed"
-      data-aos="fade-up"
-      data-aos-delay="100"
+    <div
+      data-animate
+      data-delay="100"
     >
-      {finalCta.subCopy}
-    </p>
-    <p
-      class="text-white/50 text-sm mb-10"
-      data-aos="fade-up"
-      data-aos-delay="150"
+      <JaText tag="p" text={finalCta.subCopy} class="text-white/75 text-base lg:text-lg max-w-[640px] mx-auto mb-3 leading-relaxed" />
+    </div>
+    <div
+      data-animate
+      data-delay="150"
     >
-      {finalCta.disclaimer}
-    </p>
+      <JaText tag="p" text={finalCta.disclaimer} class="text-white/50 text-sm mb-10" />
+    </div>
 
     <div
       class="flex flex-col sm:flex-row items-center justify-center gap-4"
-      data-aos="fade-up"
-      data-aos-delay="250"
+      data-animate
+      data-delay="250"
     >
       <Button variant="white" class="w-full sm:w-auto">
         {finalCta.primaryCta}

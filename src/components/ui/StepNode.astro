@@ -1,4 +1,6 @@
 ---
+import JaText from "./JaText.astro";
+
 interface Props {
   number: string;
   title: string;
@@ -28,6 +30,6 @@ const { number, title, description, isLast = false } = Astro.props;
     <h4 class="text-neutral-900 font-bold text-lg lg:text-xl mb-1">
       {title}
     </h4>
-    <p class="text-neutral-600 text-[0.95rem]">{description}</p>
+    <JaText tag="p" text={description} class="text-neutral-600 text-[13px] sm:text-[0.95rem]" />
   </div>
 </div>

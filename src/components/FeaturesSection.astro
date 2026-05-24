@@ -1,6 +1,7 @@
 ---
 import SectionHeading from "./ui/SectionHeading.astro";
 import Card from "./ui/Card.astro";
+import JaText from "./ui/JaText.astro";
 import { features } from "../data/content";
 
 const icons = [
@@ -24,22 +25,18 @@ const icons = [
 
   <div class="relative max-w-[1100px] mx-auto px-6">
     <SectionHeading dark>
-      {features.heading}
+      <JaText tag="span" text={features.heading} class="" />
     </SectionHeading>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
       {features.items.map((item, i) => (
-        <div data-aos="fade-up" data-aos-delay={i * 120} class="h-full">
+        <div data-animate data-delay={i * 120} class="h-full">
           <Card variant="dark" class="h-full">
             <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white mb-5">
               <Fragment set:html={icons[i]} />
             </div>
-            <h3 class="text-white font-bold text-xl lg:text-2xl mb-3">
-              {item.title}
-            </h3>
-            <p class="text-white/70 text-[0.95rem] leading-relaxed">
-              {item.description}
-            </p>
+            <JaText tag="h3" text={item.title} class="text-white font-bold text-xl lg:text-2xl mb-3" />
+            <JaText tag="p" text={item.description} class="text-white/70 text-[13px] sm:text-[0.95rem] leading-relaxed" />
           </Card>
         </div>
       ))}

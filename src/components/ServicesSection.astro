@@ -1,20 +1,20 @@
 ---
 import SectionHeading from "./ui/SectionHeading.astro";
+import JaText from "./ui/JaText.astro";
 import { services } from "../data/content";
 ---
 
 <section class="bg-white py-16 lg:py-24" id="services">
   <div class="max-w-[1100px] mx-auto px-6">
     <SectionHeading>
-      {services.heading}
+      <JaText tag="span" text={services.heading} class="" />
     </SectionHeading>
 
-    <p
-      class="text-neutral-600 text-base lg:text-lg text-center max-w-[680px] mx-auto mb-12 leading-relaxed"
-      data-aos="fade-up"
+    <div
+      data-animate
     >
-      {services.leadCopy}
-    </p>
+      <JaText tag="p" text={services.leadCopy} class="text-neutral-600 text-base lg:text-lg text-center max-w-[680px] mx-auto mb-12 leading-relaxed" />
+    </div>
 
     <!-- Service list -->
     <div class="max-w-[900px] mx-auto">
@@ -24,8 +24,8 @@ import { services } from "../data/content";
             "flex flex-col sm:flex-row items-start gap-4 sm:gap-6 p-6 lg:p-8 rounded-xl border-b border-neutral-200/80 last:border-b-0 transition-colors",
             i % 2 === 0 ? "bg-primary-50/50" : "bg-white",
           ]}
-          data-aos="fade-up"
-          data-aos-delay={i * 80}
+          data-animate
+          data-delay={i * 80}
         >
           <!-- Number -->
           <span class="text-primary-500/30 font-black text-4xl lg:text-5xl leading-none shrink-0 sm:w-16">
@@ -33,12 +33,8 @@ import { services } from "../data/content";
           </span>
           <!-- Content -->
           <div class="flex-1">
-            <h3 class="text-neutral-900 font-bold text-lg lg:text-xl mb-2">
-              {item.name}
-            </h3>
-            <p class="text-neutral-600 text-[0.95rem] leading-relaxed">
-              {item.description}
-            </p>
+            <JaText tag="h3" text={item.name} class="text-neutral-900 font-bold text-lg lg:text-xl mb-2" />
+            <JaText tag="p" text={item.description} class="text-neutral-600 text-[13px] sm:text-[0.95rem] leading-relaxed" />
           </div>
         </div>
       ))}
