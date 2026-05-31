@@ -40,7 +40,7 @@ const particles = Array.from({ length: N }, (_, i) => ({
   >
   </div>
 
-  <div class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-[220px] lg:pt-44 lg:pb-32">
+  <div class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
     <div class="max-w-[920px]">
       <p
         class="hero-anim hero-anim-1 font-display font-bold text-xs sm:text-sm tracking-[0.2em] text-mute mb-6"
@@ -151,15 +151,10 @@ const particles = Array.from({ length: N }, (_, i) => ({
     }
   }
 
-  /* スマホ／タブレット: テキスト背後ではなく下部の空きスペースへ */
+  /* スマホ／タブレット: ∞アニメは非表示 */
   @media (max-width: 1023px) {
-    .hero-orbit {
-      top: auto;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) scale(0.52);
-      transform-origin: center bottom;
-      opacity: 0.95;
+    .hero-bg {
+      display: none;
     }
   }
 
