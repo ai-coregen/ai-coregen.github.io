@@ -24,16 +24,16 @@
   --color-accent-600: #3A3B40;
   --color-accent-700: #121213;
 
-  /* ----- Neutrals (cool gray) ----- */
+  /* ----- Neutrals (cool gray / PKSHA寄せで全体的に濃いめ) ----- */
   --color-neutral-50: #FAFAFA;
   --color-neutral-100: #F5F5F5;
-  --color-neutral-200: #E9E9EA;
-  --color-neutral-300: #D9D9D9;
-  --color-neutral-400: #A8A9AC;
-  --color-neutral-500: #767880;
-  --color-neutral-600: #5A5C63;
-  --color-neutral-700: #3A3B40;
-  --color-neutral-800: #232428;
+  --color-neutral-200: #E2E2E4;
+  --color-neutral-300: #C7C8CB;
+  --color-neutral-400: #8E9095;
+  --color-neutral-500: #5C5E66;
+  --color-neutral-600: #44464D;
+  --color-neutral-700: #2E2F35;
+  --color-neutral-800: #1E1F24;
   --color-neutral-900: #121213;
 
   /* ----- Signature tokens ----- */

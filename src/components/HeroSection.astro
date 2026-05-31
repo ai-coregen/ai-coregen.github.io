@@ -5,20 +5,21 @@ import { hero } from "../data/content";
 ---
 
 <section class="relative bg-white overflow-hidden" id="hero">
+  <!-- ===== Ambient animation background (monochrome) ===== -->
+  <div class="hero-bg" aria-hidden="true">
+    <span class="hero-blob hero-blob-1"></span>
+    <span class="hero-blob hero-blob-2"></span>
+    <span class="hero-blob hero-blob-3"></span>
+    <span class="hero-sheen"></span>
+  </div>
   <!-- 微細なグリッド（モノクロ装飾） -->
   <div
     class="absolute inset-0 opacity-[0.04] pointer-events-none"
     style="background-image: radial-gradient(circle, #121213 1px, transparent 1px); background-size: 44px 44px;"
   >
   </div>
-  <!-- 右上のごく薄いグレーの陰影 -->
-  <div
-    class="absolute -top-32 -right-40 w-[640px] h-[640px] rounded-full pointer-events-none"
-    style="background: radial-gradient(circle, rgba(18,18,19,0.05) 0%, transparent 70%);"
-  >
-  </div>
 
-  <div class="relative max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
+  <div class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
     <div class="max-w-[920px]">
       <p
         class="hero-anim hero-anim-1 font-display font-bold text-xs sm:text-sm tracking-[0.2em] text-mute mb-6"
@@ -45,7 +46,7 @@ import { hero } from "../data/content";
       <JaText
         tag="p"
         text={hero.leadCopy}
-        class="hero-anim hero-anim-3 text-neutral-500 text-[13px] sm:text-sm lg:text-base max-w-[760px] mb-2 leading-relaxed"
+        class="hero-anim hero-anim-3 text-neutral-700 text-[13px] sm:text-sm lg:text-base max-w-[760px] mb-2 leading-relaxed"
       />
       <JaText
         tag="p"
@@ -70,6 +71,93 @@ import { hero } from "../data/content";
 </section>
 
 <style>
+  /* ===== Ambient animated background ===== */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    will-change: transform;
+  }
+
+  /* 濃いめのスモーク（インク系）でゆっくり漂う */
+  .hero-blob-1 {
+    width: 560px;
+    height: 560px;
+    top: -160px;
+    right: -120px;
+    background: radial-gradient(circle, rgba(18, 18, 19, 0.14) 0%, transparent 70%);
+    animation: drift1 24s ease-in-out infinite alternate;
+  }
+
+  .hero-blob-2 {
+    width: 480px;
+    height: 480px;
+    bottom: -180px;
+    left: -100px;
+    background: radial-gradient(circle, rgba(18, 18, 19, 0.10) 0%, transparent 70%);
+    animation: drift2 30s ease-in-out infinite alternate;
+  }
+
+  .hero-blob-3 {
+    width: 420px;
+    height: 420px;
+    top: 30%;
+    left: 45%;
+    background: radial-gradient(circle, rgba(103, 112, 112, 0.12) 0%, transparent 70%);
+    animation: drift3 27s ease-in-out infinite alternate;
+  }
+
+  /* ゆっくり回転する薄い斜めの光沢 */
+  .hero-sheen {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(18, 18, 19, 0.04) 90deg,
+      transparent 200deg,
+      rgba(103, 112, 112, 0.05) 300deg,
+      transparent 360deg
+    );
+    animation: spin 40s linear infinite;
+  }
+
+  @keyframes drift1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-70px, 50px) scale(1.18); }
+  }
+  @keyframes drift2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(60px, -40px) scale(1.12); }
+  }
+  @keyframes drift3 {
+    from { transform: translate(0, 0) scale(0.9); }
+    to   { transform: translate(-40px, -30px) scale(1.1); }
+  }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-blob,
+    .hero-sheen {
+      animation: none;
+    }
+  }
+
   @keyframes heroFadeUp {
     from {
       opacity: 0;

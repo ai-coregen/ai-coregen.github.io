@@ -15,8 +15,6 @@ const icons = [
   </svg>`,
 ];
 
-// 各カードの差し色（罫線のみ使用）
-const accents = ["#524DFE", "#00B3A1", "#E64B18"];
 const num = ["01", "02", "03"];
 ---
 
@@ -30,11 +28,11 @@ const num = ["01", "02", "03"];
       {features.items.map((item, i) => (
         <div data-animate data-delay={i * 120} class="h-full">
           <div
-            class="h-full bg-white p-7 lg:p-8 border border-line"
-            style={`border-top: 4px solid ${accents[i]}; filter: drop-shadow(0 6px 16px rgba(18,18,19,0.06));`}
+            class="group h-full bg-white p-7 lg:p-8 border border-line border-t-[3px] border-t-ink transition-shadow duration-300"
+            style="filter: drop-shadow(0 6px 16px rgba(18,18,19,0.06));"
           >
             <div class="flex items-center justify-between mb-5">
-              <div class="w-12 h-12 bg-surface flex items-center justify-center text-ink">
+              <div class="w-12 h-12 bg-ink flex items-center justify-center text-white">
                 <Fragment set:html={icons[i]} />
               </div>
               <span class="font-display text-neutral-200 font-black text-3xl leading-none">
