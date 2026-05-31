@@ -7,6 +7,7 @@ export const site = {
 };
 
 export const hero = {
+  eyebrow: "AI ENABLEMENT FOR SALES GROWTH",
   mainCatch: "AIで、売上を最大化する。",
   subCatch: [
     "業務効率化で、終わらせない。",
@@ -26,6 +27,7 @@ export const hero = {
 };
 
 export const problems = {
+  eyebrow: "ISSUES",
   heading: "こんなお悩み、ありませんか？",
   items: [
     {
@@ -52,6 +54,7 @@ export const problems = {
 };
 
 export const solution = {
+  eyebrow: "SOLUTION",
   heading: "私たちが提供するのは、「AIによる売上最大化」です。",
   body: [
     "業務効率化は、ゴールではありません。スタートです。",
@@ -74,6 +77,7 @@ export const solution = {
 };
 
 export const profile = {
+  eyebrow: "PROFILE",
   heading: "教えるのは、組織の中で売上を作ってきた人間です。",
   name: "星野創吉",
   nameReading: "ほしの そうきち",
@@ -95,6 +99,7 @@ export const profile = {
 };
 
 export const features = {
+  eyebrow: "WHY US",
   heading: "他のAI研修サービスとは、ここが違います。",
   items: [
     {
@@ -116,6 +121,7 @@ export const features = {
 };
 
 export const services = {
+  eyebrow: "SERVICES",
   heading: "5つのサービスで、AI活用を一気通貫で支援します。",
   leadCopy:
     "AI研修から伴走支援・コンサルティングまで、企業のAI実装を一気通貫で支援。助成金もご相談ください。",
@@ -153,6 +159,7 @@ export const services = {
 };
 
 export const subsidy = {
+  eyebrow: "SUBSIDY",
   heading: "人材開発支援助成金で、研修費の最大75%が国負担に。",
   beforeLabel: "通常の研修費用",
   afterLabel: "助成金活用後の実質負担",
@@ -169,6 +176,7 @@ export const subsidy = {
 };
 
 export const curriculum = {
+  eyebrow: "CURRICULUM",
   heading: "研修で学ぶ4つの主要AIツール",
   tools: [
     {
@@ -197,6 +205,7 @@ export const curriculum = {
 };
 
 export const flow = {
+  eyebrow: "FLOW",
   heading: "申込から研修実施まで、5ステップで完結します。",
   steps: [
     {
@@ -228,6 +237,7 @@ export const flow = {
 };
 
 export const faq = {
+  eyebrow: "FAQ",
   heading: "よくあるご質問",
   items: [
     {
@@ -262,6 +272,7 @@ export const faq = {
 };
 
 export const finalCta = {
+  eyebrow: "CONTACT",
   heading: "まずは無料オンライン相談から。",
   subCopy:
     "貴社の現状をお聞きし、AI活用で売上最大化する具体プランをご提案します。",

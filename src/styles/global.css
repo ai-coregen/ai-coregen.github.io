@@ -1,83 +1,124 @@
 @import "tailwindcss";
 
-/* ===== Design Tokens (Tailwind CSS v4 @theme) ===== */
-/* DigiRise-inspired bright blue-purple palette */
+/* ============================================================
+   Design Tokens — PKSHA AI SaaS inspired MONOCHROME system
+   出典: https://aisaas.pkshatech.com/
+   黒/白/グレー基調。差し色(orange/teal/blue)は罫線・CTAのみ。
+   ============================================================ */
 @theme {
-  /* Primary Blue-Purple (bright, vibrant) */
-  --color-primary-50: #F0F2FF;
-  --color-primary-100: #E0E4FF;
-  --color-primary-200: #C2CAFF;
-  --color-primary-300: #96A3FF;
-  --color-primary-400: #6B7FFF;
-  --color-primary-500: #4F63F7;
-  --color-primary-600: #3D4FDB;
-  --color-primary-700: #3341B8;
-  --color-primary-800: #2A3594;
-  --color-primary-900: #1E2666;
+  /* ----- Monochrome ramp (primary = grayscale, legacy互換) ----- */
+  --color-primary-50: #F5F5F5;
+  --color-primary-100: #ECECED;
+  --color-primary-200: #D9D9D9;
+  --color-primary-300: #BFC0C3;
+  --color-primary-400: #8A8B90;
+  --color-primary-500: #3A3B40;
+  --color-primary-600: #121213;
+  --color-primary-700: #121213;
+  --color-primary-800: #0C0C0D;
+  --color-primary-900: #0C0C0D;
 
-  /* Accent Purple */
-  --color-accent-400: #A78BFA;
-  --color-accent-500: #8B6FE8;
-  --color-accent-600: #7356D3;
-  --color-accent-700: #5C3FBE;
+  /* ----- Accent ramp も無彩色化（紫を排除） ----- */
+  --color-accent-400: #8A8B90;
+  --color-accent-500: #5A5C63;
+  --color-accent-600: #3A3B40;
+  --color-accent-700: #121213;
 
-  /* Neutrals */
-  --color-neutral-50: #FAFAFC;
-  --color-neutral-100: #F3F4F8;
-  --color-neutral-200: #E5E7EE;
-  --color-neutral-300: #D1D3DC;
-  --color-neutral-400: #A0A3B1;
-  --color-neutral-500: #6E7182;
-  --color-neutral-600: #52556A;
-  --color-neutral-700: #3A3D52;
-  --color-neutral-800: #262840;
-  --color-neutral-900: #181A2E;
+  /* ----- Neutrals (cool gray) ----- */
+  --color-neutral-50: #FAFAFA;
+  --color-neutral-100: #F5F5F5;
+  --color-neutral-200: #E9E9EA;
+  --color-neutral-300: #D9D9D9;
+  --color-neutral-400: #A8A9AC;
+  --color-neutral-500: #767880;
+  --color-neutral-600: #5A5C63;
+  --color-neutral-700: #3A3B40;
+  --color-neutral-800: #232428;
+  --color-neutral-900: #121213;
 
-  /* Semantic */
-  --color-success: #22C55E;
-  --color-danger: #EF4444;
+  /* ----- Signature tokens ----- */
+  --color-ink: #121213;
+  --color-mute: #677070;
+  --color-line: #D9D9D9;
+  --color-surface: #F5F5F5;
+  --color-tail: #DDDDDD;
+  --color-circle: #EBEBEB;
 
-  /* Font Family */
-  --font-sans: "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  /* ----- Accent colors（罫線・CTAのみ。面塗り禁止） ----- */
+  --color-brand-orange: #E64B18;
+  --color-brand-teal: #00B3A1;
+  --color-brand-blue: #524DFE;
+  --color-brand-cyan: #0079C9;
 
-  /* Shadows */
-  --shadow-card: 0 4px 16px rgba(79, 99, 247, 0.08);
-  --shadow-card-hover: 0 8px 30px rgba(79, 99, 247, 0.15);
-  --shadow-elevated: 0 16px 48px rgba(79, 99, 247, 0.2);
+  /* ----- Semantic (アクセント基準に再マップ) ----- */
+  --color-success: #00B3A1;
+  --color-danger: #E64B18;
 
-  /* Border Radius */
-  --radius-card: 12px;
+  /* ----- Fonts ----- */
+  --font-sans: "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
+  --font-display: "Satoshi", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", sans-serif;
 
-  /* Max Width */
+  /* ----- Shadows (フラット基調。最小限) ----- */
+  --shadow-card: 0 1px 2px rgba(18, 18, 19, 0.04);
+  --shadow-card-hover: 0 6px 20px rgba(18, 18, 19, 0.08);
+  --shadow-elevated: 0 10px 30px rgba(18, 18, 19, 0.10);
+  --shadow-float: 5px 0 14px rgba(0, 0, 0, 0.12);
+
+  /* ----- Radius (角丸は控えめ) ----- */
+  --radius-card: 4px;
+
+  /* ----- Max Width ----- */
   --container-3xl: 1100px;
 }
 
-/* ===== Gradient Utilities ===== */
+/* ============================================================
+   Gradient utilities → モノクロームに再定義
+   ============================================================ */
 @utility bg-gradient-hero {
-  background: linear-gradient(135deg, #4F63F7 0%, #7B68EE 40%, #9B6FE8 70%, #B07AFF 100%);
+  background: #ffffff;
 }
-
 @utility bg-gradient-cta {
-  background: linear-gradient(135deg, #4F63F7 0%, #7B68EE 50%, #9B6FE8 100%);
+  background: #121213;
 }
-
 @utility bg-gradient-btn {
-  background: linear-gradient(135deg, #4F63F7 0%, #6B5FE8 100%);
+  background: #121213;
 }
-
 @utility bg-gradient-btn-hover {
-  background: linear-gradient(135deg, #3D4FDB 0%, #5C4FD3 100%);
+  background: #2a2a2c;
 }
-
 @utility bg-gradient-subtle {
-  background: linear-gradient(135deg, #F0F2FF 0%, #F5F0FF 100%);
+  background: #f5f5f5;
 }
-
 @utility bg-gradient-footer {
-  background: linear-gradient(135deg, #1E2666 0%, #2A2080 100%);
+  background: #121213;
 }
 
-/* ===== Base Styles ===== */
+/* ============================================================
+   Signature utilities
+   ============================================================ */
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+/* タイトル下線バー: 黒(50px)→薄グレー */
+@utility title-bar {
+  display: block;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #121213 50px, var(--color-tail) 0);
+}
+
+/* 浮きカード: 上下に差し色罫線 + ドロップシャドウ */
+@utility float-card {
+  background: #fff;
+  border-top: 4px solid var(--color-brand-blue);
+  border-bottom: 4px solid var(--color-brand-cyan);
+  filter: drop-shadow(var(--shadow-float));
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -91,16 +132,17 @@
   body {
     overflow-x: hidden;
     font-family: var(--font-sans);
-    color: var(--color-neutral-700);
+    color: var(--color-ink);
     background-color: #ffffff;
     line-height: 1.8;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.08em;
   }
 }
 
 /* ===== Japanese line-break ===== */
 h1, h2, h3 {
   text-wrap: balance;
+  letter-spacing: 0.12em;
 }
 
 h4, p, li, span {

@@ -1,6 +1,5 @@
 ---
 import SectionHeading from "./ui/SectionHeading.astro";
-import Card from "./ui/Card.astro";
 import JaText from "./ui/JaText.astro";
 import { features } from "../data/content";
 
@@ -15,29 +14,36 @@ const icons = [
     <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>`,
 ];
+
+// 各カードの差し色（罫線のみ使用）
+const accents = ["#524DFE", "#00B3A1", "#E64B18"];
+const num = ["01", "02", "03"];
 ---
 
-<section class="relative bg-gradient-cta py-16 lg:py-24 overflow-hidden" id="features">
-  <!-- Light effects -->
-  <div
-    class="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_30%,rgba(255,255,255,0.1)_0%,transparent_50%)]"
-  ></div>
-
-  <div class="relative max-w-[1100px] mx-auto px-6">
-    <SectionHeading dark>
+<section class="bg-surface py-20 lg:py-32" id="features">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading eyebrow={features.eyebrow}>
       <JaText tag="span" text={features.heading} class="" />
     </SectionHeading>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
       {features.items.map((item, i) => (
         <div data-animate data-delay={i * 120} class="h-full">
-          <Card variant="dark" class="h-full">
-            <div class="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-white mb-5">
-              <Fragment set:html={icons[i]} />
+          <div
+            class="h-full bg-white p-7 lg:p-8 border border-line"
+            style={`border-top: 4px solid ${accents[i]}; filter: drop-shadow(0 6px 16px rgba(18,18,19,0.06));`}
+          >
+            <div class="flex items-center justify-between mb-5">
+              <div class="w-12 h-12 bg-surface flex items-center justify-center text-ink">
+                <Fragment set:html={icons[i]} />
+              </div>
+              <span class="font-display text-neutral-200 font-black text-3xl leading-none">
+                {num[i]}
+              </span>
             </div>
-            <JaText tag="h3" text={item.title} class="text-white font-bold text-xl lg:text-2xl mb-3" />
-            <JaText tag="p" text={item.description} class="text-white/70 text-[13px] sm:text-[0.95rem] leading-relaxed" />
-          </Card>
+            <JaText tag="h3" text={item.title} class="text-ink font-bold text-lg lg:text-xl mb-3" />
+            <JaText tag="p" text={item.description} class="text-neutral-600 text-[13px] sm:text-[0.95rem] leading-relaxed" />
+          </div>
         </div>
       ))}
     </div>

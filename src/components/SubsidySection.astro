@@ -4,9 +4,9 @@ import JaText from "./ui/JaText.astro";
 import { subsidy } from "../data/content";
 ---
 
-<section class="bg-gradient-subtle py-16 lg:py-24" id="subsidy">
-  <div class="max-w-[1100px] mx-auto px-6">
-    <SectionHeading>
+<section class="bg-gradient-subtle py-20 lg:py-32" id="subsidy">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading eyebrow={subsidy.eyebrow}>
       <JaText tag="span" text={subsidy.heading} class="" />
     </SectionHeading>
 
@@ -17,15 +17,15 @@ import { subsidy } from "../data/content";
     >
       <div class="relative flex flex-col sm:flex-row items-stretch">
         <!-- Before -->
-        <div class="flex-1 bg-neutral-100 border-t-4 border-danger rounded-xl sm:rounded-r-none p-6 lg:p-8 text-center">
-          <p class="text-neutral-500 text-sm font-semibold uppercase tracking-wider mb-3">Before</p>
-          <JaText tag="p" text={subsidy.beforeLabel} class="text-neutral-900 font-bold text-lg mb-2" />
-          <div class="text-neutral-400 text-4xl font-black">???</div>
+        <div class="flex-1 bg-white border border-line border-t-4 border-t-brand-orange p-6 lg:p-8 text-center">
+          <p class="font-display text-neutral-500 text-sm font-bold uppercase tracking-[0.15em] mb-3">Before</p>
+          <JaText tag="p" text={subsidy.beforeLabel} class="text-ink font-bold text-lg mb-2" />
+          <div class="font-display text-neutral-300 text-4xl font-black">???</div>
         </div>
 
         <!-- Arrow (centered between boxes) -->
         <div class="flex items-center justify-center z-10 -my-3 sm:my-0 sm:-mx-5">
-          <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center shadow-card">
+          <div class="w-10 h-10 rounded-full bg-ink flex items-center justify-center shadow-card">
             <!-- Desktop: right arrow -->
             <svg class="hidden sm:block w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -38,27 +38,27 @@ import { subsidy } from "../data/content";
         </div>
 
         <!-- After -->
-        <div class="flex-1 bg-white border-t-4 border-success rounded-xl sm:rounded-l-none p-6 lg:p-8 text-center shadow-card">
-          <p class="text-neutral-500 text-sm font-semibold uppercase tracking-wider mb-3">After</p>
-          <JaText tag="p" text={subsidy.afterLabel} class="text-neutral-900 font-bold text-lg mb-2" />
-          <span class="inline-block bg-gradient-btn text-white font-bold text-lg px-4 py-1.5 rounded-full">
+        <div class="flex-1 bg-white border border-line border-t-4 border-t-brand-teal p-6 lg:p-8 text-center">
+          <p class="font-display text-neutral-500 text-sm font-bold uppercase tracking-[0.15em] mb-3">After</p>
+          <JaText tag="p" text={subsidy.afterLabel} class="text-ink font-bold text-lg mb-2" />
+          <span class="inline-block bg-ink text-white font-display font-bold text-lg px-5 py-1.5 rounded-full">
             {subsidy.afterBadge}
           </span>
         </div>
       </div>
 
-      <JaText tag="p" text={subsidy.note} class="text-neutral-500 text-sm text-center mt-4" />
+      <JaText tag="p" text={subsidy.note} class="text-mute text-sm text-center mt-4" />
     </div>
 
     <!-- 4 Points -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-[700px] mx-auto mb-8">
       {subsidy.points.map((point, i) => (
         <div
-          class="flex items-start gap-3 bg-white rounded-lg p-4 shadow-[0_1px_3px_rgba(11,29,51,0.06)]"
+          class="flex items-start gap-3 bg-white border border-line p-4"
           data-animate
           data-delay={i * 80}
         >
-          <svg class="w-5 h-5 text-success shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg class="w-5 h-5 text-brand-teal shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <JaText tag="p" text={point} class="text-neutral-700 text-sm lg:text-[0.95rem]" />

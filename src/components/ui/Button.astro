@@ -8,23 +8,56 @@ interface Props {
 const { variant = "primary", href = "#", class: className = "" } = Astro.props;
 
 const baseClasses =
-  "inline-flex items-center justify-center font-bold text-sm sm:text-base tracking-[0.06em] px-4 sm:px-10 py-4 sm:py-[18px] rounded-full transition-all duration-300 cursor-pointer text-center";
+  "group relative inline-flex items-center justify-center font-display font-bold text-sm sm:text-base tracking-[0.02em] rounded-full transition-all duration-300 cursor-pointer text-center";
 
-const variantClasses = {
-  primary:
-    "bg-gradient-btn text-white shadow-card hover:bg-gradient-btn-hover hover:shadow-card-hover hover:-translate-y-0.5",
-  secondary:
-    "bg-white text-primary-600 border-2 border-primary-300 hover:border-primary-500 hover:bg-primary-50",
-  white:
-    "bg-white text-primary-700 shadow-card hover:bg-neutral-100 hover:shadow-card-hover hover:-translate-y-0.5",
-  "secondary-dark":
-    "bg-white/15 text-white border-2 border-white/40 backdrop-blur-sm hover:bg-white/25 hover:border-white/60",
+// アイコンを表示するか + アイコンの円/三角の色
+const config = {
+  primary: {
+    classes:
+      "bg-ink text-white pl-8 pr-14 sm:pl-10 sm:pr-16 py-[18px] hover:opacity-80",
+    icon: true,
+    circle: "rgba(255,255,255,0.18)",
+    tri: "#ffffff",
+  },
+  white: {
+    classes:
+      "bg-white text-ink border border-line pl-8 pr-14 sm:pl-10 sm:pr-16 py-[18px] hover:opacity-70",
+    icon: true,
+    circle: "#EBEBEB",
+    tri: "#121213",
+  },
+  secondary: {
+    classes:
+      "bg-white text-ink border border-ink px-8 sm:px-10 py-[18px] hover:opacity-70",
+    icon: false,
+    circle: "",
+    tri: "",
+  },
+  "secondary-dark": {
+    classes:
+      "bg-transparent text-white border border-white/40 px-8 sm:px-10 py-[18px] hover:bg-white/10 hover:border-white/70",
+    icon: false,
+    circle: "",
+    tri: "",
+  },
 };
+
+const c = config[variant];
 ---
 
-<a
-  href={href}
-  class:list={[baseClasses, variantClasses[variant], className]}
->
+<a href={href} class:list={[baseClasses, c.classes, className]}>
   <slot />
+  {
+    c.icon && (
+      <svg
+        class="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 w-7 h-7"
+        viewBox="0 0 32 32"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle cx="16" cy="16" r="16" fill={c.circle} />
+        <path d="M13.5 10.5 L21 16 L13.5 21.5 Z" fill={c.tri} />
+      </svg>
+    )
+  }
 </a>

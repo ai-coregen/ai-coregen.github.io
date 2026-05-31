@@ -9,15 +9,15 @@ interface Props {
 const { question, answer } = Astro.props;
 ---
 
-<div class="bg-white rounded-lg shadow-[0_1px_3px_rgba(79,99,247,0.06)] mb-3 overflow-hidden border border-neutral-200/60 border-l-[3px] border-l-transparent">
+<div class="bg-white mb-3 overflow-hidden border border-line">
   <button
     data-accordion-trigger
-    class="w-full flex items-center justify-between text-left px-6 lg:px-8 py-5 lg:py-6 cursor-pointer hover:bg-primary-50/50 transition-colors duration-200"
+    class="w-full flex items-center justify-between text-left px-6 lg:px-8 py-5 lg:py-6 cursor-pointer hover:bg-surface transition-colors duration-200"
     type="button"
   >
     <span class="flex items-start gap-3 pr-4">
-      <span class="text-primary-500 font-bold shrink-0">Q.</span>
-      <JaText tag="span" text={question} class="text-neutral-900 font-semibold text-sm lg:text-[1.15rem] leading-relaxed" />
+      <span class="font-display text-ink font-bold shrink-0">Q.</span>
+      <JaText tag="span" text={question} class="text-ink font-semibold text-sm lg:text-[1.1rem] leading-relaxed" />
     </span>
     <svg
       data-chevron

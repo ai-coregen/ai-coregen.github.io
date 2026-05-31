@@ -21,23 +21,23 @@ const icons = [
 ];
 ---
 
-<section class="bg-white py-16 lg:py-24" id="problems">
-  <div class="max-w-[1100px] mx-auto px-6">
-    <SectionHeading>
+<section class="bg-white py-20 lg:py-32" id="problems">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading eyebrow={problems.eyebrow}>
       <JaText tag="span" text={problems.heading} class="" />
     </SectionHeading>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mb-12">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch mb-10">
       {problems.items.map((item, i) => (
         <div data-animate data-delay={i * 100} class="h-full">
           <Card class="h-full">
-            <div class="text-primary-400 mb-4">
-              <Fragment set:html={icons[i]} />
-            </div>
-            <span class="text-primary-500/20 font-black text-3xl md:text-5xl leading-none block mb-2">
+            <span class="font-display text-neutral-200 font-black text-4xl md:text-5xl leading-none block mb-4">
               {item.number}
             </span>
-            <JaText tag="h3" text={item.title} class="text-neutral-900 font-bold text-xl lg:text-2xl mb-3" />
+            <div class="text-ink mb-4">
+              <Fragment set:html={icons[i]} />
+            </div>
+            <JaText tag="h3" text={item.title} class="text-ink font-bold text-lg lg:text-xl mb-3" />
             <JaText tag="p" text={item.description} class="text-neutral-600 text-[13px] sm:text-[0.95rem] leading-relaxed" />
           </Card>
         </div>
@@ -46,7 +46,7 @@ const icons = [
 
     <!-- Closing -->
     <div data-animate data-delay="300">
-      <JaText tag="p" text={problems.closing} class="text-primary-600 font-semibold text-[13px] sm:text-base lg:text-lg border-l-4 border-primary-400 pl-4 max-w-[640px] mx-auto text-left" />
+      <JaText tag="p" text={problems.closing} class="text-ink font-bold text-[14px] sm:text-base lg:text-lg border-l-2 border-brand-orange pl-5 max-w-[680px]" />
     </div>
   </div>
 </section>
