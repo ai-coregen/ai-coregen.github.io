@@ -6,13 +6,15 @@ import { hero } from "../data/content";
 // ∞（フィギュアエイト/レムニスケート）軌道
 const ORBIT_PATH =
   "M360,180 C470,60 650,60 650,180 C650,300 470,300 360,180 C250,60 70,60 70,180 C70,300 250,300 360,180 Z";
-const N = 18;
-const DUR = 20; // seconds (1周)
-const sizes = [3, 4, 5, 4, 6, 3, 5, 4, 3, 6];
+const N = 56;
+const DUR = 20; // seconds (基準1周)
+const sizes = [2, 3, 2, 4, 3, 2, 5, 3, 2, 4, 3, 2];
 const particles = Array.from({ length: N }, (_, i) => ({
   delay: (-(i / N) * DUR).toFixed(2),
   size: sizes[i % sizes.length],
-  op: (0.16 + (i % 5) * 0.06).toFixed(2),
+  op: (0.45 + (i % 6) * 0.09).toFixed(2), // 0.45..0.90
+  od: (16 + (i % 7) * 1.6).toFixed(1), // 周回 16.0..25.6s
+  td: (1.8 + (i % 5) * 0.55).toFixed(2), // 点滅 1.8..3.45s
 }));
 ---
 
@@ -26,7 +28,7 @@ const particles = Array.from({ length: N }, (_, i) => ({
       {particles.map((p) => (
         <span
           class="hero-particle"
-          style={`width:${p.size}px;height:${p.size}px;background:rgba(18,18,19,${p.op});animation-delay:${p.delay}s;`}
+          style={`width:${p.size}px;height:${p.size}px;background:rgba(18,18,19,${p.op});--od:${p.od}s;--td:${p.td}s;animation-delay:${p.delay}s;`}
         />
       ))}
     </div>
@@ -116,23 +118,37 @@ const particles = Array.from({ length: N }, (_, i) => ({
     height: 100%;
   }
 
-  /* ∞ を周回する粒子 */
+  /* ∞ を周回しながらキラキラ点滅する粒子 */
   .hero-particle {
     position: absolute;
     top: 0;
     left: 0;
     border-radius: 50%;
-    box-shadow: 0 0 6px rgba(18, 18, 19, 0.12);
+    box-shadow: 0 0 4px rgba(18, 18, 19, 0.15);
     offset-path: path("M360,180 C470,60 650,60 650,180 C650,300 470,300 360,180 C250,60 70,60 70,180 C70,300 250,300 360,180 Z");
     offset-rotate: 0deg;
     offset-distance: 0%;
-    animation: orbit 20s linear infinite;
-    will-change: offset-distance;
+    animation:
+      orbit var(--od, 20s) linear infinite,
+      twinkle var(--td, 3s) ease-in-out infinite;
+    will-change: offset-distance, opacity;
   }
 
   @keyframes orbit {
     from { offset-distance: 0%; }
     to   { offset-distance: 100%; }
+  }
+
+  /* キラキラ: 透明度とグローを脈動 */
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0.2;
+      box-shadow: 0 0 2px rgba(18, 18, 19, 0.1);
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 9px rgba(18, 18, 19, 0.3);
+    }
   }
 
   @media (max-width: 1023px) {
