@@ -6,6 +6,15 @@ export const site = {
     "AI研修から伴走支援、AIコンサルティングまで、企業のAI実装を一気通貫で伴走支援。地方中小企業のための、売上最大化型AI伴走支援。",
 };
 
+export const nav = [
+  { label: "選ばれる理由", href: "#features" },
+  { label: "サービス", href: "#services" },
+  { label: "助成金", href: "#subsidy" },
+  { label: "カリキュラム", href: "#curriculum" },
+  { label: "導入の流れ", href: "#flow" },
+  { label: "FAQ", href: "#faq" },
+];
+
 export const hero = {
   eyebrow: "AI ENABLEMENT FOR SALES GROWTH",
   mainCatch: "AIで、売上を最大化する。",
