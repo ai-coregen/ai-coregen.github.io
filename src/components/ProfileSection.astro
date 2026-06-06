@@ -35,7 +35,7 @@ const careerIcons = [
           <h3 class="text-ink font-bold text-2xl text-center">
             {profile.name}
           </h3>
-          <p class="text-neutral-500 text-sm text-center mb-1">
+          <p class="text-mute text-sm text-center mb-1">
             {profile.nameReading}
           </p>
           <p class="text-mute font-semibold text-sm text-center tracking-wider">
@@ -55,7 +55,7 @@ const careerIcons = [
                 <span class="text-ink mt-0.5 shrink-0">
                   <Fragment set:html={careerIcons[i]} />
                 </span>
-                <JaText tag="p" text={item} class="text-neutral-700 text-[13px] sm:text-[0.95rem] leading-relaxed" />
+                <JaText tag="p" text={item} class="text-ink text-[13px] sm:text-[0.95rem] leading-relaxed" />
               </li>
             ))}
           </ul>
@@ -68,7 +68,7 @@ const careerIcons = [
               <p class="font-display text-ink font-black text-2xl lg:text-3xl mb-1">
                 {stat.value}
               </p>
-              <p class="text-neutral-600 text-xs lg:text-sm leading-tight">
+              <p class="text-ink text-xs lg:text-sm leading-tight">
                 {stat.label}
               </p>
             </div>
