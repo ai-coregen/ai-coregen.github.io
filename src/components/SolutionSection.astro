@@ -24,7 +24,7 @@ import { solution } from "../data/content";
           <>
             <div
               class:list={[
-                "flex-1 border p-5 lg:p-6 text-center flex flex-col items-center justify-center",
+                "flex-1 border p-5 lg:p-6 text-center flex flex-col items-center",
                 i === solution.flowSteps.length - 1
                   ? "bg-ink border-ink"
                   : "bg-white border-line",
@@ -34,7 +34,7 @@ import { solution } from "../data/content";
             >
               <div
                 class:list={[
-                  "w-9 h-9 rounded-full font-display font-bold flex items-center justify-center mb-3 text-sm",
+                  "w-9 h-9 rounded-full font-display font-bold flex items-center justify-center mb-3 text-sm shrink-0",
                   i === solution.flowSteps.length - 1
                     ? "bg-white text-ink"
                     : "bg-ink text-white",
@@ -42,14 +42,16 @@ import { solution } from "../data/content";
               >
                 {`0${i + 1}`}
               </div>
-              <JaText
-                tag="p"
-                text={text}
-                class:list={[
-                  "font-bold text-[13px] sm:text-[0.95rem] lg:text-base",
-                  i === solution.flowSteps.length - 1 ? "text-white" : "text-ink",
-                ]}
-              />
+              <div class="flex-1 flex items-center">
+                <JaText
+                  tag="p"
+                  text={text}
+                  class:list={[
+                    "font-bold text-[13px] sm:text-[0.95rem] lg:text-base",
+                    i === solution.flowSteps.length - 1 ? "text-white" : "text-ink",
+                  ]}
+                />
+              </div>
             </div>
             {i < solution.flowSteps.length - 1 && (
               <div class="flex items-center justify-center py-1 lg:py-0">
