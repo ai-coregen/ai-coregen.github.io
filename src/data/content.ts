@@ -1,7 +1,7 @@
 // LP全テキストコンテンツ（Doc v4「9セクション集約版」準拠）
 
 export const site = {
-  title: "FRUOR｜AIで売上を最大化するAI実装研修",
+  title: "Cosmo AI｜AIで売上を最大化するAI実装研修",
   description:
     "AI導入研修から伴走支援・AI経営戦略支援まで、企業のAI実装を一気通貫で支援。単なる業務効率化で終わらせず、売上最大化にコミット。地方中小企業のための、完全成果報酬型AI伴走支援。",
 };
@@ -242,7 +242,7 @@ export const finalCta = {
 };
 
 export const footer = {
-  copyright: "© 2026 FRUOR",
+  copyright: "© 2026 Cosmo AI",
   services: [
     "AI導入研修・組織への定着支援",
     "AI導入支援",
@@ -254,7 +254,7 @@ export const footer = {
     { label: "プライバシーポリシー", slug: "privacy" },
   ],
   companyInfo: {
-    name: "FRUOR（AI実装研修）",
+    name: "Cosmo AI（AI実装研修）",
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
   },
