@@ -1,5 +1,8 @@
 ---
 import { footer } from "../data/content";
+
+// base path を含めたページリンク（GitHub Pages の /ai-maximize-sales/ 配下対応）
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <footer class="bg-gradient-footer pt-16 pb-8" id="footer">
@@ -29,7 +32,7 @@ import { footer } from "../data/content";
         <ul class="space-y-2.5">
           {footer.company.map((item) => (
             <li>
-              <a href={item.href} class="text-white/50 text-sm hover:text-white transition-colors block py-1.5">
+              <a href={`${base}/${item.slug}`} class="text-white/50 text-sm hover:text-white transition-colors block py-1.5">
                 {item.label}
               </a>
             </li>
@@ -73,7 +76,7 @@ import { footer } from "../data/content";
           <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
           </svg>
-          @Hoshino_AISales
+          @Hoshino_Sokichi
         </a>
       </div>
     </div>
@@ -92,10 +95,6 @@ import { footer } from "../data/content";
         <div class="flex gap-3">
           <dt class="text-white/40 shrink-0 w-16">所在地</dt>
           <dd class="text-white/60">{footer.companyInfo.address}</dd>
-        </div>
-        <div class="flex gap-3">
-          <dt class="text-white/40 shrink-0 w-16">電話番号</dt>
-          <dd class="text-white/60">{footer.companyInfo.tel}</dd>
         </div>
       </dl>
       <p class="text-white/40 text-[13px] mt-5 leading-relaxed">

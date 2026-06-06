@@ -30,7 +30,7 @@ export const hero = {
     { label: "Xフォロワー", value: "15,000人超" },
     { label: "AIサロン運営中", value: "100名超" },
   ],
-  primaryCta: "無料オンライン相談を予約する（30分）",
+  primaryCta: "無料オンライン相談を予約する",
   secondaryCta: "サービス詳細資料をダウンロード",
   disclaimer: "※ 営業電話・しつこい勧誘は一切いたしません。",
 };
@@ -70,7 +70,7 @@ export const profile = {
     { value: "15,000+", label: "Xフォロワー" },
   ],
   links: {
-    x: "https://x.com/Hoshino_AISales",
+    x: "https://x.com/Hoshino_Sokichi",
     salon: "https://ai-salon.site/",
   },
 };
@@ -227,7 +227,7 @@ export const finalCta = {
     "貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
   note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
   disclaimer: "営業電話・しつこい勧誘は一切いたしません。",
-  primaryCta: "無料オンライン相談を予約する（30分）",
+  primaryCta: "無料オンライン相談を予約する",
   secondaryCta: "サービス詳細資料をダウンロード（無料）",
   materialsTitle: "資料ダウンロードの内容",
   materials: [
@@ -250,18 +250,17 @@ export const footer = {
     "AI経営戦略支援",
   ],
   company: [
-    { label: "特定商取引法に基づく表記", href: "#" },
-    { label: "プライバシーポリシー", href: "#" },
+    { label: "特定商取引法に基づく表記", slug: "tokushoho" },
+    { label: "プライバシーポリシー", slug: "privacy" },
   ],
   companyInfo: {
     name: "FRUOR（AI実装研修）",
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
-    tel: "080-8041-0861",
   },
   note: "最初の3〜5回は無料でAI導入支援を実施。成果が出るまで完全成果報酬制。",
   social: {
-    x: "https://x.com/Hoshino_AISales",
+    x: "https://x.com/Hoshino_Sokichi",
     salon: "https://ai-salon.site/",
   },
 };
