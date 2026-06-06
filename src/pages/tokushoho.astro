@@ -65,13 +65,13 @@ const rows = [
     <h1 class="text-ink font-bold text-2xl lg:text-3xl mb-3 tracking-[0.04em]">
       特定商取引法に基づく表記
     </h1>
-    <p class="text-neutral-500 text-sm mb-12">最終更新日：2026年6月6日</p>
+    <p class="text-ink text-sm mb-12">最終更新日：2026年6月6日</p>
 
     <dl class="border-t border-line">
       {rows.map((row) => (
         <div class="flex flex-col sm:flex-row gap-1 sm:gap-6 py-5 border-b border-line">
           <dt class="text-ink font-bold text-sm sm:w-48 shrink-0">{row.label}</dt>
-          <dd class="text-neutral-700 text-sm leading-relaxed flex-1">{row.value}</dd>
+          <dd class="text-ink text-sm leading-relaxed flex-1">{row.value}</dd>
         </div>
       ))}
     </dl>
