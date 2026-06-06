@@ -78,6 +78,31 @@ import { footer } from "../data/content";
       </div>
     </div>
 
+    <!-- Company info -->
+    <div class="border-t border-white/10 pt-8 mb-8">
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 max-w-[760px] text-[13px]">
+        <div class="flex gap-3">
+          <dt class="text-white/40 shrink-0 w-16">運営</dt>
+          <dd class="text-white/60">{footer.companyInfo.name}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="text-white/40 shrink-0 w-16">代表者</dt>
+          <dd class="text-white/60">{footer.companyInfo.rep}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="text-white/40 shrink-0 w-16">所在地</dt>
+          <dd class="text-white/60">{footer.companyInfo.address}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="text-white/40 shrink-0 w-16">電話番号</dt>
+          <dd class="text-white/60">{footer.companyInfo.tel}</dd>
+        </div>
+      </dl>
+      <p class="text-white/40 text-[13px] mt-5 leading-relaxed">
+        {footer.note}
+      </p>
+    </div>
+
     <!-- Bottom bar -->
     <div class="border-t border-white/10 pt-6">
       <p class="text-white/30 text-[13px] text-center">

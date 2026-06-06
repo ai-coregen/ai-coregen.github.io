@@ -10,69 +10,59 @@ import { solution } from "../data/content";
       <JaText tag="span" text={solution.heading} class="" />
     </SectionHeading>
 
-    <!-- Body text -->
-    <div class="max-w-[760px] mb-14" data-animate>
+    <!-- Philosophy statement -->
+    <div class="max-w-[820px] mb-14" data-animate>
       {solution.body.map((line) => (
         <JaText tag="p" text={line} class="text-neutral-700 text-[14px] sm:text-base lg:text-lg leading-loose mb-3 last:mb-0" />
       ))}
     </div>
 
-    <!-- Diagram -->
-    <div class="max-w-[920px] mx-auto mb-14">
-      <!-- 3 boxes + connectors -->
-      <div class="flex flex-col lg:flex-row items-stretch gap-3 lg:gap-4 mb-6">
-        {solution.diagram.map((text, i) => (
+    <!-- Flow diagram: 業務効率化 → コスト削減 → 配置転換 → 売上最大化 -->
+    <div class="max-w-[980px] mx-auto mb-12">
+      <div class="flex flex-col lg:flex-row items-stretch gap-3 lg:gap-2">
+        {solution.flowSteps.map((text, i) => (
           <>
             <div
-              class="flex-1 bg-white border border-line p-5 lg:p-6 text-center"
+              class:list={[
+                "flex-1 border p-5 lg:p-6 text-center flex flex-col items-center justify-center",
+                i === solution.flowSteps.length - 1
+                  ? "bg-ink border-ink"
+                  : "bg-white border-line",
+              ]}
               data-animate
               data-delay={i * 150}
             >
-              <div class="w-9 h-9 rounded-full bg-ink text-white font-display font-bold flex items-center justify-center mx-auto mb-3 text-sm">
+              <div
+                class:list={[
+                  "w-9 h-9 rounded-full font-display font-bold flex items-center justify-center mb-3 text-sm",
+                  i === solution.flowSteps.length - 1
+                    ? "bg-white text-ink"
+                    : "bg-ink text-white",
+                ]}
+              >
                 {`0${i + 1}`}
               </div>
-              <JaText tag="p" text={text} class="text-ink font-bold text-[13px] sm:text-[0.95rem] lg:text-base" />
+              <JaText
+                tag="p"
+                text={text}
+                class:list={[
+                  "font-bold text-[13px] sm:text-[0.95rem] lg:text-base",
+                  i === solution.flowSteps.length - 1 ? "text-white" : "text-ink",
+                ]}
+              />
             </div>
-            {i < 2 && (
+            {i < solution.flowSteps.length - 1 && (
               <div class="flex items-center justify-center py-1 lg:py-0">
-                <span class="text-neutral-400 font-bold text-2xl">+</span>
+                <!-- Desktop: right arrow / Mobile: down arrow -->
+                <svg class="hidden lg:block w-5 h-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                </svg>
+                <svg class="lg:hidden w-5 h-5 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                </svg>
               </div>
             )}
           </>
-        ))}
-      </div>
-
-      <!-- Arrow -->
-      <div class="flex justify-center mb-6" data-animate data-delay="450">
-        <svg class="w-7 h-7 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-        </svg>
-      </div>
-
-      <!-- Result box -->
-      <div
-        class="bg-ink text-white p-7 lg:p-9 text-center"
-        data-animate
-        data-delay="550"
-      >
-        <JaText tag="p" text={solution.diagramResult} class="font-bold text-[clamp(1rem,2vw+0.5rem,1.35rem)] tracking-[0.06em]" />
-      </div>
-    </div>
-
-    <!-- Concrete examples -->
-    <div class="mx-auto mb-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {solution.examples.map((example, i) => (
-          <div
-            class="flex items-start gap-3 bg-white border border-line p-4"
-            data-animate
-            data-delay={i * 80}
-          >
-            <svg class="w-5 h-5 text-ink shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <JaText tag="p" text={example} class="text-neutral-700 text-sm lg:text-[0.95rem]" />
-          </div>
         ))}
       </div>
     </div>
