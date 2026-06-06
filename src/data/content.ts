@@ -1,7 +1,7 @@
 // LP全テキストコンテンツ（Doc v4「9セクション集約版」準拠）
 
 export const site = {
-  title: "Coregen｜AIで売上を最大化するAI実装研修",
+  title: "CoreGen｜AIで売上を最大化するAI実装研修",
   description:
     "AI導入研修から伴走支援・AI経営戦略支援まで、企業のAI実装を一気通貫で支援。単なる業務効率化で終わらせず、売上最大化にコミット。地方中小企業のための、完全成果報酬型AI伴走支援。",
 };
@@ -55,7 +55,6 @@ export const profile = {
   heading: "教えるのは、組織の中で売上を作ってきた人間です",
   name: "星野創吉",
   nameReading: "ほしの そうきち",
-  title: "AIコンサルタント／AI実装研修 代表",
   career: [
     "近畿大学経営学部卒業後、株式会社フィナンシャルエージェンシーに入社。数々の主要な新規事業の立ち上げを担当し、若干27歳で執行役員に就任。営業担当役員などの要職を歴任。",
     "1,000名超の営業組織のマネジメントを経験する中で、僅か4年余りで売上規模を500万円から35億円まで拡大。KPI・KGI分析とデータベースマーケティングで、業界最大級の保険代理店ビジネスへと成長させる。",
@@ -189,12 +188,12 @@ export const flow = {
     {
       number: "2",
       title: "無料オンライン相談（30分）",
-      description: "Zoom・Google Meet・Teamsで現状ヒアリング・アドバイス",
+      description: "オンラインMTGで現状ヒアリング・アドバイス",
     },
     {
       number: "3",
       title: "課題のヒアリングとアドバイス",
-      description: "具体的な業務課題を整理し、最適なプランをご提案",
+      description: "具体的な業務課題を整理・最適なプランをご提案",
     },
     {
       number: "4",
@@ -203,13 +202,13 @@ export const flow = {
     },
     {
       number: "5",
-      title: "カスタマイズワークショップ",
-      description: "貴社業務に合わせたカスタマイズを全5回実施",
+      title: "AI導入支援",
+      description: "貴社の業務に合わせたAIの導入を実装フェーズから直接サポート",
     },
     {
       number: "6",
-      title: "伴走支援（長期伴走・AIコンサル）",
-      description: "AI経営戦略の策定から業務改革まで継続支援",
+      title: "実務特化型プログラム研修",
+      description: "GPTs・Gem・Copilotエージェント・Claude Cowork・Claude Codeなど、実務に直結するプログラムを提供",
     },
   ],
   note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
@@ -217,7 +216,7 @@ export const flow = {
 
 export const finalCta = {
   eyebrow: "CONTACT",
-  heading: "まずは、無料オンライン相談から",
+  heading: "まずは無料オンライン相談から",
   subCopy:
     "貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
   note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
@@ -237,7 +236,7 @@ export const finalCta = {
 };
 
 export const footer = {
-  copyright: "© 2026 Coregen",
+  copyright: "© 2026 CoreGen",
   services: [
     "AI導入研修・組織への定着支援",
     "AI導入支援",
@@ -249,7 +248,7 @@ export const footer = {
     { label: "プライバシーポリシー", slug: "privacy" },
   ],
   companyInfo: {
-    name: "Coregen（AI実装研修）",
+    name: "CoreGen（AI実装研修）",
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
   },

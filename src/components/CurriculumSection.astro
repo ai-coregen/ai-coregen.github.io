@@ -13,7 +13,7 @@ import { curriculum } from "../data/content";
 
     <!-- Lead -->
     <div class="max-w-[860px] mb-3" data-animate>
-      <JaText tag="p" text={curriculum.leadCopy} class="text-ink font-bold text-[15px] sm:text-lg lg:text-xl leading-relaxed" />
+      <JaText tag="p" text={curriculum.leadCopy} class="text-ink font-bold text-lg sm:text-xl lg:text-2xl leading-relaxed" />
     </div>
     <div class="max-w-[860px] mb-12" data-animate data-delay="80">
       <JaText tag="p" text={curriculum.intro} class="text-ink text-[15px] sm:text-base leading-relaxed" />
@@ -25,7 +25,7 @@ import { curriculum } from "../data/content";
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-line border border-line">
         {curriculum.videos.map((video, i) => (
           <div class="flex items-start gap-3 bg-white p-4 lg:p-5">
-            <span class="font-display text-neutral-300 font-black text-xl leading-none shrink-0 w-7">
+            <span class="font-display text-ink font-black text-xl leading-none shrink-0 w-7">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div class="flex-1 min-w-0">

@@ -4,6 +4,7 @@ interface Props {
   dark?: boolean;
   align?: "left" | "center";
   class?: string;
+  rawEyebrow?: boolean;
 }
 
 const {
@@ -11,6 +12,7 @@ const {
   dark = false,
   align = "left",
   class: className = "",
+  rawEyebrow = false,
 } = Astro.props;
 
 const isCenter = align === "center";
@@ -31,7 +33,8 @@ const barStyle = dark
     eyebrow && (
       <p
         class:list={[
-          "font-display font-bold text-base sm:text-lg tracking-[0.14em] mb-4 lowercase first-letter:uppercase",
+          "font-display font-bold text-base sm:text-lg tracking-[0.14em] mb-4",
+          !rawEyebrow && "lowercase first-letter:uppercase",
           dark ? "text-white/60" : "text-ink",
         ]}
       >
