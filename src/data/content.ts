@@ -21,7 +21,7 @@ export const hero = {
     "単なる業務効率化で終わらせない",
     "空いた時間を売上に直結する仕事へ",
   ],
-  subLead: "中小企業のための、売上最大化型AI伴走支援",
+  subLead: "中小企業のためのAI伴走支援",
   badges: [
     { label: "AIセミナー登壇", value: "50回以上" },
     { label: "Xフォロワー", value: "15,000人超" },

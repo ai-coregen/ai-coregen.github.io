@@ -6,10 +6,10 @@ import { nav } from "../data/content";
   id="site-header"
   class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-line transition-all duration-300"
 >
-  <div class="max-w-[1260px] mx-auto px-6 lg:px-8 flex items-center justify-between h-[72px] lg:h-20">
+  <div class="max-w-[1260px] mx-auto px-6 lg:px-8 flex items-center justify-between h-20 lg:h-24">
     <!-- Logo -->
     <a href="#hero" class="flex items-center group min-h-[44px] shrink-0">
-      <span class="text-ink font-display font-black text-2xl lg:text-[2rem] tracking-[0.02em] group-hover:opacity-60 transition-opacity">
+      <span class="text-ink font-display font-black text-3xl lg:text-[2.75rem] tracking-[0.02em] group-hover:opacity-60 transition-opacity">
         CoreGen
       </span>
     </a>
@@ -20,7 +20,7 @@ import { nav } from "../data/content";
         nav.map((item) => (
           <a
             href={item.href}
-            class="text-ink text-base font-bold tracking-[0.04em] hover:opacity-50 transition-opacity"
+            class="text-ink text-lg font-bold tracking-[0.04em] hover:opacity-50 transition-opacity"
           >
             {item.label}
           </a>
@@ -32,7 +32,7 @@ import { nav } from "../data/content";
       <!-- CTA -->
       <a
         href="#cta"
-        class="hidden sm:inline-flex items-center bg-ink text-white font-display font-bold text-base tracking-[0.04em] px-6 lg:px-7 py-3 rounded-full hover:opacity-80 transition-opacity"
+        class="hidden sm:inline-flex items-center bg-ink text-white font-display font-bold text-lg tracking-[0.04em] px-7 lg:px-8 py-3 rounded-full hover:opacity-80 transition-opacity"
       >
         無料相談を予約
       </a>
@@ -110,7 +110,7 @@ import { nav } from "../data/content";
   /* Mobile dropdown panel */
   .mobile-panel {
     position: fixed;
-    top: 4.5rem; /* header h-[72px] */
+    top: 5rem; /* header h-20 (mobile) */
     left: 0;
     right: 0;
     background: #ffffff;
