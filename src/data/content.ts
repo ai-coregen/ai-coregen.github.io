@@ -19,8 +19,8 @@ export const hero = {
   eyebrow: "AI ENABLEMENT FOR SALES GROWTH",
   mainCatch: "AIで売上を最大化する",
   subCatch: [
-    "単なる業務効率化で、終わらせない",
-    "空いた時間を、売上に直結する仕事へ",
+    "単なる業務効率化で終わらせない",
+    "空いた時間を売上に直結する仕事へ",
   ],
   leadCopy:
     "AI導入研修・AI導入支援・実務特化型プログラム研修&支援・AI経営戦略支援まで、企業のAI実装を一気通貫で伴走支援します。",
