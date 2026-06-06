@@ -178,7 +178,7 @@ export const caseStudy = {
 
 export const flow = {
   eyebrow: "FLOW",
-  heading: "申込みから売上最大化まで、6ステップで完結します",
+  heading: "申込みから売上最大化まで7ステップで完結します",
   steps: [
     {
       number: "1",
@@ -209,6 +209,11 @@ export const flow = {
       number: "6",
       title: "実務特化型プログラム研修",
       description: "GPTs・Gem・Copilotエージェント・Claude Cowork・Claude Codeなど、実務に直結するプログラムを提供",
+    },
+    {
+      number: "7",
+      title: "AI経営戦略支援",
+      description: "AI戦略の策定から業務プロセスの改善まで、伴走型で支援",
     },
   ],
   note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
@@ -248,11 +253,11 @@ export const footer = {
     { label: "プライバシーポリシー", slug: "privacy" },
   ],
   companyInfo: {
-    name: "CoreGen（AI実装研修）",
+    name: "CoreGen",
     rep: "星野 創吉",
-    address: "東京都北区堀船 1-25-5 サンハイツ 201",
+    address: "東京都北区堀船 1-25-5 サンハイツ 201",
   },
-  note: "最初の3〜5回は無料でAI導入支援を実施。成果が出るまで完全成果報酬制。",
+  note: "最初の3〜5回は無料でAI導入支援を実施。成果が出るまで完全無料。",
   social: {
     x: "https://x.com/Hoshino_Sokichi",
     salon: "https://ai-salon.site/",
