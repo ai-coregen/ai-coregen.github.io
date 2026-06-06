@@ -1,7 +1,7 @@
 // LP全テキストコンテンツ（Doc v4「9セクション集約版」準拠）
 
 export const site = {
-  title: "AIで売上を最大化する。｜AI実装研修",
+  title: "FRUOR｜AIで売上を最大化するAI実装研修",
   description:
     "AI導入研修から伴走支援・AI経営戦略支援まで、企業のAI実装を一気通貫で支援。単なる業務効率化で終わらせず、売上最大化にコミット。地方中小企業のための、完全成果報酬型AI伴走支援。",
 };
@@ -180,14 +180,6 @@ export const caseStudy = {
   ],
   tableNote:
     "※ 各種業界調査・生成AI導入事例に基づく一般的な目安です。",
-  casesHeading: "導入事例",
-  cases: [
-    { label: "CASE 01", text: "導入事例は現在準備中です（リサーチ後に掲載）。" },
-    { label: "CASE 02", text: "導入事例は現在準備中です（リサーチ後に掲載）。" },
-    { label: "CASE 03", text: "導入事例は現在準備中です（リサーチ後に掲載）。" },
-    { label: "CASE 04", text: "導入事例は現在準備中です（リサーチ後に掲載）。" },
-    { label: "CASE 05", text: "導入事例は現在準備中です（リサーチ後に掲載）。" },
-  ],
 };
 
 export const flow = {
@@ -250,7 +242,7 @@ export const finalCta = {
 };
 
 export const footer = {
-  copyright: "© 2026 AI実装研修",
+  copyright: "© 2026 FRUOR",
   services: [
     "AI導入研修・組織への定着支援",
     "AI導入支援",
@@ -262,7 +254,7 @@ export const footer = {
     { label: "プライバシーポリシー", href: "#" },
   ],
   companyInfo: {
-    name: "AI実装研修",
+    name: "FRUOR（AI実装研修）",
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
     tel: "080-8041-0861",

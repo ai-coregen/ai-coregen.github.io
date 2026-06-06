@@ -38,22 +38,5 @@ import { caseStudy } from "../data/content";
       </div>
       <JaText tag="p" text={caseStudy.tableNote} class="text-mute text-[13px] mt-4" />
     </div>
-
-    <!-- Case cards (placeholder) -->
-    <div class="mt-14" data-animate>
-      <JaText tag="h3" text={caseStudy.casesHeading} class="text-ink font-bold text-base lg:text-lg mb-5" />
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
-        {caseStudy.cases.map((c, i) => (
-          <div
-            class="bg-white border border-line border-dashed p-6 text-center"
-            data-animate
-            data-delay={i * 80}
-          >
-            <p class="font-display text-neutral-300 font-black text-sm tracking-[0.12em] mb-3">{c.label}</p>
-            <JaText tag="p" text={c.text} class="text-neutral-500 text-[13px] leading-relaxed" />
-          </div>
-        ))}
-      </div>
-    </div>
   </div>
 </section>
