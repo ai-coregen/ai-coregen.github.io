@@ -27,7 +27,7 @@ import { caseStudy } from "../data/content";
         </div>
         {caseStudy.table.map((row) => (
           <div class="grid grid-cols-[1.4fr_1fr_1.3fr] border-t border-line items-center">
-            <div class="p-3 lg:p-4 text-ink font-bold text-[13px] lg:text-[0.95rem]">{row.task}</div>
+            <div class="p-3 lg:p-4 text-ink font-bold text-[15px] lg:text-base">{row.task}</div>
             <div class="p-3 lg:p-4 text-neutral-400 font-display font-medium text-center text-sm lg:text-base border-l border-line line-through decoration-1">{row.before}</div>
             <div class="p-3 lg:p-4 flex items-baseline justify-center gap-2 border-l border-line">
               <span class="text-ink font-display font-bold text-base lg:text-xl leading-none">{row.after}</span>
@@ -36,7 +36,7 @@ import { caseStudy } from "../data/content";
           </div>
         ))}
       </div>
-      <JaText tag="p" text={caseStudy.tableNote} class="text-ink text-[13px] mt-4" />
+      <JaText tag="p" text={caseStudy.tableNote} class="text-ink text-[15px] mt-4" />
     </div>
   </div>
 </section>

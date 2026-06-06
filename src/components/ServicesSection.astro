@@ -23,13 +23,13 @@ import { services } from "../data/content";
           data-delay={i * 80}
         >
           <!-- Number -->
-          <span class="font-display text-neutral-200 font-black text-4xl lg:text-5xl leading-none shrink-0 sm:w-16">
+          <span class="font-display text-ink font-black text-4xl lg:text-5xl leading-none shrink-0 sm:w-16">
             {item.number}
           </span>
           <!-- Content -->
           <div class="flex-1">
             <JaText tag="h3" text={item.name} class="text-ink font-bold text-lg lg:text-xl mb-2" />
-            <JaText tag="p" text={item.description} class="text-ink text-[13px] sm:text-[0.95rem] leading-relaxed" />
+            <JaText tag="p" text={item.description} class="text-ink text-[15px] sm:text-base leading-relaxed" />
           </div>
         </div>
       ))}

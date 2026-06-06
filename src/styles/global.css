@@ -135,8 +135,8 @@
     color: var(--color-ink);
     background-color: #ffffff;
     line-height: 1.8;
-    /* PKSHA は本文 letter-spacing 2px（≒0.1em）の広めの字間が個性 */
-    letter-spacing: 0.1em;
+    /* PKSHA は本文 letter-spacing 2px（≒0.12em@16px）の広めの字間が個性 */
+    letter-spacing: 0.12em;
     /* 本文は Yu Gothic Medium 相当(500)で、細さ・薄さを解消し視認性を確保。
        font-bold 等のユーティリティ／継承した太字より弱く、上書きしない */
     font-weight: 500;

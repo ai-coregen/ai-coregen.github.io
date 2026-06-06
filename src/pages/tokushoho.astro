@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const home = `${base}/`;
 
 const rows = [
-  { label: "販売事業者", value: "Cosmo AI" },
+  { label: "販売事業者", value: "Coregen" },
   { label: "運営統括責任者", value: footer.companyInfo.rep },
   { label: "所在地", value: footer.companyInfo.address },
   {
@@ -45,17 +45,14 @@ const rows = [
 ---
 
 <Layout
-  title="特定商取引法に基づく表記｜Cosmo AI"
-  description="Cosmo AI（AI実装研修）の特定商取引法に基づく表記です。"
+  title="特定商取引法に基づく表記｜Coregen"
+  description="Coregen（AI実装研修）の特定商取引法に基づく表記です。"
 >
   <header class="border-b border-line">
     <div class="max-w-[800px] mx-auto px-6 h-16 flex items-center">
-      <a href={home} class="flex items-center gap-2.5 group min-h-[44px]">
-        <div class="w-8 h-8 bg-ink flex items-center justify-center">
-          <span class="text-white font-display font-black text-base leading-none">C</span>
-        </div>
-        <span class="text-ink font-display font-bold text-base tracking-[0.08em] group-hover:opacity-60 transition-opacity">
-          Cosmo AI
+      <a href={home} class="flex items-center group min-h-[44px]">
+        <span class="text-ink font-display font-bold text-xl tracking-[0.08em] group-hover:opacity-60 transition-opacity">
+          Coregen
         </span>
       </a>
     </div>
@@ -88,7 +85,7 @@ const rows = [
 
   <footer class="border-t border-line">
     <div class="max-w-[800px] mx-auto px-6 py-6">
-      <p class="text-neutral-400 text-[13px] text-center">{footer.copyright}</p>
+      <p class="text-neutral-400 text-[15px] text-center">{footer.copyright}</p>
     </div>
   </footer>
 </Layout>

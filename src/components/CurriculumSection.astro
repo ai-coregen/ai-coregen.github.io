@@ -16,7 +16,7 @@ import { curriculum } from "../data/content";
       <JaText tag="p" text={curriculum.leadCopy} class="text-ink font-bold text-[15px] sm:text-lg lg:text-xl leading-relaxed" />
     </div>
     <div class="max-w-[860px] mb-12" data-animate data-delay="80">
-      <JaText tag="p" text={curriculum.intro} class="text-ink text-[13px] sm:text-[0.95rem] leading-relaxed" />
+      <JaText tag="p" text={curriculum.intro} class="text-ink text-[15px] sm:text-base leading-relaxed" />
     </div>
 
     <!-- (1) 基礎動画学習: 9 videos -->
@@ -29,8 +29,8 @@ import { curriculum } from "../data/content";
               {String(i + 1).padStart(2, "0")}
             </span>
             <div class="flex-1 min-w-0">
-              <h4 class="text-ink font-bold text-sm lg:text-[0.95rem] mb-1">{video.name}</h4>
-              <JaText tag="p" text={video.description} class="text-ink text-xs lg:text-[13px] leading-relaxed" />
+              <h4 class="text-ink font-bold text-sm lg:text-base mb-1">{video.name}</h4>
+              <JaText tag="p" text={video.description} class="text-ink text-xs lg:text-[15px] leading-relaxed" />
             </div>
           </div>
         ))}
@@ -40,14 +40,14 @@ import { curriculum } from "../data/content";
     <!-- (2) カスタマイズワークショップ -->
     <div class="mb-14" data-animate>
       <JaText tag="h3" text={curriculum.workshopTitle} class="text-ink font-bold text-base lg:text-lg mb-3" />
-      <JaText tag="p" text={curriculum.workshopLead} class="text-ink text-[13px] sm:text-[0.95rem] leading-relaxed mb-5" />
+      <JaText tag="p" text={curriculum.workshopLead} class="text-ink text-[15px] sm:text-base leading-relaxed mb-5" />
       <ul class="space-y-3 max-w-[760px]">
         {curriculum.workshopPoints.map((point) => (
           <li class="flex items-start gap-3">
             <svg class="w-5 h-5 text-ink shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <JaText tag="p" text={point} class="text-ink text-[13px] sm:text-[0.95rem]" />
+            <JaText tag="p" text={point} class="text-ink text-[15px] sm:text-base" />
           </li>
         ))}
       </ul>
@@ -56,7 +56,7 @@ import { curriculum } from "../data/content";
     <!-- (3) 伴走支援 -->
     <div class="mb-12" data-animate>
       <JaText tag="h3" text={curriculum.mentoringTitle} class="text-ink font-bold text-base lg:text-lg mb-3" />
-      <JaText tag="p" text={curriculum.mentoringDescription} class="text-ink text-[13px] sm:text-[0.95rem] leading-relaxed max-w-[760px]" />
+      <JaText tag="p" text={curriculum.mentoringDescription} class="text-ink text-[15px] sm:text-base leading-relaxed max-w-[760px]" />
     </div>
 
     <!-- Closing -->

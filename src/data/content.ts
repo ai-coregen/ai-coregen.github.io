@@ -1,7 +1,7 @@
 // LP全テキストコンテンツ（Doc v4「9セクション集約版」準拠）
 
 export const site = {
-  title: "Cosmo AI｜AIで売上を最大化するAI実装研修",
+  title: "Coregen｜AIで売上を最大化するAI実装研修",
   description:
     "AI導入研修から伴走支援・AI経営戦略支援まで、企業のAI実装を一気通貫で支援。単なる業務効率化で終わらせず、売上最大化にコミット。地方中小企業のための、完全成果報酬型AI伴走支援。",
 };
@@ -16,15 +16,12 @@ export const nav = [
 ];
 
 export const hero = {
-  eyebrow: "AI ENABLEMENT FOR SALES GROWTH",
   mainCatch: "AIで売上を最大化する",
   subCatch: [
     "単なる業務効率化で終わらせない",
     "空いた時間を売上に直結する仕事へ",
   ],
-  leadCopy:
-    "AI導入研修・AI導入支援・実務特化型プログラム研修&支援・AI経営戦略支援まで、企業のAI実装を一気通貫で伴走支援します。",
-  subLead: "中小企業のための、売上最大化型AI伴走支援。",
+  subLead: "中小企業のための、売上最大化型AI伴走支援",
   badges: [
     { label: "AIセミナー登壇", value: "50回以上" },
     { label: "Xフォロワー", value: "15,000人超" },
@@ -55,7 +52,7 @@ export const solution = {
 
 export const profile = {
   eyebrow: "PROFILE",
-  heading: "教えるのは、組織の中で売上を作ってきた人間です。",
+  heading: "教えるのは、組織の中で売上を作ってきた人間です",
   name: "星野創吉",
   nameReading: "ほしの そうきち",
   title: "AIコンサルタント／AI実装研修 代表",
@@ -77,7 +74,7 @@ export const profile = {
 
 export const services = {
   eyebrow: "SERVICES",
-  heading: "AI実装を、一気通貫で支援する4つのサービス。",
+  heading: "AI実装を、一気通貫で支援する4つのサービス",
   leadCopy:
     "すべてワンストップで、貴社に合わせたカスタマイズサポートをご提供します。",
   items: [
@@ -110,7 +107,7 @@ export const services = {
 
 export const features = {
   eyebrow: "WHY US",
-  heading: "他のAI研修サービスとは、ここが違います。",
+  heading: "他のAI研修サービスとは、ここが違います",
   items: [
     {
       title: "業務効率化ではなく、売上最大化にコミット",
@@ -118,7 +115,7 @@ export const features = {
         "他社は業務効率化までで終わりがちですが、私たちは効率化で生まれた時間を新たな売上創出に振り向ける設計までセットで提供します。組織のリソース再配分を行います。",
     },
     {
-      title: "研修で終わらせず、伴走しきる",
+      title: "単なる研修で終わらせず、組織に定着させる",
       description:
         "学んで終わりにはしません。AIが現場で当たり前に使われ、組織に定着・実装されるまで、私たちが最後まで伴走しきります。",
     },
@@ -166,7 +163,7 @@ export const curriculum = {
 
 export const caseStudy = {
   eyebrow: "CASE STUDY",
-  heading: "AI活用で、こんな業務効率化が実現できます。",
+  heading: "AI活用で、こんな業務効率化が実現できます",
   leadCopy:
     "AI活用によって、具体的にどのようなことが実現でき、どれほどの時間やコストを削減できるのか。実際の事例をご紹介します。",
   tableHeading: "時間削減のイメージ",
@@ -184,7 +181,7 @@ export const caseStudy = {
 
 export const flow = {
   eyebrow: "FLOW",
-  heading: "申込から成果創出まで、6ステップで完結します。",
+  heading: "申込から成果創出まで、6ステップで完結します",
   steps: [
     {
       number: "1",
@@ -222,7 +219,7 @@ export const flow = {
 
 export const finalCta = {
   eyebrow: "CONTACT",
-  heading: "まずは、無料オンライン相談から。",
+  heading: "まずは、無料オンライン相談から",
   subCopy:
     "貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
   note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
@@ -242,7 +239,7 @@ export const finalCta = {
 };
 
 export const footer = {
-  copyright: "© 2026 Cosmo AI",
+  copyright: "© 2026 Coregen",
   services: [
     "AI導入研修・組織への定着支援",
     "AI導入支援",
@@ -254,7 +251,7 @@ export const footer = {
     { label: "プライバシーポリシー", slug: "privacy" },
   ],
   companyInfo: {
-    name: "Cosmo AI（AI実装研修）",
+    name: "Coregen（AI実装研修）",
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
   },

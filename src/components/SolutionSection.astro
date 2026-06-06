@@ -13,7 +13,7 @@ import { solution } from "../data/content";
     <!-- Philosophy statement -->
     <div class="max-w-[820px] mb-14" data-animate>
       {solution.body.map((line) => (
-        <JaText tag="p" text={line} class="text-ink text-[14px] sm:text-base lg:text-lg leading-loose mb-3 last:mb-0" />
+        <JaText tag="p" text={line} class="text-ink font-bold text-lg sm:text-xl lg:text-2xl leading-relaxed mb-4 last:mb-0" />
       ))}
     </div>
 
@@ -47,7 +47,7 @@ import { solution } from "../data/content";
                   tag="p"
                   text={text}
                   class:list={[
-                    "font-bold text-[13px] sm:text-[0.95rem] lg:text-base",
+                    "font-bold text-[15px] sm:text-base lg:text-base",
                     i === solution.flowSteps.length - 1 ? "text-white" : "text-ink",
                   ]}
                 />
@@ -71,7 +71,7 @@ import { solution } from "../data/content";
 
     <!-- Closing -->
     <div data-animate>
-      <JaText tag="p" text={solution.closing} class="text-ink text-sm" />
+      <JaText tag="p" text={solution.closing} class="text-ink font-bold text-base lg:text-xl leading-relaxed" />
     </div>
   </div>
 </section>

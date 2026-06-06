@@ -42,16 +42,10 @@ const particles = Array.from({ length: N }, (_, i) => ({
 
   <div class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
     <div class="max-w-[920px]">
-      <p
-        class="hero-anim hero-anim-1 font-display font-bold text-xs sm:text-sm tracking-[0.2em] text-ink mb-6"
-      >
-        {hero.eyebrow}
-      </p>
-
       <JaText
         tag="h1"
         text={hero.mainCatch}
-        class="hero-anim hero-anim-2 text-[clamp(2.25rem,6vw+0.5rem,4rem)] leading-[1.35] tracking-[0.06em] font-bold text-ink mb-8"
+        class="hero-anim hero-anim-2 text-[clamp(3rem,7vw+0.5rem,5rem)] leading-[1.25] tracking-[0.08em] font-bold text-ink mb-8"
       />
 
       <div class="hero-anim hero-anim-3 mb-6">
@@ -59,20 +53,15 @@ const particles = Array.from({ length: N }, (_, i) => ({
           <JaText
             tag="p"
             text={line}
-            class="text-ink text-base sm:text-lg lg:text-xl font-bold leading-relaxed"
+            class="text-ink text-xl sm:text-2xl lg:text-[28px] font-bold leading-snug"
           />
         ))}
       </div>
 
       <JaText
         tag="p"
-        text={hero.leadCopy}
-        class="hero-anim hero-anim-3 text-ink text-[13px] sm:text-sm lg:text-base max-w-[760px] mb-2 leading-relaxed"
-      />
-      <JaText
-        tag="p"
         text={hero.subLead}
-        class="hero-anim hero-anim-3 text-ink text-sm lg:text-base font-bold mb-10"
+        class="hero-anim hero-anim-3 text-ink text-base lg:text-lg font-bold mb-10"
       />
 
       <div class="hero-anim hero-anim-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-5">
@@ -84,7 +73,7 @@ const particles = Array.from({ length: N }, (_, i) => ({
         </Button>
       </div>
 
-      <p class="hero-anim hero-anim-5 text-ink font-bold text-[13px] tracking-wider">
+      <p class="hero-anim hero-anim-5 text-ink font-bold text-[15px] tracking-wider">
         {hero.disclaimer}
       </p>
     </div>
