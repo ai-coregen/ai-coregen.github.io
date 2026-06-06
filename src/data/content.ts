@@ -27,9 +27,8 @@ export const hero = {
     { label: "Xフォロワー", value: "15,000人超" },
     { label: "AIサロン運営中", value: "100名超" },
   ],
-  primaryCta: "無料オンライン相談を予約する",
+  primaryCta: "無料相談を予約する",
   secondaryCta: "サービス詳細資料をダウンロード",
-  disclaimer: "※ 営業電話・しつこい勧誘は一切いたしません。",
 };
 
 export const solution = {
@@ -226,8 +225,8 @@ export const finalCta = {
     "貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
   note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
   disclaimer: "営業電話・しつこい勧誘は一切いたしません。",
-  primaryCta: "無料オンライン相談を予約する",
-  secondaryCta: "サービス詳細資料をダウンロード（無料）",
+  primaryCta: "無料相談を予約する",
+  secondaryCta: "サービス詳細資料をダウンロード",
   materialsTitle: "資料ダウンロードの内容",
   materials: [
     "AI実装研修の全体像",

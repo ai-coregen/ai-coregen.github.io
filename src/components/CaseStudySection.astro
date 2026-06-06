@@ -16,22 +16,22 @@ import { caseStudy } from "../data/content";
     </div>
 
     <!-- Before / After time-saving table -->
-    <div class="max-w-[760px] mx-auto mb-6" data-animate>
-      <JaText tag="h3" text={caseStudy.tableHeading} class="text-ink font-bold text-base lg:text-lg mb-5" />
+    <div class="max-w-[940px] mx-auto mb-6" data-animate>
+      <JaText tag="h3" text={caseStudy.tableHeading} class="text-ink font-bold text-lg lg:text-xl mb-5" />
       <div class="border border-line bg-white">
         <!-- Header row -->
-        <div class="grid grid-cols-[1.4fr_1fr_1.3fr] bg-ink text-white">
-          <div class="p-3 lg:p-4 text-sm lg:text-base font-bold tracking-[0.06em]">業務</div>
-          <div class="p-3 lg:p-4 text-sm lg:text-base font-bold tracking-[0.06em] text-center border-l border-white/15">Before</div>
-          <div class="p-3 lg:p-4 text-sm lg:text-base font-bold tracking-[0.06em] text-center border-l border-white/15">After</div>
+        <div class="grid grid-cols-[1.3fr_1fr_1.3fr] bg-ink text-white">
+          <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center">業務</div>
+          <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center border-l border-white/15">Before</div>
+          <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center border-l border-white/15">After</div>
         </div>
         {caseStudy.table.map((row) => (
-          <div class="grid grid-cols-[1.4fr_1fr_1.3fr] border-t border-line items-center">
-            <div class="p-3 lg:p-4 text-ink font-bold text-[15px] lg:text-base">{row.task}</div>
-            <div class="p-3 lg:p-4 text-neutral-400 font-display font-medium text-center text-sm lg:text-base border-l border-line line-through decoration-1">{row.before}</div>
-            <div class="p-3 lg:p-4 flex items-baseline justify-center gap-2 border-l border-line">
-              <span class="text-ink font-display font-bold text-base lg:text-xl leading-none">{row.after}</span>
-              <span class="text-ink font-display font-bold text-[11px] lg:text-xs tracking-wide">{row.cut}</span>
+          <div class="grid grid-cols-[1.3fr_1fr_1.3fr] border-t border-line items-center">
+            <div class="p-4 lg:p-5 text-ink font-bold text-base lg:text-lg text-center">{row.task}</div>
+            <div class="p-4 lg:p-5 text-neutral-400 font-display font-medium text-center text-base lg:text-lg border-l border-line line-through decoration-1">{row.before}</div>
+            <div class="p-4 lg:p-5 flex items-baseline justify-center gap-1.5 lg:gap-2 border-l border-line">
+              <span class="text-ink font-display font-black text-xl lg:text-3xl leading-none">{row.after}</span>
+              <span class="text-ink font-display font-bold text-xs lg:text-sm tracking-wide">{row.cut}</span>
             </div>
           </div>
         ))}

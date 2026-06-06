@@ -25,8 +25,8 @@ const num = ["01", "02", "03"];
             </div>
             <!-- テキストは左揃えのまま、ブロックを中央に配置（幅を絞って中央寄せ） -->
             <div class="text-left max-w-[230px] mx-auto">
-              <JaText tag="h3" text={item.title} class="text-ink font-bold text-lg lg:text-xl mb-3" />
-              <!-- 通常折り返し（語の途中でも改行し、右端を揃える） -->
+              <!-- 見出し・本文とも通常折り返し（語の途中でも改行し、右端を揃える） -->
+              <h3 class="text-ink font-bold text-lg lg:text-xl mb-3">{item.title}</h3>
               <p class="text-ink text-[15px] sm:text-base leading-relaxed">{item.description}</p>
             </div>
           </div>
