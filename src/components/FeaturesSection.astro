@@ -23,8 +23,8 @@ const num = ["01", "02", "03"];
             <div class="w-10 h-10 rounded-full bg-ink text-white font-display font-bold flex items-center justify-center text-sm mb-5 shrink-0">
               {num[i]}
             </div>
-            <!-- テキストを中央揃え（中央配置） -->
-            <div class="text-center max-w-[280px] mx-auto">
+            <!-- テキストは左揃えのまま、ブロックを中央に配置（幅を絞って中央寄せ） -->
+            <div class="text-left max-w-[230px] mx-auto">
               <JaText tag="h3" text={item.title} class="text-ink font-bold text-lg lg:text-xl mb-3" />
               <JaText tag="p" text={item.description} class="text-ink text-[15px] sm:text-base leading-relaxed" />
             </div>
