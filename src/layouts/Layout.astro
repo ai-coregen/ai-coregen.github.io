@@ -10,7 +10,8 @@ const { title, description } = Astro.props;
 
 // base path を含めた favicon パス（GitHub Pages の /ai-maximize-sales/ 配下対応）
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const faviconHref = `${base}/favicon.svg`;
+// ?v= はキャッシュ無効化用（ファビコン更新時にバージョンを上げる）
+const faviconHref = `${base}/favicon.svg?v=coregen-dots`;
 ---
 
 <!doctype html>
