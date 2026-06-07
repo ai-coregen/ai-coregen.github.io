@@ -4,43 +4,27 @@ import JaText from "./ui/JaText.astro";
 import { hero } from "../data/content";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-
-// ∞（フィギュアエイト/レムニスケート）軌道
-const ORBIT_PATH =
-  "M360,180 C470,60 650,60 650,180 C650,300 470,300 360,180 C250,60 70,60 70,180 C70,300 250,300 360,180 Z";
-const N = 56;
-const DUR = 20; // seconds (基準1周)
-const sizes = [2, 3, 2, 4, 3, 2, 5, 3, 2, 4, 3, 2];
-const particles = Array.from({ length: N }, (_, i) => ({
-  delay: (-(i / N) * DUR).toFixed(2),
-  size: sizes[i % sizes.length],
-  op: (0.45 + (i % 6) * 0.09).toFixed(2), // 0.45..0.90
-  od: (16 + (i % 7) * 1.6).toFixed(1), // 周回 16.0..25.6s
-  td: (1.8 + (i % 5) * 0.55).toFixed(2), // 点滅 1.8..3.45s
-}));
+const videoSrc = `${base}/hero.mp4`;
+const posterSrc = `${base}/hero-poster.jpg`;
 ---
 
 <section class="relative bg-white overflow-hidden" id="hero">
-  <!-- ===== ∞ particle orbit (monochrome) ===== -->
-  <div class="hero-bg" aria-hidden="true">
-    <div class="hero-orbit">
-      <svg class="hero-orbit-line" viewBox="0 0 720 360" preserveAspectRatio="xMidYMid meet">
-        <path d={ORBIT_PATH} fill="none" stroke="rgba(18,18,19,0.07)" stroke-width="1" />
-      </svg>
-      {particles.map((p) => (
-        <span
-          class="hero-particle"
-          style={`width:${p.size}px;height:${p.size}px;background:rgba(18,18,19,${p.op});--od:${p.od}s;--td:${p.td}s;animation-delay:${p.delay}s;`}
-        />
-      ))}
-    </div>
+  <!-- ===== 背景動画（右寄り・薄く・コピー背後。モバイル非表示） ===== -->
+  <div class="hero-video-wrap" aria-hidden="true">
+    <video
+      class="hero-video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="auto"
+      poster={posterSrc}
+    >
+      <source src={videoSrc} type="video/mp4" />
+    </video>
   </div>
-  <!-- 微細なグリッド（モノクロ装飾） -->
-  <div
-    class="absolute inset-0 opacity-[0.04] pointer-events-none"
-    style="background-image: radial-gradient(circle, #121213 1px, transparent 1px); background-size: 44px 44px;"
-  >
-  </div>
+  <!-- 可読性のための白オーバーレイ（左=白 → 右=透明） -->
+  <div class="hero-overlay" aria-hidden="true"></div>
 
   <div class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
     <div class="max-w-[920px]">
@@ -79,79 +63,60 @@ const particles = Array.from({ length: N }, (_, i) => ({
 </section>
 
 <style>
-  /* ===== Ambient animated background ===== */
-  .hero-bg {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* ∞ 軌道レイヤー（右側に配置、テキストは左寄せ） */
-  .hero-orbit {
+  /* 背景動画レイヤー（∞があった右側に薄く配置） */
+  .hero-video-wrap {
     position: absolute;
     top: 50%;
-    left: 58%;
-    width: 720px;
-    height: 360px;
+    left: 54%;
+    width: 760px;
+    max-width: 58%;
     transform: translateY(-50%);
+    z-index: 0;
+    opacity: 0.7;
+    pointer-events: none;
+    /* 動画の白っぽい背景を地の白に溶かして矩形を消す */
+    mix-blend-mode: multiply;
+    /* 端を大きくぼかして矩形感を消す */
+    -webkit-mask-image: radial-gradient(ellipse 66% 66% at 50% 50%, #000 32%, transparent 90%);
+    mask-image: radial-gradient(ellipse 66% 66% at 50% 50%, #000 32%, transparent 90%);
   }
 
-  .hero-orbit-line {
+  .hero-video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* 左（コピー側）を白く残し、右へ向かって動画を見せる */
+  .hero-overlay {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      #ffffff 28%,
+      rgba(255, 255, 255, 0.55) 55%,
+      rgba(255, 255, 255, 0) 100%
+    );
   }
 
-  /* ∞ を周回しながらキラキラ点滅する粒子 */
-  .hero-particle {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border-radius: 50%;
-    box-shadow: 0 0 4px rgba(18, 18, 19, 0.15);
-    offset-path: path("M360,180 C470,60 650,60 650,180 C650,300 470,300 360,180 C250,60 70,60 70,180 C70,300 250,300 360,180 Z");
-    offset-rotate: 0deg;
-    offset-distance: 0%;
-    animation:
-      orbit var(--od, 20s) linear infinite,
-      twinkle var(--td, 3s) ease-in-out infinite;
-    will-change: offset-distance, opacity;
-  }
-
-  @keyframes orbit {
-    from { offset-distance: 0%; }
-    to   { offset-distance: 100%; }
-  }
-
-  /* キラキラ: 透明度とグローを脈動 */
-  @keyframes twinkle {
-    0%, 100% {
-      opacity: 0.2;
-      box-shadow: 0 0 2px rgba(18, 18, 19, 0.1);
-    }
-    50% {
-      opacity: 1;
-      box-shadow: 0 0 9px rgba(18, 18, 19, 0.3);
-    }
-  }
-
-  /* スマホ／タブレット: ∞アニメは非表示 */
+  /* スマホ／タブレット: 動画は非表示（白背景のみ） */
   @media (max-width: 1023px) {
-    .hero-bg {
+    .hero-video-wrap,
+    .hero-overlay {
       display: none;
     }
   }
 
+  /* モーション抑制設定では動画を出さない */
   @media (prefers-reduced-motion: reduce) {
-    .hero-particle {
-      animation: none;
+    .hero-video-wrap {
       display: none;
     }
   }
 
+  /* ===== コピーの登場アニメ ===== */
   @keyframes heroFadeUp {
     from {
       opacity: 0;
@@ -168,9 +133,7 @@ const particles = Array.from({ length: N }, (_, i) => ({
     animation: heroFadeUp 0.8s ease-out forwards;
   }
 
-  .hero-anim-1 { animation-delay: 0.1s; }
   .hero-anim-2 { animation-delay: 0.25s; }
   .hero-anim-3 { animation-delay: 0.45s; }
   .hero-anim-4 { animation-delay: 0.65s; }
-  .hero-anim-5 { animation-delay: 0.85s; }
 </style>
