@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://naoki-gpt.github.io',
-  base: '/ai-maximize-sales',
+  site: 'https://ai-coregen.github.io',
+  base: '/',
   vite: {
     plugins: [tailwindcss()]
   }
