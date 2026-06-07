@@ -68,7 +68,7 @@ export const profile = {
 
 export const services = {
   eyebrow: "SERVICES",
-  heading: "AI実装を、一気通貫で支援する4つのサービス",
+  heading: "AI実装を一気通貫で支援する4つのサービス",
   leadCopy:
     "すべてワンストップで、貴社に合わせたカスタマイズサポートをご提供します。",
   items: [
