@@ -22,7 +22,7 @@
 
 // 表示文言（機密でないのでコード内に保持。必要ならプロパティで上書き可）
 var TEXT = {
-  FROM_NAME: 'CoreGen / AI実装研修',
+  FROM_NAME: 'CoreGen',
   SUBJECT: '【CoreGen】サービス詳細資料をお送りします',
   ATTACHMENT_NAME: 'CoreGen_サービス詳細資料.pdf'
 };
@@ -134,7 +134,7 @@ function applicantText_(companyName) {
     'ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信ください。',
     '',
     '────────────────',
-    'CoreGen / AI実装研修',
+    'CoreGen',
     '代表 星野 創吉',
     'X: https://x.com/Hoshino_Sokichi',
     '────────────────'
@@ -149,7 +149,7 @@ function applicantHtml_(companyName) {
     + '本メールに資料（PDF）を添付しております。ご査収ください。</p>'
     + '<p>ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信ください。</p>'
     + '<hr style="border:none;border-top:1px solid #ddd;margin:20px 0;">'
-    + '<p style="font-size:13px;color:#677070;">CoreGen / AI実装研修<br>代表 星野 創吉<br>'
+    + '<p style="font-size:13px;color:#677070;">CoreGen<br>代表 星野 創吉<br>'
     + 'X: <a href="https://x.com/Hoshino_Sokichi">@Hoshino_Sokichi</a></p>'
     + '</div>';
 }
