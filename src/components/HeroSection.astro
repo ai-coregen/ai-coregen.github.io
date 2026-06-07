@@ -3,6 +3,8 @@ import Button from "./ui/Button.astro";
 import JaText from "./ui/JaText.astro";
 import { hero } from "../data/content";
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 // ∞（フィギュアエイト/レムニスケート）軌道
 const ORBIT_PATH =
   "M360,180 C470,60 650,60 650,180 C650,300 470,300 360,180 C250,60 70,60 70,180 C70,300 250,300 360,180 Z";
@@ -68,7 +70,7 @@ const particles = Array.from({ length: N }, (_, i) => ({
         <Button variant="primary" href="#cta" class="w-full sm:w-auto">
           {hero.primaryCta}
         </Button>
-        <Button variant="secondary" href="#curriculum" class="w-full sm:w-auto">
+        <Button variant="secondary" href={`${base}/download`} class="w-full sm:w-auto">
           {hero.secondaryCta}
         </Button>
       </div>

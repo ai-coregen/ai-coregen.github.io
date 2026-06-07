@@ -3,6 +3,8 @@ import SectionHeading from "./ui/SectionHeading.astro";
 import Button from "./ui/Button.astro";
 import JaText from "./ui/JaText.astro";
 import { curriculum } from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <section class="bg-white py-20 lg:py-32" id="curriculum">
@@ -67,7 +69,7 @@ import { curriculum } from "../data/content";
 
     <!-- CTA -->
     <div class="text-center" data-animate>
-      <Button variant="primary">
+      <Button variant="primary" href={`${base}/download`}>
         {curriculum.cta}
       </Button>
     </div>

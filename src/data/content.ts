@@ -262,3 +262,34 @@ export const footer = {
     salon: "https://ai-salon.site/",
   },
 };
+
+// 資料ダウンロード（リード獲得）フォーム
+// gasUrl: GASウェブアプリをデプロイ後、その /exec URL をここに貼る（空のうちは送信ボタン無効）
+export const downloadForm = {
+  // GASウェブアプリの公開エンドポイント（公開前提のため直書きでOK。スクリプトIDとは別物）
+  gasUrl:
+    "https://script.google.com/macros/s/AKfycbxnSB5PhFmlqSTcyCIrEentY69gMGSBJQhhFIx2TEwF1i6CQdIuHEb-bGI2cx_uIiLr/exec",
+  eyebrow: "DOWNLOAD",
+  heading: "サービス詳細資料ダウンロード",
+  lead: "会社名とメールアドレスをご入力ください。ご入力のメールアドレス宛に、サービス詳細資料（PDF）をお送りします。",
+  companyLabel: "会社名",
+  companyPlaceholder: "株式会社○○",
+  emailLabel: "メールアドレス",
+  emailPlaceholder: "you@example.com",
+  submit: "資料を受け取る",
+  sending: "送信中…",
+  successTitle: "送信ありがとうございます",
+  successBody:
+    "ご入力いただいたメールアドレス宛に、サービス詳細資料をお送りしました。数分しても届かない場合は、迷惑メールフォルダもご確認ください。",
+  errorBody: "送信に失敗しました。お手数ですが、時間をおいて再度お試しください。",
+  preparingNote: "※ ダウンロードフォームは現在準備中です。公開までお待ちください。",
+  materialsTitle: "資料の内容",
+  materials: [
+    "AI実装研修の全体像",
+    "4本柱の支援内容詳細",
+    "AI導入研修のカリキュラム（動画9本＋カスタマイズワークショップ全5回）",
+    "完全成果報酬モデルの仕組み",
+    "業務効率化の具体事例",
+    "導入企業の声",
+  ],
+};
