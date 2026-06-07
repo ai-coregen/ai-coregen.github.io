@@ -33,9 +33,9 @@ export const hero = {
 
 export const solution = {
   eyebrow: "PHILOSOPHY",
-  heading: "私たちの理念",
+  heading: "私の理念",
   body: [
-    "私たちは、“単なる業務効率化”で終わらせず、“売上の最大化”にコミットします。",
+    "私は、“単なる業務効率化”で終わらせず、“売上の最大化”にコミットします。",
     "そのために、AIを組織そのものに実装し、現場に定着させます。",
     "AI活用は、まずはAI人材の育成から。",
   ],
@@ -46,7 +46,7 @@ export const solution = {
     "売上・利益の最大化",
   ],
   closing:
-    "私たちが目指すのは、業務効率化を超えた“売上最大化”の実現です。",
+    "私が目指すのは、業務効率化を超えた“売上最大化”の実現です。",
 };
 
 export const profile = {
@@ -88,7 +88,7 @@ export const services = {
       number: "03",
       name: "実務特化型プログラム研修&支援",
       description:
-        "GPTs・Gem・Copilotエージェント・Claude Cowork・Claude Codeなど、実務に直結するプログラムを提供します。",
+        "GPTs・Gem・Copilotエージェント・Claude Cowork・Claude Codeなど、実務に直結するプログラムをご提供します。",
     },
     {
       number: "04",
@@ -106,17 +106,17 @@ export const features = {
     {
       title: "業務効率化ではなく、売上最大化にコミット",
       description:
-        "他社は業務効率化までで終わりがちですが、私たちは効率化で生まれた時間を新たな売上創出に振り向ける設計までセットで提供します。組織のリソース再配分を行います。",
+        "他社は業務効率化までで終わりがちですが、私は効率化で生まれた時間を新たな売上創出に振り向ける設計までセットでご提供します。組織のリソース再配分を行います。",
     },
     {
       title: "単なる研修で終わらせず、組織に定着させる",
       description:
-        "学んで終わりにはしません。AIが現場で当たり前に使われ、組織に定着・実装されるまで、私たちが最後まで伴走しきります。",
+        "学んで終わりにはしません。AIが現場で当たり前に使われ、組織に定着・実装されるまで、私が最後まで伴走しきります。",
     },
     {
-      title: "完全成果報酬モデル（最初3〜5回は無料）",
+      title: "完全成果報酬モデル",
       description:
-        "最初の3〜5回は無料で実施。成果が出るまで完全成果報酬制を採用しているため、貴社は初期投資なしでAI実装を始められます。",
+        "完全成果報酬制を採用しているため、貴社は初期費用なしでAI実装を始められます。",
     },
   ],
 };
@@ -207,7 +207,7 @@ export const flow = {
     {
       number: "6",
       title: "実務特化型プログラム研修",
-      description: "GPTs・Gem・Copilotエージェント・Claude Cowork・Claude Codeなど、実務に直結するプログラムを提供",
+      description: "GPTs・Gem・Copilotエージェント・Claude Cowork・Claude Codeなど、実務に直結するプログラムをご提供",
     },
     {
       number: "7",
@@ -215,7 +215,7 @@ export const flow = {
       description: "AI戦略の策定から業務プロセスの改善まで、伴走型で支援",
     },
   ],
-  note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
+  note: "完全成果報酬のため、初期費用はかかりません。",
 };
 
 export const finalCta = {
@@ -223,7 +223,7 @@ export const finalCta = {
   heading: "まずは無料オンライン相談から",
   subCopy:
     "貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
-  note: "最初の3〜5回は無料／成果が出るまで完全成果報酬のため、初期投資はかかりません。",
+  note: "完全成果報酬のため、初期費用はかかりません。",
   disclaimer: "営業電話・しつこい勧誘は一切いたしません。",
   primaryCta: "無料相談を予約する",
   secondaryCta: "サービス詳細資料をダウンロード",
@@ -256,7 +256,7 @@ export const footer = {
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
   },
-  note: "最初の3〜5回は無料でAI導入支援を実施。成果が出るまで完全無料。",
+  note: "完全成果報酬のため、初期費用はかかりません。",
   social: {
     x: "https://x.com/Hoshino_Sokichi",
     salon: "https://ai-salon.site/",
@@ -292,4 +292,13 @@ export const downloadForm = {
     "業務効率化の具体事例",
     "導入企業の声",
   ],
+};
+
+// 無料相談予約（TimeRex 埋め込み）
+export const reserve = {
+  eyebrow: "RESERVE",
+  heading: "無料オンライン相談のご予約",
+  lead: "ご希望の日時を選んでください。貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをご提案します。",
+  timerexUrl: "https://timerex.net/s/Sokichi_Hoshino/3a56f516",
+  note: "※ 営業電話・しつこい勧誘は一切いたしません。オンライン（Zoom・Google Meet・Teams）で実施します。",
 };

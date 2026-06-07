@@ -1,0 +1,65 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { footer, reserve } from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const home = `${base}/`;
+---
+
+<Layout
+  title="無料オンライン相談のご予約｜CoreGen"
+  description="CoreGen（AI実装研修）の無料オンライン相談をご予約いただけます。"
+>
+  <header class="border-b border-line">
+    <div class="max-w-[800px] mx-auto px-6 h-20 flex items-center">
+      <a href={home} class="flex items-center group min-h-[44px]">
+        <span class="text-ink font-display font-black text-3xl tracking-[0.02em] group-hover:opacity-60 transition-opacity">
+          CoreGen
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="max-w-[760px] mx-auto px-6 py-16 lg:py-24">
+    <p class="font-display font-bold text-base sm:text-lg tracking-[0.14em] text-ink mb-4">
+      {reserve.eyebrow}
+    </p>
+    <h1 class="text-ink font-bold text-2xl lg:text-3xl mb-5 tracking-[0.04em] leading-snug">
+      {reserve.heading}
+    </h1>
+    <p class="text-ink text-base leading-relaxed mb-8">
+      {reserve.lead}
+    </p>
+
+    <!-- TimeRex 予約カレンダー -->
+    <div
+      id="timerex_calendar"
+      data-url={reserve.timerexUrl}
+      class="border border-line bg-white min-h-[480px]"
+    >
+    </div>
+
+    <p class="text-mute text-[13px] leading-relaxed mt-6">{reserve.note}</p>
+
+    <div class="mt-12">
+      <a href={home} class="inline-flex items-center gap-2 text-ink text-sm font-bold hover:opacity-60 transition-opacity">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+        </svg>
+        トップページに戻る
+      </a>
+    </div>
+  </main>
+
+  <footer class="border-t border-line">
+    <div class="max-w-[760px] mx-auto px-6 py-6">
+      <p class="text-neutral-400 text-[13px] text-center">{footer.copyright}</p>
+    </div>
+  </footer>
+</Layout>
+
+<!-- TimeRex 埋め込みスクリプト（is:inline でそのまま出力） -->
+<script id="timerex_embed" src="https://asset.timerex.net/js/embed.js" is:inline></script>
+<script is:inline>
+  if (window.TimerexCalendar) window.TimerexCalendar();
+</script>

@@ -1,5 +1,8 @@
 ---
 import { nav } from "../data/content";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const reserveHref = `${base}/reserve`;
 ---
 
 <header
@@ -31,7 +34,7 @@ import { nav } from "../data/content";
     <div class="flex items-center gap-2">
       <!-- CTA -->
       <a
-        href="#cta"
+        href={reserveHref}
         class="hidden sm:inline-flex items-center bg-ink text-white font-display font-bold text-lg tracking-[0.04em] px-7 lg:px-8 py-3 rounded-full hover:opacity-80 transition-opacity"
       >
         無料相談を予約
@@ -65,7 +68,7 @@ import { nav } from "../data/content";
         ))
       }
       <a
-        href="#cta"
+        href={reserveHref}
         class="mobile-link mt-4 mb-2 inline-flex items-center justify-center bg-ink text-white font-display font-bold text-sm tracking-[0.04em] py-3.5 rounded-full"
       >
         無料相談を予約
