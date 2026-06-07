@@ -7,7 +7,7 @@ import { caseStudy } from "../data/content";
 <section class="bg-surface py-20 lg:py-32" id="cases">
   <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
     <SectionHeading eyebrow={caseStudy.eyebrow}>
-      <JaText tag="span" text={caseStudy.heading} class="" />
+      {caseStudy.heading}
     </SectionHeading>
 
     <!-- Lead -->
@@ -18,23 +18,26 @@ import { caseStudy } from "../data/content";
     <!-- Before / After time-saving table -->
     <div class="max-w-[940px] mx-auto mb-6" data-animate>
       <JaText tag="h3" text={caseStudy.tableHeading} class="text-ink font-bold text-lg lg:text-xl mb-5" />
-      <div class="border border-line bg-white">
-        <!-- Header row -->
-        <div class="grid grid-cols-[1.3fr_1fr_1.3fr] bg-ink text-white">
-          <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center">業務</div>
-          <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center border-l border-white/15">Before</div>
-          <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center border-l border-white/15">After</div>
-        </div>
-        {caseStudy.table.map((row) => (
-          <div class="grid grid-cols-[1.3fr_1fr_1.3fr] border-t border-line items-center">
-            <div class="p-4 lg:p-5 text-ink font-bold text-base lg:text-lg text-center">{row.task}</div>
-            <div class="p-4 lg:p-5 text-neutral-400 font-display font-medium text-center text-base lg:text-lg border-l border-line line-through decoration-1">{row.before}</div>
-            <div class="p-4 lg:p-5 flex items-baseline justify-center gap-1.5 lg:gap-2 border-l border-line">
-              <span class="text-ink font-display font-black text-xl lg:text-3xl leading-none">{row.after}</span>
-              <span class="text-ink font-display font-bold text-xs lg:text-sm tracking-wide">{row.cut}</span>
-            </div>
+      <!-- モバイルは横スクロール（文字の不自然な改行を防ぐ） -->
+      <div class="overflow-x-auto -mx-6 px-6 lg:mx-0 lg:px-0">
+        <div class="border border-line bg-white min-w-[520px]">
+          <!-- Header row -->
+          <div class="grid grid-cols-[1.3fr_1fr_1.3fr] bg-ink text-white">
+            <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center whitespace-nowrap">業務</div>
+            <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center border-l border-white/15 whitespace-nowrap">Before</div>
+            <div class="p-4 lg:p-5 text-base lg:text-lg font-bold tracking-[0.06em] text-center border-l border-white/15 whitespace-nowrap">After</div>
           </div>
-        ))}
+          {caseStudy.table.map((row) => (
+            <div class="grid grid-cols-[1.3fr_1fr_1.3fr] border-t border-line items-center">
+              <div class="p-4 lg:p-5 text-ink font-bold text-base lg:text-lg text-center whitespace-nowrap">{row.task}</div>
+              <div class="p-4 lg:p-5 text-neutral-400 font-display font-medium text-center text-base lg:text-lg border-l border-line line-through decoration-1 whitespace-nowrap">{row.before}</div>
+              <div class="p-4 lg:p-5 flex items-baseline justify-center gap-1.5 lg:gap-2 border-l border-line whitespace-nowrap">
+                <span class="text-ink font-display font-black text-xl lg:text-3xl leading-none">{row.after}</span>
+                <span class="text-ink font-display font-bold text-xs lg:text-sm tracking-wide">{row.cut}</span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
       <JaText tag="p" text={caseStudy.tableNote} class="text-ink text-[15px] mt-4" />
     </div>
