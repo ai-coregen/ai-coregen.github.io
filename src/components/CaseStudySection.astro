@@ -20,7 +20,7 @@ import { caseStudy } from "../data/content";
       <JaText tag="h3" text={caseStudy.tableHeading} class="text-ink font-bold text-lg lg:text-xl mb-5" />
       <div class="border border-line bg-white">
         <!-- Header row -->
-        <div class="grid grid-cols-[1.2fr_1fr_1.3fr] bg-ink text-white tracking-tight">
+        <div class="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)] bg-ink text-white tracking-tight">
           <div class="p-2.5 sm:p-4 lg:p-5 text-[11px] sm:text-base lg:text-lg font-bold text-center">業務</div>
           <div class="p-2.5 sm:p-4 lg:p-5 text-[11px] sm:text-base lg:text-lg font-bold text-center border-l border-white/15">Before</div>
           <div class="p-2.5 sm:p-4 lg:p-5 text-[11px] sm:text-base lg:text-lg font-bold text-center border-l border-white/15">After</div>
@@ -30,7 +30,7 @@ import { caseStudy } from "../data/content";
           const main = idx >= 0 ? row.task.slice(0, idx) : row.task;
           const sub = idx >= 0 ? row.task.slice(idx) : "";
           return (
-            <div class="grid grid-cols-[1.2fr_1fr_1.3fr] border-t border-line items-center tracking-tight">
+            <div class="grid grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,1.3fr)] border-t border-line items-center tracking-tight">
               <div class="p-2.5 sm:p-4 lg:p-5 text-center">
                 <span class="block text-ink font-bold text-xs sm:text-base lg:text-lg leading-tight">{main}</span>
                 {sub && <span class="block text-mute text-[10px] sm:text-xs leading-tight mt-0.5">{sub}</span>}
