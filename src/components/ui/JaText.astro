@@ -32,6 +32,8 @@ const chunks = parser.parse(text);
 <style>
   .break-keep {
     word-break: keep-all;
-    overflow-wrap: break-word;
+    /* はみ出す場合のみ任意位置で改行（min-content も縮みブローアウト防止）。
+       通常は budoux の <wbr> による文節改行が優先される */
+    overflow-wrap: anywhere;
   }
 </style>
