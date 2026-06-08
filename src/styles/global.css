@@ -144,13 +144,18 @@
 }
 
 /* ===== Japanese line-break ===== */
-h1, h2, h3 {
-  text-wrap: balance;
-  letter-spacing: 0.12em;
-}
+/* @layer base に入れることで、Tailwind の utilities（例: 見出し h2 の [text-wrap:wrap]）で
+   上書き可能にする。レイヤー外に置くと詳細度に関係なく utilities より優先され、
+   見出しが balance（早い改行）のまま上書き不能になる */
+@layer base {
+  h1, h2, h3 {
+    text-wrap: balance;
+    letter-spacing: 0.12em;
+  }
 
-h4, p, li, span {
-  text-wrap: pretty;
+  h4, p, li, span {
+    text-wrap: pretty;
+  }
 }
 
 /* ===== Scroll Animations (IntersectionObserver) ===== */
