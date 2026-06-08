@@ -112,16 +112,17 @@ const posterSrc = `${base}/hero-poster.jpg`;
   /* モバイル用 背景動画（右寄せ・画面の約2/3・コピー最背面）。白背景を地に溶かす */
   .hero-video-mobile {
     position: absolute;
-    top: 50%;
-    right: -4%;
-    width: 67%;
+    /* メインキャッチの高さ（pt-32=128px の下）に中心を合わせる */
+    top: 215px;
+    right: -2%;
+    width: 74%;
     transform: translateY(-50%);
     z-index: 0;
-    opacity: 0.6;
+    opacity: 0.8;
     pointer-events: none;
     mix-blend-mode: multiply;
-    -webkit-mask-image: radial-gradient(ellipse 82% 82% at 58% 50%, #000 46%, transparent 92%);
-    mask-image: radial-gradient(ellipse 82% 82% at 58% 50%, #000 46%, transparent 92%);
+    -webkit-mask-image: radial-gradient(ellipse 86% 86% at 56% 50%, #000 54%, transparent 94%);
+    mask-image: radial-gradient(ellipse 86% 86% at 56% 50%, #000 54%, transparent 94%);
   }
 
   /* PC: 右寄せ薄背景動画（モバイルは非表示）/ モバイル: 上記の背景動画 */
