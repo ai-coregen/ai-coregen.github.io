@@ -27,20 +27,20 @@ const posterSrc = `${base}/hero-poster.jpg`;
   <!-- 可読性のための白オーバーレイ（左=白 → 右=透明） -->
   <div class="hero-overlay" aria-hidden="true"></div>
 
+  <!-- ===== モバイル用 背景動画（右寄せ・画面の約2/3・最背面） ===== -->
+  <div class="hero-video-mobile lg:hidden" aria-hidden="true">
+    <video class="block w-full h-auto" autoplay muted loop playsinline preload="auto" poster={posterSrc}>
+      <source src={mobileVideoSrc} type="video/mp4" />
+    </video>
+  </div>
+
   <div class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
     <div class="max-w-[920px]">
       <JaText
         tag="h1"
         text={hero.mainCatch}
-        class="hero-anim hero-anim-2 text-[clamp(3rem,7vw+0.5rem,5rem)] leading-[1.25] tracking-[0.08em] font-bold text-ink mb-6"
+        class="hero-anim hero-anim-2 text-[clamp(3rem,7vw+0.5rem,5rem)] leading-[1.25] tracking-[0.08em] font-bold text-ink mb-8"
       />
-
-      <!-- モバイルのみ: メインキャッチとサブキャッチの間に右寄せで小さく配置 -->
-      <div class="hero-mvideo lg:hidden ml-auto mr-1 w-[58%] max-w-[230px] -mt-1 mb-4" aria-hidden="true">
-        <video class="block w-full h-auto" autoplay muted loop playsinline preload="auto" poster={posterSrc}>
-          <source src={mobileVideoSrc} type="video/mp4" />
-        </video>
-      </div>
 
       <div class="hero-anim hero-anim-3 mb-6">
         {hero.subCatch.map((line) => (
@@ -109,14 +109,22 @@ const posterSrc = `${base}/hero-poster.jpg`;
     );
   }
 
-  /* モバイル用の小さな動画（キャッチ間に右寄せ）。白背景を地に溶かす */
-  .hero-mvideo {
+  /* モバイル用 背景動画（右寄せ・画面の約2/3・コピー最背面）。白背景を地に溶かす */
+  .hero-video-mobile {
+    position: absolute;
+    top: 50%;
+    right: -4%;
+    width: 67%;
+    transform: translateY(-50%);
+    z-index: 0;
+    opacity: 0.6;
+    pointer-events: none;
     mix-blend-mode: multiply;
-    -webkit-mask-image: radial-gradient(ellipse 76% 76% at 50% 50%, #000 56%, transparent 95%);
-    mask-image: radial-gradient(ellipse 76% 76% at 50% 50%, #000 56%, transparent 95%);
+    -webkit-mask-image: radial-gradient(ellipse 82% 82% at 58% 50%, #000 46%, transparent 92%);
+    mask-image: radial-gradient(ellipse 82% 82% at 58% 50%, #000 46%, transparent 92%);
   }
 
-  /* PC: 右寄せ薄背景動画 / モバイル: 上記の小型動画 を出し分け */
+  /* PC: 右寄せ薄背景動画（モバイルは非表示）/ モバイル: 上記の背景動画 */
   @media (max-width: 1023px) {
     .hero-video-wrap,
     .hero-overlay {
@@ -124,15 +132,10 @@ const posterSrc = `${base}/hero-poster.jpg`;
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-mvideo {
-      display: none;
-    }
-  }
-
   /* モーション抑制設定では動画を出さない */
   @media (prefers-reduced-motion: reduce) {
-    .hero-video-wrap {
+    .hero-video-wrap,
+    .hero-video-mobile {
       display: none;
     }
   }
