@@ -24,7 +24,8 @@
 var TEXT = {
   FROM_NAME: 'CoreGen',
   SUBJECT: '【CoreGen】サービス詳細資料をお送りします',
-  ATTACHMENT_NAME: 'CoreGen_サービス詳細資料.pdf'
+  ATTACHMENT_NAME: 'CoreGen_サービス詳細資料.pdf',
+  RESERVE_URL: 'https://ai-coregen.github.io/reserve'  // 無料相談予約ページ
 };
 
 function prop_(key, def) {
@@ -125,13 +126,19 @@ function json_(obj) {
 }
 
 function applicantText_(companyName) {
+  var reserveUrl = prop_('RESERVE_URL', TEXT.RESERVE_URL);
   return [
     companyName + ' ご担当者様',
     '',
     'この度は CoreGenのサービス詳細資料をご請求いただき、誠にありがとうございます。',
     '本メールに資料（PDF）を添付しております。ご査収ください。',
     '',
-    'ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信ください。',
+    '貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えする',
+    '無料オンライン相談（30分）を実施しております。ご希望の方は下記よりご予約ください。',
+    '▼ 無料相談のご予約はこちら',
+    reserveUrl,
+    '',
+    'ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信いただいても結構です。',
     '',
     '────────────────',
     'CoreGen',
@@ -142,12 +149,18 @@ function applicantText_(companyName) {
 }
 
 function applicantHtml_(companyName) {
+  var reserveUrl = prop_('RESERVE_URL', TEXT.RESERVE_URL);
   return ''
     + '<div style="font-family:\'Yu Gothic\',sans-serif;color:#121213;line-height:1.8;">'
     + '<p>' + escapeHtml_(companyName) + ' ご担当者様</p>'
     + '<p>この度は <b>CoreGen</b> のサービス詳細資料をご請求いただき、誠にありがとうございます。<br>'
     + '本メールに資料（PDF）を添付しております。ご査収ください。</p>'
-    + '<p>ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信ください。</p>'
+    + '<p>貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えする'
+    + '<b>無料オンライン相談（30分）</b>を実施しております。ご希望の方は下記よりご予約ください。</p>'
+    + '<p><a href="' + reserveUrl + '" '
+    + 'style="display:inline-block;background:#121213;color:#fff;text-decoration:none;'
+    + 'padding:12px 28px;border-radius:40px;font-weight:700;">無料相談を予約する</a></p>'
+    + '<p style="font-size:13px;color:#677070;">ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信いただいても結構です。</p>'
     + '<hr style="border:none;border-top:1px solid #ddd;margin:20px 0;">'
     + '<p style="font-size:13px;color:#677070;">CoreGen<br>代表 星野 創吉<br>'
     + 'X: <a href="https://x.com/Hoshino_Sokichi">@Hoshino_Sokichi</a></p>'
