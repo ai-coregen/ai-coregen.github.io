@@ -79,7 +79,9 @@ function doPost(e) {
     // 3) スプレッドシート記録
     if (SHEET_ID) {
       var sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
-      sheet.appendRow([new Date(), companyName, email]);
+      var tz = Session.getScriptTimeZone() || 'Asia/Tokyo';
+      var stamp = Utilities.formatDate(new Date(), tz, 'yyyy/MM/dd HH:mm:ss');
+      sheet.appendRow([stamp, companyName, email]);
     }
 
     return json_({ ok: true });
@@ -104,7 +106,8 @@ function initProps() {
   PropertiesService.getScriptProperties().setProperties({
     PDF_FILE_ID: '',   // ← DriveのPDFファイルID
     NOTIFY_TO: '',     // ← 通知先メール
-    SHEET_ID: ''       // ← 記録用スプレッドシートID（任意）
+    SHEET_ID: '',      // ← 記録用スプレッドシートID（任意）
+    RESERVE_URL: ''    // ← 無料相談予約URL（空ならTEXT.RESERVE_URLにフォールバック）
   }, true);
 }
 
