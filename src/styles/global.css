@@ -46,6 +46,8 @@
 
   /* ----- Accent colors（罫線・CTAのみ。面塗り禁止） ----- */
   --color-brand-orange: #E64B18;
+  /* ブランドの差し色（ロゴ末尾ドットと統一）。強調・暗背景アクセント用 */
+  --color-brand-gold: #F0BF7A;
   --color-brand-teal: #00B3A1;
   --color-brand-blue: #524DFE;
   --color-brand-cyan: #0079C9;
