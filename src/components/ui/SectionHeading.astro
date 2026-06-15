@@ -17,10 +17,10 @@ const {
 
 const isCenter = align === "center";
 // 下線バー: 黒(50px)→薄グレー。中央寄せ時はダーク背景でテール色を反転
-// 暗背景の見出しバーは先頭をブランドの差し色（ゴールド）に。明背景は黒のシグネチャーを維持
+// 見出しバーの先頭50pxをブランドの差し色（ゴールド）に＝詳細資料のバーと統一。暗背景は元の白
 const barStyle = dark
-  ? "background: linear-gradient(90deg, #F0BF7A 50px, rgba(255,255,255,0.25) 0);"
-  : "background: linear-gradient(90deg, #121213 50px, var(--color-tail) 0);";
+  ? "background: linear-gradient(90deg, #ffffff 50px, rgba(255,255,255,0.25) 0);"
+  : "background: linear-gradient(90deg, var(--color-brand-gold) 50px, var(--color-tail) 0);";
 ---
 
 <div
