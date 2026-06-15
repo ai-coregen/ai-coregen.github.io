@@ -51,7 +51,7 @@ export const solution = {
 
 export const profile = {
   eyebrow: "PROFILE",
-  heading: "教えるのは、組織の中で売上を作ってきた人間です",
+  heading: "私は、組織の中で売上を作ってきた人間です",
   name: "星野創吉",
   nameReading: "ほしの そうきち",
   career: [
@@ -255,6 +255,8 @@ export const footer = {
     name: "CoreGen",
     rep: "星野 創吉",
     address: "東京都北区堀船 1-25-5 サンハイツ 201",
+    tel: "080-8041-0861",
+    email: "sokichi0614@gmail.com",
   },
   note: "完全成果報酬のため、初期費用はかかりません。",
   social: {
