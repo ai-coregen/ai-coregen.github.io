@@ -302,5 +302,5 @@ export const reserve = {
   heading: "無料オンライン相談のご予約",
   lead: "ご希望の日時を選んでください。貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをご提案します。",
   timerexUrl: "https://timerex.net/s/Sokichi_Hoshino/3a56f516",
-  note: "※ 営業電話・しつこい勧誘は一切いたしません。オンライン（Zoom・Google Meet・Teams）で実施します。",
+  note: "※ 営業電話・しつこい勧誘は一切いたしません。オンラインで実施します。",
 };
