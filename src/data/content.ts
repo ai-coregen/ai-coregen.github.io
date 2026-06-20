@@ -10,6 +10,7 @@ export const nav = [
   { label: "理念", href: "#solution" },
   { label: "サービス", href: "#services" },
   { label: "選ばれる理由", href: "#features" },
+  { label: "プロフィール", href: "#profile" },
   { label: "研修内容", href: "#curriculum" },
   { label: "事例", href: "#cases" },
   { label: "導入の流れ", href: "#flow" },
