@@ -52,7 +52,7 @@ export const solution = {
 export const profile = {
   eyebrow: "PROFILE",
   heading: "私は、組織の中で売上を作ってきた人間です",
-  name: "星野創吉",
+  name: "星野 創吉",
   nameReading: "ほしの そうきち",
   career: [
     "近畿大学経営学部卒業後、株式会社フィナンシャルエージェンシーに入社。数々の新規事業の立ち上げを担当し、27歳で執行役員に就任。営業担当役員などの要職を歴任",
