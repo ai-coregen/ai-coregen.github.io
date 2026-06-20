@@ -14,6 +14,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const faviconHref = `${base}/favicon.svg?v=coregen-dots2`;
 // OGP画像（絶対URL。SNSは相対パス不可）。?v= は更新時のキャッシュ無効化用
 const ogImage = new URL(`${base}/ogp.png?v=1`, Astro.site).href;
+// 現在ページの正規URL（canonical / og:url 用。クエリ・末尾は正規化）
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -22,9 +24,13 @@ const ogImage = new URL(`${base}/ogp.png?v=1`, Astro.site).href;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="CoreGen" />
+    <meta property="og:locale" content="ja_JP" />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
