@@ -273,7 +273,7 @@ export const downloadForm = {
   // GASウェブアプリの公開エンドポイント（公開前提のため直書きでOK。スクリプトIDとは別物）
   gasUrl:
     "https://script.google.com/macros/s/AKfycbxnSB5PhFmlqSTcyCIrEentY69gMGSBJQhhFIx2TEwF1i6CQdIuHEb-bGI2cx_uIiLr/exec",
-  eyebrow: "DOWNLOAD",
+  eyebrow: "Download",
   heading: "サービス詳細資料ダウンロード",
   lead: "会社名とメールアドレスをご入力ください。ご入力のメールアドレス宛に、サービス詳細資料（PDF）をお送りします。",
   companyLabel: "会社名",
@@ -300,7 +300,7 @@ export const downloadForm = {
 
 // 無料相談予約（TimeRex 埋め込み）
 export const reserve = {
-  eyebrow: "RESERVE",
+  eyebrow: "Reserve",
   heading: "無料オンライン相談のご予約",
   lead: "ご希望の日時を選んでください。貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをご提案します。",
   timerexUrl: "https://timerex.net/s/Sokichi_Hoshino/3a56f516",
