@@ -313,6 +313,5 @@ export const tracking = {
   logUrl: downloadForm.gasUrl,
   tokenParam: "c",
   // GA4測定ID（サイト全体の合計流入のみ。個社特定はtoken側が担当）。空なら無効。
-  // 例: "G-XXXXXXXXXX" を入れて lp/ をデプロイすると有効化。
-  ga4Id: "",
+  ga4Id: "G-N5M6HJ92CL",
 };
