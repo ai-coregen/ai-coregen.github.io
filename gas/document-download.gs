@@ -33,6 +33,29 @@ function prop_(key, def) {
   return (v === null || v === undefined || v === '') ? (def || '') : v;
 }
 
+// ===== 計測（measurement-plan.md §5/§12）: token受領・clicks/downloadsタブ =====
+function stamp_() {
+  var tz = Session.getScriptTimeZone() || 'Asia/Tokyo';
+  return Utilities.formatDate(new Date(), tz, 'yyyy/MM/dd HH:mm:ss');
+}
+
+// tokenは英数記号の短い形のみ通す（汚染ログ/インジェクション防止）
+function safeToken_(t) {
+  t = String(t || '').trim();
+  return /^[A-Za-z0-9_-]{1,32}$/.test(t) ? t : '';
+}
+
+// シート名で取得（無ければヘッダ付きで作成）。getSheets()[0] の位置依存を廃止
+function sheetByName_(name, header) {
+  var ss = SpreadsheetApp.openById(prop_('SHEET_ID'));
+  var sh = ss.getSheetByName(name);
+  if (!sh) {
+    sh = ss.insertSheet(name);
+    if (header) sh.appendRow(header);
+  }
+  return sh;
+}
+
 function doPost(e) {
   try {
     var body = {};
@@ -41,9 +64,20 @@ function doPost(e) {
     }
     var companyName = String(body.companyName || '').trim();
     var email = String(body.email || '').trim();
+    var token = safeToken_(body.token);
+    var event = String(body.event || '').trim();
 
     // honeypot（フォーム側で弾くが念のため）
     if (body._gotcha) return json_({ ok: true });
+
+    // 訪問/クリックビーコン: 「クリック」タブに1行だけ（メール送信などはしない・PIIはtokenのみ）
+    if (event === 'visit') {
+      if (prop_('SHEET_ID') && token) {
+        var page = String(body.page || '').slice(0, 64);
+        sheetByName_('クリック', ['日時', 'トークン', 'ページ']).appendRow([stamp_(), token, page]);
+      }
+      return json_({ ok: true });
+    }
 
     if (!companyName) return json_({ ok: false, error: 'companyName required' });
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -76,12 +110,10 @@ function doPost(e) {
       );
     }
 
-    // 3) スプレッドシート記録
+    // 3) スプレッドシート記録（「資料DL」タブ・token付き）
     if (SHEET_ID) {
-      var sheet = SpreadsheetApp.openById(SHEET_ID).getSheets()[0];
-      var tz = Session.getScriptTimeZone() || 'Asia/Tokyo';
-      var stamp = Utilities.formatDate(new Date(), tz, 'yyyy/MM/dd HH:mm:ss');
-      sheet.appendRow([stamp, companyName, email]);
+      var sheet = sheetByName_('資料DL', ['日時', '会社名', 'メール', 'トークン']);
+      sheet.appendRow([stamp_(), companyName, email, token]);
     }
 
     return json_({ ok: true });

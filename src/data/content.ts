@@ -306,3 +306,13 @@ export const reserve = {
   timerexUrl: "https://timerex.net/s/Sokichi_Hoshino/3a56f516",
   note: "※ 営業電話・しつこい勧誘は一切いたしません。オンラインで実施します。",
 };
+
+// 計測（measurement-plan.md §5/§7/§12）。フォーム営業のユニークリンク(?c=token)とGA4。
+export const tracking = {
+  // クリック/訪問ビーコンの送信先。資料DLと同じGASに相乗り（GAS側が event 種別で clicks/downloads に振り分け）。
+  logUrl: downloadForm.gasUrl,
+  tokenParam: "c",
+  // GA4測定ID（サイト全体の合計流入のみ。個社特定はtoken側が担当）。空なら無効。
+  // 例: "G-XXXXXXXXXX" を入れて lp/ をデプロイすると有効化。
+  ga4Id: "",
+};

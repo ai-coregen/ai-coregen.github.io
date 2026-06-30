@@ -145,6 +145,7 @@ const ready = !!downloadForm.gasUrl;
 </Layout>
 
 <script>
+  import { getToken } from "../lib/track";
   const form = document.getElementById("dl-form") as HTMLFormElement | null;
   const successBox = document.getElementById("dl-success");
   const errorEl = document.getElementById("dl-error");
@@ -183,10 +184,16 @@ const ready = !!downloadForm.gasUrl;
 
       try {
         // GASウェブアプリはCORSヘッダを返さないため no-cors で送信（レスポンスは読まない）
+        // token(?c=) を同梱＝どの営業文(会社×型)由来のDLかをGASに記録させる
         await fetch(gasUrl, {
           method: "POST",
           mode: "no-cors",
-          body: JSON.stringify({ companyName, email }),
+          body: JSON.stringify({
+            companyName,
+            email,
+            token: getToken() || "",
+            event: "download_submit",
+          }),
         });
         form.classList.add("hidden");
         successBox?.classList.remove("hidden");
