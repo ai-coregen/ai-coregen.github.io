@@ -70,6 +70,15 @@ function doPost(e) {
     // honeypot（フォーム側で弾くが念のため）
     if (body._gotcha) return json_({ ok: true });
 
+    // タブ事前生成（管理用・一度きり）: 「資料DL」「クリック」タブをヘッダ付きで用意（無ければ作成）
+    if (event === 'setup') {
+      if (prop_('SHEET_ID')) {
+        sheetByName_('資料DL', ['日時', '会社名', 'メール', 'トークン']);
+        sheetByName_('クリック', ['日時', 'トークン', 'ページ']);
+      }
+      return json_({ ok: true, setup: true });
+    }
+
     // 訪問/クリックビーコン: 「クリック」タブに1行だけ（メール送信などはしない・PIIはtokenのみ）
     if (event === 'visit') {
       if (prop_('SHEET_ID') && token) {
