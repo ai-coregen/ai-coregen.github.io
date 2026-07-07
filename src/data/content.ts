@@ -63,7 +63,7 @@ export const profile = {
     "2025年4月に独立し、AIコンサルティング事業を開始。現在は、営業・マーケティング領域を中心に、AI活用、業務効率化、AI導入設計を支援しています",
   ],
   links: {
-    x: "https://x.com/Hoshino_Sokichi",
+    x: "https://x.com/Sokichi_Hoshino",
     salon: "https://ai-salon.site/",
   },
 };
@@ -262,7 +262,7 @@ export const footer = {
   },
   note: "完全成果報酬のため、初期費用はかかりません。",
   social: {
-    x: "https://x.com/Hoshino_Sokichi",
+    x: "https://x.com/Sokichi_Hoshino",
     salon: "https://ai-salon.site/",
   },
 };

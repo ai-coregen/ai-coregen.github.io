@@ -52,10 +52,14 @@ clasp open-script                  # ブラウザでエディタを開く
 | プロパティ | 値 | 必須 |
 |---|---|---|
 | `PDF_FILE_ID` | DriveのPDFファイルID | ✅ |
-| `NOTIFY_TO`   | 申込通知の送信先メール（カンマ区切り可） | 任意 |
+| `DISCORD_WEBHOOK_URL` | 申込通知先のDiscord webhook。**設定時はメール通知の代わりにDiscordへ**（GASメールquota=無料100通/日を申込者への資料送付に全振りできる） | 推奨 |
+| `NOTIFY_TO`   | 申込通知の送信先メール（webhook未設定/失敗時のフォールバック。カンマ区切り可） | 任意 |
 | `SHEET_ID`    | 記録用スプレッドシートID | 任意 |
+| `SEND_AS`     | 申込者への資料メールの送信元アドレス（例: `sokichi0614@gmail.com`）。**このアドレスを公開アカウントのGmailで「送信元アドレスの追加（Send mail as）」に登録・確認済み**の場合のみ From に反映（未確認でも送信は壊れず Reply-To のみ SEND_AS に向く）。`setSendAs()` を一度実行すれば登録＋エイリアス確認ログが出る | 任意 |
 
 > コードで入れたい場合は `initProps()` の値を書き換えて一度だけ実行→その後値を空に戻して保存。
+> `DISCORD_WEBHOOK_URL` は `secrets.gs`（gitignore済・claspはpushする）の `setupDiscordWebhook()` を
+> エディタで一度実行すると登録＋テスト通知＋外部リクエストスコープの承認が一度に済む。
 > プロパティは**実行時に読む**ので、後から設定・変更しても再デプロイ不要。
 
 ### C. 資料PDFをDriveに置く

@@ -26,3 +26,6 @@ pnpm-debug.log*
 # clasp: スクリプトID・認証はコミットしない（ローカルのみ）
 gas/.clasp.json
 .clasprc.json
+
+# GAS秘匿値（webhook URL等）: claspはpushするがgitにはコミットしない
+gas/secrets.gs

@@ -4,7 +4,8 @@
  * 役割:
  *   LPの /download フォームから {companyName, email} のPOSTを受け取り、
  *   1) 申込者へ「資料PDF添付メール」を自動返信
- *   2) 運営（NOTIFY_TO）へ申込通知メール
+ *   2) 運営へ申込通知（DISCORD_WEBHOOK_URL があれば Discord・無ければ NOTIFY_TO へメール。
+ *      Discord優先の理由 = GASのメールquota(無料100通/日)を申込者への資料送付に全振りするため）
  *   3) スプレッドシートに1行記録（SHEET_ID 指定時のみ）
  *
  * 設定値（メール/各種ID）はコードに直書きせず、スクリプトプロパティから読み込む。
@@ -14,9 +15,15 @@
 
 // ===== 直書きしない設定（スクリプトプロパティのキー名）=========
 // プロジェクトの設定 → スクリプト プロパティ で以下を登録:
-//   PDF_FILE_ID … DriveのPDFファイルID（必須）
-//   NOTIFY_TO   … 申込通知の送信先メール（カンマ区切り可。空なら通知しない）
-//   SHEET_ID    … 記録用スプレッドシートID（空なら記録しない）
+//   PDF_FILE_ID         … DriveのPDFファイルID（必須）
+//   DISCORD_WEBHOOK_URL … 申込通知先のDiscord webhook（設定時はメール通知の代わりにDiscordへ。quota節約）
+//   NOTIFY_TO           … 申込通知の送信先メール（webhook未設定/失敗時のフォールバック。空なら通知しない）
+//   SHEET_ID            … 記録用スプレッドシートID（空なら記録しない）
+//   SEND_AS             … 申込者への資料メールの送信元アドレス（例: sokichi0614@gmail.com）。
+//                         このアドレスを公開アカウント(このスクリプトのオーナー)のGmailで
+//                         「送信元アドレスの追加(Send mail as)」に登録・確認済みの場合のみ From に反映。
+//                         未登録/未確認なら From は従来のオーナーアドレスにフォールバックし、
+//                         いずれの場合も Reply-To は SEND_AS に向く（返信は必ずここへ届く）。
 // 一度だけ initProps() を実行してUIから登録する方法も可（下部参照）。
 // ===============================================================
 
@@ -79,6 +86,11 @@ function doPost(e) {
       return json_({ ok: true, setup: true });
     }
 
+    // 通知経路の疎通テスト（管理用）: Discordへテスト投稿し成否を返す（メール送信・シート記録なし）
+    if (event === 'notify_test') {
+      return json_({ ok: true, discord: notifyDiscord_('[TEST] 資料請求通知の経路テスト（doPost notify_test）') });
+    }
+
     // 訪問/クリックビーコン: 「クリック」タブに1行だけ（メール送信などはしない・PIIはtokenのみ）
     if (event === 'visit') {
       if (prop_('SHEET_ID') && token) {
@@ -102,6 +114,14 @@ function doPost(e) {
       name: prop_('FROM_NAME', TEXT.FROM_NAME),
       htmlBody: applicantHtml_(companyName)
     };
+    // 送信元を星野さんのアドレスに。確認済みエイリアスの時だけ From に反映（未確認でも送信は壊さない）。
+    var sendAs = prop_('SEND_AS');
+    if (sendAs) {
+      options.replyTo = sendAs;  // 返信は常に SEND_AS へ
+      try {
+        if (GmailApp.getAliases().indexOf(sendAs) !== -1) options.from = sendAs;
+      } catch (e) {}
+    }
     if (PDF_FILE_ID) {
       var blob = DriveApp.getFileById(PDF_FILE_ID).getBlob();
       var attachName = prop_('ATTACHMENT_NAME', TEXT.ATTACHMENT_NAME);
@@ -110,8 +130,11 @@ function doPost(e) {
     }
     GmailApp.sendEmail(email, prop_('SUBJECT', TEXT.SUBJECT), applicantText_(companyName), options);
 
-    // 2) 運営へ通知
-    if (NOTIFY_TO) {
+    // 2) 運営へ通知（Discord優先。webhook未設定/失敗時のみメール = quota消費を1通/申込に抑える）
+    var notified = notifyDiscord_(
+      '【資料請求】' + companyName + '\nメール: ' + email + (token ? '\nトークン: ' + token : '')
+    );
+    if (!notified && NOTIFY_TO) {
       MailApp.sendEmail(
         NOTIFY_TO,
         '【資料請求】' + companyName,
@@ -131,6 +154,28 @@ function doPost(e) {
   }
 }
 
+/**
+ * Discord webhookへ通知。成功=true / webhook未設定・失敗=false（呼び元がメールにフォールバック）。
+ * 失敗しても doPost 全体は落とさない（申込者への資料送付が最優先）。
+ */
+function notifyDiscord_(content) {
+  var url = prop_('DISCORD_WEBHOOK_URL');
+  if (!url && typeof discordWebhookUrl_ === 'function') url = discordWebhookUrl_();  // secrets.gs フォールバック
+  if (!url) return false;
+  try {
+    var res = UrlFetchApp.fetch(url, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify({ content: content }),
+      muteHttpExceptions: true
+    });
+    var code = res.getResponseCode();
+    return code >= 200 && code < 300;
+  } catch (err) {
+    return false;
+  }
+}
+
 // デプロイ確認用（ブラウザでURLを開くと表示される）
 function doGet() {
   return ContentService
@@ -145,11 +190,30 @@ function doGet() {
  */
 function initProps() {
   PropertiesService.getScriptProperties().setProperties({
-    PDF_FILE_ID: '',   // ← DriveのPDFファイルID
-    NOTIFY_TO: '',     // ← 通知先メール
-    SHEET_ID: '',      // ← 記録用スプレッドシートID（任意）
-    RESERVE_URL: ''    // ← 無料相談予約URL（空ならTEXT.RESERVE_URLにフォールバック）
+    PDF_FILE_ID: '',         // ← DriveのPDFファイルID
+    DISCORD_WEBHOOK_URL: '', // ← 申込通知先のDiscord webhook（secrets.gs の setupDiscordWebhook() でも登録可）
+    NOTIFY_TO: '',           // ← 通知先メール（webhookのフォールバック）
+    SHEET_ID: '',            // ← 記録用スプレッドシートID（任意）
+    SEND_AS: '',             // ← 資料メールの送信元アドレス（例: sokichi0614@gmail.com。要 Send mail as 登録・確認）
+    RESERVE_URL: ''          // ← 無料相談予約URL（空ならTEXT.RESERVE_URLにフォールバック）
   }, true);
+}
+
+/**
+ * 送信元アドレス(SEND_AS)だけを登録する専用ヘルパー。
+ * エディタでこの関数を一度だけ実行（▶）すれば、資料メールの送信元が
+ * sokichi0614@gmail.com になる（他のプロパティは変更しない）。
+ * 実行後、ログに現在のGmailエイリアス一覧が出るので sokichi0614 が含まれていれば From に反映される。
+ */
+function setSendAs() {
+  PropertiesService.getScriptProperties().setProperty('SEND_AS', 'sokichi0614@gmail.com');
+  var aliases = GmailApp.getAliases();
+  Logger.log('SEND_AS を sokichi0614@gmail.com に設定しました。');
+  Logger.log('現在の送信可能アドレス（エイリアス）: ' + JSON.stringify(aliases));
+  Logger.log(aliases.indexOf('sokichi0614@gmail.com') !== -1
+    ? 'OK: sokichi0614@gmail.com が含まれています。送信元に反映されます。'
+    : '注意: まだ含まれていません（承認が反映されるまで数分かかることがあります）。');
+  return 'done';
 }
 
 /**
@@ -160,6 +224,7 @@ function initProps() {
 function authorize() {
   GmailApp.getAliases();      // Gmail送信スコープを要求
   DriveApp.getRootFolder();   // Drive閲覧スコープを要求
+  UrlFetchApp.fetch('https://discord.com', { muteHttpExceptions: true });  // 外部リクエストスコープ（Discord通知用）
   return 'authorized';
 }
 
@@ -187,7 +252,7 @@ function applicantText_(companyName) {
     '────────────────',
     'CoreGen',
     '代表 星野 創吉',
-    'X: https://x.com/Hoshino_Sokichi',
+    'X: https://x.com/Sokichi_Hoshino',
     '────────────────'
   ].join('\n');
 }
@@ -207,7 +272,7 @@ function applicantHtml_(companyName) {
     + '<p style="font-size:13px;color:#677070;">ご不明点や無料相談のご希望がございましたら、本メールにそのままご返信いただいても結構です。</p>'
     + '<hr style="border:none;border-top:1px solid #ddd;margin:20px 0;">'
     + '<p style="font-size:13px;color:#677070;">CoreGen<br>代表 星野 創吉<br>'
-    + 'X: <a href="https://x.com/Hoshino_Sokichi">@Hoshino_Sokichi</a></p>'
+    + 'X: <a href="https://x.com/Sokichi_Hoshino">@Sokichi_Hoshino</a></p>'
     + '</div>';
 }
 
