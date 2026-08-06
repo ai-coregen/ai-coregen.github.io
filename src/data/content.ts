@@ -26,7 +26,9 @@ export const nav = [
  */
 export const industryCards = {
   eyebrow: "INDUSTRIES",
-  heading: "業種別のご案内",
+  heading: "業種ごとに、作るものが違います",
+  /** カードを見る理由を作るだけの1文。売り込まない（「ぜひご覧ください」の類は付けない） */
+  lead: "同じAIでも、どこに入れて何を作るかは業種で変わります。",
 };
 
 export const hero = {

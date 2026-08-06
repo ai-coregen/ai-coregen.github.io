@@ -5,15 +5,18 @@
  * **カードは `industries.ts` から自動生成する**。業種を1件足すとカードが1枚増えるので、
  * このファイルにも content.ts にも業種を書き足す必要はない（2026-08-06 なおき決定の最小差し込み）。
  *
- * カードの中身は既存のコピーから引く（新しい文言を作らない）:
+ * カードの中身は既存のコピーから引く（新しい文言を作らない。正本 knowledge/top-copy.md §3）:
  *   業種名  = industry.name
- *   一言    = industry.hero.mainCatch（各業種で選定済みのキャッチ）
- *   対象業務 = industry.hero.subCatch（誰向け・何をするかの1行）
- * 文言の正本は knowledge/top-copy.md。着地したら industries.ts 側に上書き用の値を持たせる。
+ *   一言    = industry.hero.mainCatch（各業種LPで選定済みのメインキャッチ。**改行位置も維持する**）
+ *   対象業務 = industry.cardWork（体言止め・句点なし）
+ *   画像alt = industry.hero.image.alt
  *
  * 画像は業種ヒーローの流用。**素の画像は「被写体=左／余白=右」**なので、カードでは
  * 反転せず左寄せで切り抜く（業種ページのヒーローだけがCSSで反転している）。
  * ファイルが無ければ画像を描かず、カードの形だけ保つ（「準備中」の類は出さない）。
+ *
+ * **カードの中にボタンやリンク文言は置かない**（カード全体がリンク）。
+ * 計測はカード側に足さない＝内部遷移なので `?c=` は track.ts の sessionStorage が引き継ぐ。
  */
 import SectionHeading from "./ui/SectionHeading.astro";
 import JaText from "./ui/JaText.astro";
@@ -29,9 +32,10 @@ const cards = Object.values(industries).map((industry) => {
   return {
     href: `${base}/${industry.slug}/`,
     name: industry.name,
-    catch: industry.hero.mainCatch.join(""),
-    work: industry.hero.subCatch,
+    catchLines: industry.hero.mainCatch,
+    work: industry.cardWork,
     image: hasPublicAsset(file) ? `${base}/${file}` : null,
+    alt: industry.hero.image.alt,
     width: size?.width,
     height: size?.height,
   };
@@ -44,6 +48,13 @@ const cards = Object.values(industries).map((industry) => {
       {industryCards.heading}
     </SectionHeading>
 
+    <JaText
+      tag="p"
+      text={industryCards.lead}
+      class="text-ink text-[15px] sm:text-base leading-[1.95] max-w-[820px] mb-10"
+      data-animate
+    />
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
       {cards.map((card, i) => (
         <div data-animate data-delay={i * 120} class="h-full">
@@ -53,7 +64,7 @@ const cards = Object.values(industries).map((industry) => {
               {card.image && (
                 <img
                   src={card.image}
-                  alt=""
+                  alt={card.alt}
                   width={card.width}
                   height={card.height}
                   loading="lazy"
@@ -63,9 +74,16 @@ const cards = Object.values(industries).map((industry) => {
             </span>
             <span class="ind-link-body">
               <span class="ind-link-name">{card.name}</span>
-              <JaText tag="span" text={card.catch} class="ind-link-catch" />
+              {/*
+                一言は業種LPの改行位置をそのまま持ってくる（製造業だけ2行）。
+                枠は2行ぶんの高さで固定してあるので、1行の業種が縮んで並びが崩れない。
+              */}
+              <span class="ind-link-catch">
+                {card.catchLines.map((line) => (
+                  <JaText tag="span" text={line} class="block" />
+                ))}
+              </span>
               <JaText tag="span" text={card.work} class="ind-link-work" />
-              <span class="ind-link-arrow" aria-hidden="true">→</span>
             </span>
           </a>
         </div>
@@ -112,6 +130,12 @@ const cards = Object.values(industries).map((industry) => {
     }
   }
 
+  /* スマホはhoverが無いので、押した手応えは :active の軽い押し込みで返す */
+  .ind-link-card:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(18, 18, 19, 0.08);
+  }
+
   .ind-link-card:focus-visible {
     outline: 2px solid var(--color-brand-orange);
     outline-offset: 2px;
@@ -151,12 +175,17 @@ const cards = Object.values(industries).map((industry) => {
     margin-bottom: 0.6rem;
   }
 
+  /*
+   * 一言。**2行ぶんの高さで固定**する（正本 §4）。
+   * 製造業だけ2行・他は1行なので、固定しないとカードごとに対象業務の行の高さが変わる。
+   */
   .ind-link-catch {
     display: block;
     font-size: 1.0625rem;
     font-weight: 700;
     line-height: 1.6;
     color: var(--color-ink);
+    min-height: calc(1.0625rem * 1.6 * 2);
     margin-bottom: 0.6rem;
   }
 
@@ -165,23 +194,6 @@ const cards = Object.values(industries).map((industry) => {
     font-size: 0.8125rem;
     line-height: 1.8;
     color: var(--color-mute);
-  }
-
-  /* 押せることの合図。文言は足さず矢印だけ置く */
-  .ind-link-arrow {
-    display: block;
-    margin-top: auto;
-    padding-top: 1.1rem;
-    font-size: 0.875rem;
-    line-height: 1;
-    color: var(--color-ink);
-    transition: transform 0.3s ease;
-  }
-
-  @media (hover: hover) {
-    .ind-link-card:hover .ind-link-arrow {
-      transform: translateX(4px);
-    }
   }
 
   @media (min-width: 1024px) {

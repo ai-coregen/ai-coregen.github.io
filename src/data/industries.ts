@@ -190,6 +190,12 @@ export interface Industry {
   slug: string;
   /** 業種の表示名 */
   name: string;
+  /**
+   * トップLPの業種カードに出す対象業務の1行。**体言止め・句点なし**（例「見積回答・案件フォロー」）。
+   * 正本は knowledge/top-copy.md。カードの残り（業種名・一言・画像・リンク先）は
+   * このファイルの既存の値から自動で組み立てるので、業種を足すときに書くのはここだけ。
+   */
+  cardWork: string;
   /** CTAリンクの計測パラメータ v= の値 */
   ctaVersion: string;
   meta: IndustryMeta;
@@ -224,6 +230,7 @@ export function ctaUrl(
 const manufacturing: Industry = {
   slug: "manufacturing",
   name: "製造業",
+  cardWork: "見積回答・案件フォロー",
   ctaVersion: "mfg_v1",
 
   meta: {
@@ -572,6 +579,7 @@ const manufacturing: Industry = {
 const construction: Industry = {
   slug: "construction",
   name: "建設・設備工事",
+  cardWork: "見積準備・案件フォロー",
   ctaVersion: "con_v1",
 
   meta: {
@@ -922,6 +930,7 @@ const construction: Industry = {
 const hr: Industry = {
   slug: "hr",
   name: "人材紹介・派遣",
+  cardWork: "推薦文作成・面談調整",
   ctaVersion: "hr_v1",
 
   meta: {
