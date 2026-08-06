@@ -71,6 +71,13 @@ const cards = Object.values(industries).map((industry) => {
                   decoding="async"
                 />
               )}
+              {/*
+                ホバーで画像に薄い白をかけ、その上に業種名を浮かせる。
+                下のテキストブロックに同じ業種名があるので、読み上げからは外す。
+              */}
+              <span class="ind-link-veil" aria-hidden="true">
+                <span class="ind-link-veil-text">{card.name}</span>
+              </span>
             </span>
             <span class="ind-link-body">
               <span class="ind-link-name">{card.name}</span>
@@ -120,13 +127,17 @@ const cards = Object.values(industries).map((industry) => {
     }
   }
 
-  /* 動きを減らす設定の人には移動を出さない（浮きは影と罫線で見せる） */
+  /* 動きを減らす設定の人には移動を出さない（浮きは影と罫線・膜で見せる） */
   @media (prefers-reduced-motion: reduce) {
     .ind-link-card {
       transition: box-shadow 0.3s ease, border-top-color 0.3s ease;
     }
     .ind-link-card:hover {
       transform: none;
+    }
+    .ind-link-veil-text {
+      transform: none;
+      transition: none;
     }
   }
 
@@ -142,10 +153,49 @@ const cards = Object.values(industries).map((industry) => {
   }
 
   .ind-link-visual {
+    position: relative;
     display: block;
     aspect-ratio: 3 / 2;
     overflow: hidden;
     background: var(--color-surface);
+  }
+
+  /*
+   * ホバー時に画像へかける薄い膜と、その上に浮かぶ業種名（2026-08-06 なおき指示）。
+   * 白い膜にしているのは、このLPが白地のモノクロ基調で、画像もすでに減彩してあるため。
+   * 黒い膜だと明るい面の中に暗い矩形が1枚だけ立ち、浮くより先に目立ってしまう。
+   * 文字は本文と同じ ink。72%の白の上なので、地の写真によらず読める。
+   */
+  .ind-link-veil {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.72);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .ind-link-veil-text {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-ink);
+    transform: translateY(8px);
+    transition: transform 0.3s ease;
+  }
+
+  /* 膜と文字は**hoverできる装置だけ**に出す。タッチ端末では最初から出さない */
+  @media (hover: hover) {
+    .ind-link-card:hover .ind-link-veil {
+      opacity: 1;
+    }
+
+    .ind-link-card:hover .ind-link-veil-text {
+      transform: translateY(0);
+    }
   }
 
   .ind-link-visual img {
