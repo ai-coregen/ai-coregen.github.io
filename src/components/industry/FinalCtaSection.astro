@@ -1,0 +1,92 @@
+---
+/** 11. 最終CTA。計測は cta=bottom。既存トップLPの CtaSection と同じ黒地 */
+import SectionHeading from "../ui/SectionHeading.astro";
+import Button from "../ui/Button.astro";
+import JaText from "../ui/JaText.astro";
+import EmText from "./EmText.astro";
+import { ctaUrl, type IndustryFinalCta } from "../../data/industries";
+
+interface Props {
+  data: IndustryFinalCta;
+  ctaVersion: string;
+}
+
+const { data, ctaVersion } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const reserveHref = ctaUrl(base, "reserve", "bottom", ctaVersion);
+const downloadHref = ctaUrl(base, "download", "bottom", ctaVersion);
+---
+
+<section class="relative bg-gradient-cta py-16 lg:py-24 overflow-hidden" id="contact">
+  <div
+    class="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_50%,rgba(255,255,255,0.12)_0%,transparent_50%)]"
+  >
+  </div>
+  <div
+    class="absolute inset-0 opacity-[0.05]"
+    style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 40px 40px;"
+  >
+  </div>
+
+  <div class="relative max-w-[1100px] mx-auto px-6 lg:px-8 text-center">
+    <SectionHeading dark align="center">
+      {data.heading.map((line) => <JaText tag="span" text={line} class="block" />)}
+    </SectionHeading>
+
+    <div class="max-w-[720px] mx-auto" data-animate>
+      {data.body.map((line) => (
+        <EmText
+          tag="p"
+          text={line}
+          emphasis={data.emphasis}
+          class="text-white text-[15px] sm:text-lg leading-[1.95]"
+        />
+      ))}
+    </div>
+
+    <!-- 資料の内容 -->
+    <div class="max-w-[560px] mx-auto mt-10 text-left" data-animate data-delay="120">
+      <div class="bg-white/[0.06] border border-white/15 p-6 lg:p-7">
+        <p class="text-white text-sm font-bold tracking-[0.12em] mb-4 text-center">
+          {data.materialsTitle}
+        </p>
+        <ul class="space-y-2.5 max-w-[420px] mx-auto">
+          {data.materials.map((item) => (
+            <li class="flex items-start gap-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-white/60 shrink-0 mt-2.5"></span>
+              <JaText
+                tag="span"
+                text={item}
+                class="text-white/85 text-[15px] leading-relaxed"
+              />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col lg:flex-row items-center justify-center gap-4 mt-10 mb-5"
+      data-animate
+      data-delay="180"
+    >
+      <Button variant="white" href={reserveHref} class="w-full lg:w-auto lg:whitespace-nowrap">
+        {data.primaryCta}
+      </Button>
+      <Button
+        variant="secondary-dark"
+        href={downloadHref}
+        class="w-full lg:w-auto lg:whitespace-nowrap"
+      >
+        {data.secondaryCta}
+      </Button>
+    </div>
+
+    <div data-animate data-delay="220">
+      {data.microCopy.map((line) => (
+        <JaText tag="p" text={line} class="text-white/50 text-[13px] leading-relaxed" />
+      ))}
+    </div>
+  </div>
+</section>

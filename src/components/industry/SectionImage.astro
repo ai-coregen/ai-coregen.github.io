@@ -1,0 +1,54 @@
+---
+/**
+ * セクションに添える画像。なじませは design-manual.md §8-4 の指定どおり。
+ * ヒーローとの差は2点だけ:
+ *   - opacity 0.85 → 0.92（ヒーローはコピーが上に乗るので沈めるが、これは単独で見せる）
+ *   - **maskを使わない**（本文の横に置かれ周囲に余白があるので矩形が浮かない。
+ *     ヒーローと同じradial-maskを当てると被写体で満たした画面の四隅が削れて画が痩せる）
+ *
+ * 画像ファイルが無いときは何も描画しない（セクション画像の生成待ちでもビルドが通る）。
+ */
+import { hasPublicAsset, webpSize } from "../../lib/publicAsset";
+import type { SectionImage } from "../../data/industries";
+
+interface Props {
+  image: SectionImage;
+}
+
+const { image } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const relPath = `industry/${image.file}`;
+const exists = hasPublicAsset(relPath);
+// 実寸を読んで width/height を出す（縦横比を決め打ちしない＝画像を切り取らない）
+const size = exists ? webpSize(relPath) : null;
+---
+
+{
+  exists && (
+    <img
+      src={`${base}/${relPath}`}
+      alt={image.alt}
+      width={size?.width}
+      height={size?.height}
+      loading="lazy"
+      decoding="async"
+      class="ind-section-image"
+      data-animate
+    />
+  )
+}
+
+<style>
+  /* design-manual.md §8-4。値を変えるときは向こうも直すこと */
+  .ind-section-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: saturate(0.55) contrast(0.96) brightness(1.02);
+    mix-blend-mode: multiply;
+    opacity: 0.92;
+    /* mask-image は使わない（§8-4） */
+    pointer-events: none;
+  }
+</style>

@@ -1,0 +1,363 @@
+---
+/**
+ * 6. 導入前と導入後。
+ * テキストを左右2列に並べるのではなく、上下2段の工程フロー図にする（正本 §6「図の仕様」）。
+ *
+ * 2026-08-06 なおきレビューで図の仕様が変わった。
+ * 旧: 消える3工程を導入後の段で「位置を空けたままグレーで潰す」
+ * 新: **3工程は消えるのではなくAIに移る**。同じ位置にラベルを残し、
+ *     3枠を1本のグレー枠でまとめ、枠の上に「ここはAIが自動で」と添える。
+ *     導入前の段からグレー枠へ ↓ でつなぎ、枠から「判断して見積を出す」へも矢印を出す
+ *     （工程が消滅したのではなく、機械の側へ移動したことを線で見せる）。
+ *
+ * ・導入前と導入後は同じコマ数で並べ、同じ工程が縦に揃うようにする
+ *   （グレー枠は3列ぶんを span し、枠の中も同じ列幅で割るので、上下の列がずれない）
+ * ・強調は1コマだけ（差し色は罫線のみ）。最後の1組だけ ✕ と ◯ で対比する
+ * ・段の脇には「人がやる工程」の数を添える。時間の削減率のような数値は出さない（保証表現になる）
+ * 写真は入れない（この図が視覚要素）。
+ */
+import SectionHeading from "../ui/SectionHeading.astro";
+import JaText from "../ui/JaText.astro";
+import type { FlowNode, IndustryAfter } from "../../data/industries";
+
+interface Props {
+  data: IndustryAfter;
+}
+
+const { data } = Astro.props;
+
+/** 描画の単位。連続する auto ノードは1つのグレー枠にまとめる */
+type Cell =
+  | { type: "node"; step: FlowNode }
+  | { type: "auto"; items: FlowNode[] };
+
+/**
+ * まとめるのは導入後の段だけ。
+ * 導入前の段は同じ工程を1コマずつ並べる（まだ人がやっているので、束ねると意味が変わる）。
+ */
+function toCells(steps: FlowNode[], group: boolean): Cell[] {
+  const cells: Cell[] = [];
+  for (const step of steps) {
+    if (!group || step.kind !== "auto") {
+      cells.push({ type: "node", step });
+      continue;
+    }
+    const last = cells[cells.length - 1];
+    if (last && last.type === "auto") {
+      last.items.push(step);
+      continue;
+    }
+    cells.push({ type: "auto", items: [step] });
+  }
+  return cells;
+}
+
+const rows = [
+  {
+    title: data.beforeTitle,
+    count: data.beforeCount,
+    cells: toCells(data.beforeSteps, false),
+    isAfter: false,
+  },
+  {
+    title: data.afterTitle,
+    count: data.afterCount,
+    cells: toCells(data.afterSteps, true),
+    isAfter: true,
+  },
+];
+---
+
+<section class="bg-surface py-16 lg:py-24" id="after">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading>
+      {data.heading.map((line) => <JaText tag="span" text={line} class="block" />)}
+    </SectionHeading>
+
+    <div class="bg-white border border-line p-5 sm:p-8 lg:p-10" data-animate>
+      {rows.map((row, ri) => (
+        <div class:list={[ri > 0 && "mt-10"]}>
+          <p class:list={["ind-row-title", row.isAfter && "is-after"]}>
+            <span class:list={["ind-row-label", row.isAfter ? "text-ink" : "text-mute"]}>
+              {row.title}
+            </span>
+            <span class="ind-row-count">{row.count}</span>
+          </p>
+          <ol class="ind-flowrow">
+            {row.cells.map((cell, i) => {
+              /* 工程は途切れずに続くので、最後のコマ以外はすべて次へ矢印を出す */
+              const hasArrow = i < row.cells.length - 1;
+              return cell.type === "auto" ? (
+                <li
+                  class:list={["ind-auto-group", hasArrow && "has-arrow"]}
+                  style={`--span:${cell.items.length}`}
+                >
+                  {/* 導入前の段からこの枠へ。工程が消えたのではなく移ったことを見せる */}
+                  <span class="ind-auto-head">
+                    <span class="ind-auto-from" aria-hidden="true">↓</span>
+                    <span class="ind-auto-cap">{data.autoGroupLabel}</span>
+                  </span>
+                  <div class="ind-auto-frame">
+                    {cell.items.map((item) => (
+                      <span class="ind-auto-item">
+                        <JaText tag="span" text={item.label ?? ""} class="ind-auto-label" />
+                      </span>
+                    ))}
+                  </div>
+                </li>
+              ) : (
+                <li
+                  class:list={[
+                    "ind-node",
+                    `is-${cell.step.kind}`,
+                    row.isAfter && "is-after",
+                    hasArrow && "has-arrow",
+                  ]}
+                >
+                  <JaText tag="span" text={cell.step.label ?? ""} class="ind-node-label" />
+                  {/* 良くなったことは導入後側のバッジで見せる（✕・◯は使わない） */}
+                  {cell.step.badge && (
+                    <span class="ind-badge">{cell.step.badge}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      ))}
+    </div>
+
+    {/* 図の直下に置く1行。図から離さない（正本 §6・2026-08-06 第4レビュー） */}
+    <JaText
+      tag="p"
+      text={data.figureNote}
+      class="text-ink font-bold text-[14px] sm:text-[15px] mt-4"
+      data-animate
+    />
+
+    <div class="max-w-[880px] mt-12" data-animate>
+      {data.body.map((line) => (
+        <JaText
+          tag="p"
+          text={line}
+          class="text-ink text-[15px] sm:text-base leading-[1.95]"
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * 段のラベルは「パッと見て何がどう変わったか」を決める要素なので、本文より大きく出す
+   * （2026-08-06 なおき第4レビュー）。
+   */
+  .ind-row-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-weight: 700;
+    font-size: 1.0625rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.85rem;
+  }
+
+  .ind-row-count {
+    font-size: 0.8125rem;
+    letter-spacing: 0.08em;
+    color: var(--color-mute);
+    border: 1px solid var(--color-line);
+    padding: 0.15rem 0.55rem;
+  }
+
+  /*
+   * 「導入後」の段が結論なので、さらに一段大きく＋差し色で立てる
+   * （差し色は罫線のみ・面では使わない）。「導入前」は mute のままにして、
+   * どちらを読ませたい段かを一目で分ける。
+   */
+  .ind-row-title.is-after {
+    font-size: 1.25rem;
+  }
+
+  .ind-row-title.is-after .ind-row-label {
+    padding-bottom: 0.3rem;
+    border-bottom: 3px solid var(--color-brand-orange);
+  }
+
+  .ind-row-title.is-after .ind-row-count {
+    color: var(--color-ink);
+    border-color: var(--color-brand-orange);
+  }
+
+  /* SP: 縦積み。PC: 6列グリッドで導入前後の工程を縦に揃える */
+  .ind-flowrow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem 1.25rem;
+  }
+
+  .ind-node {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 68px;
+    padding: 0.75rem 0.5rem;
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+  }
+
+  .ind-node-label {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  /* 工程をつなぐ矢印。SPは下向き、PCは右向き */
+  .has-arrow::after {
+    content: "↓";
+    position: absolute;
+    left: 50%;
+    bottom: -1.35rem;
+    transform: translate(-50%, 0);
+    color: var(--color-line);
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  /* 導入前: これから人の手を離れる工程 */
+  .ind-node.is-auto .ind-node-label,
+  .ind-node.is-negative .ind-node-label {
+    color: var(--color-mute);
+  }
+
+  /*
+   * 導入後: AIへ移る工程をまとめたグレー枠。
+   * 枠は左右の余白（グリッドのgap）へ少しはみ出させ、中身は外側と同じ列割りにする。
+   * こうすると枠を持ちながら、上の段の工程と列がずれない。
+   */
+  .ind-auto-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ind-auto-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+  }
+
+  /*
+   * 上の段からグレー枠へ下りる矢印。
+   * SPは全体が縦一列で、直前のコマが既に ↓ を出しているので出さない（↓が2つ並ぶ）。
+   */
+  .ind-auto-from {
+    display: none;
+    color: var(--color-line);
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  .ind-auto-cap {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-mute);
+  }
+
+  .ind-auto-frame {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    background: #ededed;
+    border: 1px dashed var(--color-line);
+    padding: 0.75rem;
+  }
+
+  .ind-auto-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 44px;
+    padding: 0.5rem;
+    background: #ffffff;
+    border: 1px dashed var(--color-line);
+  }
+
+  .ind-auto-label {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-mute);
+  }
+
+  /* 導入後: 担当者の時間が集まるところ（差し色は罫線のみ） */
+  .ind-node.is-highlight {
+    border: 2px solid var(--color-brand-orange);
+  }
+
+  .ind-node.is-highlight .ind-node-label {
+    font-weight: 700;
+  }
+
+  /*
+   * 導入後に良くなったコマ。✕・◯は使わず（何を言っているか分からないため）、
+   * 「自動」バッジ＋差し色の罫線で変化を見せる。
+   * 差し色はオレンジ＝「人が判断するところ」と使い分けるため teal にする。
+   */
+  .ind-node.is-positive {
+    border-color: var(--color-brand-teal);
+  }
+
+  .ind-badge {
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    padding: 0.1rem 0.45rem;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    color: var(--color-brand-teal);
+    background: #ffffff;
+    border: 1px solid var(--color-brand-teal);
+  }
+
+  @media (min-width: 768px) {
+    .ind-flowrow {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 0.75rem 1.5rem;
+    }
+
+    .has-arrow::after {
+      content: "→";
+      left: auto;
+      right: -1.15rem;
+      top: 50%;
+      bottom: auto;
+      transform: translate(0, -50%);
+    }
+
+    .ind-auto-from {
+      display: block;
+    }
+
+    /* まとめた枠は、束ねた工程ぶんの列を占める */
+    .ind-auto-group {
+      grid-column: span var(--span, 3);
+      align-self: center;
+    }
+
+    /* 枠の中も束ねた工程の数で割る＝上の段の同じ工程とほぼ縦が揃う */
+    .ind-auto-frame {
+      grid-template-columns: repeat(var(--span, 3), minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+
+</style>

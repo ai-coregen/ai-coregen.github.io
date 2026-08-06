@@ -1,0 +1,74 @@
+---
+/** 2. 悩みへの共感。チェックボックスは装飾（aria-hidden・押せる必要はない）。画像は右 */
+import SectionHeading from "../ui/SectionHeading.astro";
+import JaText from "../ui/JaText.astro";
+import EmText from "./EmText.astro";
+import SectionSplit from "./SectionSplit.astro";
+import type { IndustryChallenges } from "../../data/industries";
+
+interface Props {
+  data: IndustryChallenges;
+}
+
+const { data } = Astro.props;
+---
+
+<section class="bg-surface py-16 lg:py-24" id="challenges">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading>
+      {data.heading.map((line) => <JaText tag="span" text={line} class="block" />)}
+    </SectionHeading>
+
+    <SectionSplit image={data.image}>
+      <ul class="ind-checklist bg-white border border-line p-6 space-y-4" data-animate>
+        {data.checklist.map((item) => (
+          <li class="flex items-start gap-3">
+            <span class="ind-check shrink-0 mt-1" aria-hidden="true"></span>
+            <JaText
+              tag="span"
+              text={item}
+              class="text-ink text-[15px] leading-[1.8]"
+            />
+          </li>
+        ))}
+      </ul>
+    </SectionSplit>
+
+    <div class="max-w-[880px] mt-10" data-animate>
+      {data.closing.map((line) => (
+        <EmText
+          tag="p"
+          text={line}
+          emphasis={data.emphasis}
+          class="text-ink font-bold text-base sm:text-lg leading-[1.9]"
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+   * PC（1024px以上）では1項目=1行にする。折り返すと □ の右で行頭が揃わず、
+   * チェックリストが箇条書きの塊に見えるため（2026-08-06 なおきレビュー）。
+   *
+   * **1行に収まる長さはコピー側で担保する**: 本文15px・字間0.12emで1文字あたり約16.9px、
+   * この列の内寸は約516px＝**日本語30字が上限**。31字を超えると nowrap のまま溢れる。
+   * 上限は scripts/verify_industry_copy.py が機械で見ている（超えたら検品が落ちる）。
+   * SPは幅が足りないので budoux の文節改行に任せる。
+   */
+  @media (min-width: 1024px) {
+    .ind-checklist li > :global(.break-keep) {
+      white-space: nowrap;
+    }
+  }
+
+  /* チェックボックスは装飾。テキストの □ を読み上げさせない */
+  .ind-check {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--color-ink);
+    background: #ffffff;
+  }
+</style>

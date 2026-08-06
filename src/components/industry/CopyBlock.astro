@@ -1,0 +1,36 @@
+---
+/**
+ * 段落（＝原稿の空行区切り）ごとに、原稿の1行を1つの <p> として並べる。
+ * 原稿の改行位置がそのまま出て、端末幅で溢れる分だけ budoux が文節で折る。
+ * 統計を並べた長い段落がモバイルで塊にならないための実装（manufacturing.md 実装への注記）。
+ */
+import EmText from "./EmText.astro";
+import type { Paragraph } from "../../data/industries";
+
+interface Props {
+  paragraphs: Paragraph[];
+  emphasis?: string[];
+  /** 段落コンテナに付けるクラス */
+  class?: string;
+  /** 1行（<p>）に付けるクラス */
+  lineClass?: string;
+}
+
+const {
+  paragraphs,
+  emphasis = [],
+  class: className = "",
+  lineClass = "text-ink text-[15px] sm:text-base leading-[1.9]",
+} = Astro.props;
+---
+
+<div class:list={[className]}>
+  {
+    paragraphs.map((lines, i) => (
+      <div class:list={[i > 0 && "mt-6"]}>
+        {lines.map((line) => (
+          <EmText tag="p" text={line} emphasis={emphasis} class={lineClass} />
+        ))}
+      </div>
+    ))}
+</div>

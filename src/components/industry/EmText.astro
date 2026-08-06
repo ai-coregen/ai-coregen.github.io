@@ -1,0 +1,93 @@
+---
+/**
+ * 業種LPの本文1行。JaText(budoux)で文節改行しつつ、
+ * industries.ts の emphasis に載っている語だけを強調する。
+ *
+ * 強調は「太字 + 差し色の下線（罫線扱い）」。デザイン規定どおり差し色は面で使わない。
+ * 強調語は knowledge/industry-copy/{slug}.md の「強調したいキーワード」表が正本で、
+ * セクションごとに1〜2語まで。1行につき各語は最初の1回だけ当てる。
+ */
+import JaText from "../ui/JaText.astro";
+
+type TextTag = "p" | "span" | "h3" | "h4" | "li";
+
+interface Props {
+  text: string;
+  emphasis?: string[];
+  tag?: TextTag;
+  class?: string;
+}
+
+const {
+  text,
+  emphasis = [],
+  tag: Tag = "p",
+  class: className = "",
+} = Astro.props;
+
+interface Segment {
+  text: string;
+  em: boolean;
+}
+
+function splitEmphasis(source: string, phrases: string[]): Segment[] {
+  let segments: Segment[] = [{ text: source, em: false }];
+
+  for (const phrase of phrases) {
+    if (!phrase) continue;
+    const next: Segment[] = [];
+    let matched = false;
+
+    for (const segment of segments) {
+      const index = matched || segment.em ? -1 : segment.text.indexOf(phrase);
+      if (index < 0) {
+        next.push(segment);
+        continue;
+      }
+      const head = segment.text.slice(0, index);
+      const tail = segment.text.slice(index + phrase.length);
+      if (head) next.push({ text: head, em: false });
+      next.push({ text: phrase, em: true });
+      if (tail) next.push({ text: tail, em: false });
+      matched = true;
+    }
+    segments = next;
+  }
+
+  return segments;
+}
+
+const segments = splitEmphasis(text, emphasis);
+const hasEmphasis = segments.some((segment) => segment.em);
+---
+
+{
+  hasEmphasis ? (
+    <Tag class:list={["break-keep", className]}>
+      {segments.map((segment) =>
+        segment.em ? (
+          <strong class="ind-em">
+            <JaText tag="span" text={segment.text} />
+          </strong>
+        ) : (
+          <JaText tag="span" text={segment.text} />
+        )
+      )}
+    </Tag>
+  ) : (
+    <JaText tag={Tag} text={text} class={className} />
+  )
+}
+
+<style>
+  .break-keep {
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  /* 強調＝太字＋差し色の下線。面では使わない（design-system-pksha.md） */
+  .ind-em {
+    font-weight: 700;
+    box-shadow: inset 0 -2px 0 0 var(--color-brand-orange);
+  }
+</style>

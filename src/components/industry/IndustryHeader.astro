@@ -1,0 +1,63 @@
+---
+/**
+ * 業種LP専用の最小ヘッダー（司令塔判断 2026-08-05）。
+ * 営業文から来た訪問者をページの縦の流れから逸らさないため、ナビリンクを置かない。
+ * 左=ロゴ（トップ `/` へ。会社を確かめる導線としてだけ残す）／右=無料相談のピルボタン。
+ *
+ * 既存の `components/Header.astro` は**触らない**（トップLPと共用のため）。
+ * ロゴサイズ・高さ・余白・固定追従・スクロール影は既存Headerに合わせてある。
+ */
+import { ctaUrl } from "../../data/industries";
+
+interface Props {
+  ctaVersion: string;
+  ctaLabel?: string;
+}
+
+const { ctaVersion, ctaLabel = "無料相談を予約" } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const homeHref = `${base}/`;
+const reserveHref = ctaUrl(base, "reserve", "header", ctaVersion);
+---
+
+<header
+  id="industry-header"
+  class="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-line transition-all duration-300"
+>
+  <div
+    class="max-w-[1260px] mx-auto px-6 lg:px-8 flex items-center justify-between gap-3 h-20 lg:h-24"
+  >
+    <a href={homeHref} class="flex items-center group min-h-[44px] shrink-0" aria-label="CoreGen">
+      <img
+        src={`${base}/logo.png`}
+        alt="CoreGen"
+        width="1485"
+        height="271"
+        decoding="async"
+        class="h-6 sm:h-7 lg:h-10 w-auto group-hover:opacity-60 transition-opacity"
+      />
+    </a>
+
+    <a
+      href={reserveHref}
+      class="inline-flex items-center justify-center shrink-0 bg-ink text-white font-display font-bold text-[13px] sm:text-sm lg:text-lg tracking-[0.04em] whitespace-nowrap px-4 sm:px-6 lg:px-8 py-2.5 lg:py-3 rounded-full hover:opacity-80 transition-opacity"
+    >
+      {ctaLabel}
+    </a>
+  </div>
+</header>
+
+<script>
+  // スクロールで影を付ける（既存Headerと同じ挙動）
+  const header = document.getElementById("industry-header");
+  if (header) {
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 80) {
+        header.classList.add("shadow-elevated");
+      } else {
+        header.classList.remove("shadow-elevated");
+      }
+    });
+  }
+</script>

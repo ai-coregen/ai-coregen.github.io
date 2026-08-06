@@ -2,6 +2,18 @@
 import JaText from "./ui/JaText.astro";
 import { footer } from "../data/content";
 
+interface Props {
+  /**
+   * 「完全成果報酬のため、初期費用はかかりません。」を出すか。
+   * 既定 true＝トップLP・既存ページは従来どおり。
+   * 業種LPは false にする（価格を一切書かない設計で、FAQの
+   * 「金額を一律に掲載していません。価格・進め方は無料相談で」と矛盾するため）。
+   */
+  showRewardNote?: boolean;
+}
+
+const { showRewardNote = true } = Astro.props;
+
 // base path を含めたページリンク（Astro の base 設定に追従）
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
@@ -17,7 +29,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
         <ul class="space-y-2.5">
           {footer.services.map((service) => (
             <li>
-              <a href="#services" class="text-white/50 text-sm hover:text-white transition-colors block py-1.5">
+              <a href={`${base}/#services`} class="text-white/50 text-sm hover:text-white transition-colors block py-1.5">
                 {service}
               </a>
             </li>
@@ -106,7 +118,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
           <dd class="text-white">{footer.companyInfo.email}</dd>
         </div>
       </dl>
-      <JaText tag="p" text={footer.note} class="text-white text-[15px] mt-5 leading-relaxed" />
+      {showRewardNote && (
+        <JaText tag="p" text={footer.note} class="text-white text-[15px] mt-5 leading-relaxed" />
+      )}
     </div>
 
     <!-- Bottom bar -->

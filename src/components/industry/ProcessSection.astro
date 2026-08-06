@@ -1,0 +1,76 @@
+---
+/**
+ * 7. 進め方。画像は左。既存 StepNode と同じ「丸番号＋縦線」の見た目。
+ *
+ * 下余白だけ既定（py-16 lg:py-24）より詰めてある。
+ * 次のプロフィールも白地で上余白 py-16 lg:py-24 を持つため、既定のままだと
+ * 白いだけの帯が最大192px続き、セクションが切れて見える（2026-08-06 なおきレビュー）。
+ * プロフィールはトップLPと共用なので触らず、こちら側の pb で詰める。
+ */
+import SectionHeading from "../ui/SectionHeading.astro";
+import JaText from "../ui/JaText.astro";
+import EmText from "./EmText.astro";
+import SectionSplit from "./SectionSplit.astro";
+import type { IndustryProcess } from "../../data/industries";
+
+interface Props {
+  data: IndustryProcess;
+}
+
+const { data } = Astro.props;
+---
+
+<section class="bg-white pt-16 lg:pt-24 pb-6 lg:pb-8" id="process">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading>
+      {data.heading.map((line) => <JaText tag="span" text={line} class="block" />)}
+    </SectionHeading>
+
+    <SectionSplit image={data.image}>
+      <ol>
+        {data.steps.map((step, i) => {
+          const isLast = i === data.steps.length - 1;
+          return (
+            <li class="flex gap-4 lg:gap-5" data-animate data-delay={i * 80}>
+              <div class="flex flex-col items-center">
+                <span
+                  class="w-11 h-11 lg:w-12 lg:h-12 rounded-full bg-ink text-white flex items-center justify-center font-display font-bold text-sm lg:text-base shrink-0"
+                >
+                  {step.number}
+                </span>
+                {!isLast && <span class="w-px bg-line flex-1 min-h-[28px] mt-2"></span>}
+              </div>
+              {/* 最後のSTEPは下余白を持たない（`pb-0` を足すだけでは lg:pb-8 に負ける） */}
+              <div class:list={[isLast ? "pb-0" : "pb-7 lg:pb-8"]}>
+                <p class="font-display font-bold text-mute text-[11px] tracking-[0.16em] mb-1">
+                  STEP {step.number}
+                </p>
+                <JaText
+                  tag="h3"
+                  text={step.title}
+                  class="text-ink font-bold text-lg lg:text-xl mb-1.5"
+                />
+                <EmText
+                  tag="p"
+                  text={step.body}
+                  emphasis={data.emphasis}
+                  class="text-ink text-[15px] leading-[1.9]"
+                />
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </SectionSplit>
+
+    {data.closing && (
+      <div class="mt-10" data-animate>
+        <JaText
+          tag="p"
+          text={data.closing}
+          class="text-ink font-bold text-[15px] sm:text-base"
+        />
+      </div>
+    )}
+  </div>
+</section>

@@ -1,0 +1,57 @@
+---
+/**
+ * 本文と画像の2カラム。`image.side` で画像を右か左に置く。
+ * ページ全体では 悩み=右 / なぜ今か=左 / 解決策=右 / 進め方=左 の交互になる。
+ *
+ * 画像ファイルがまだ無いときは、本文だけを幅いっぱいに描画する
+ * （セクション画像の生成を待たずにビルド・検品ができるようにするため）。
+ * モバイルは常に縦積みで、画像が先・本文が後。
+ */
+import SectionImage from "./SectionImage.astro";
+import { hasPublicAsset } from "../../lib/publicAsset";
+import type { SectionImage as SectionImageData } from "../../data/industries";
+
+interface Props {
+  image?: SectionImageData;
+  class?: string;
+}
+
+const { image, class: className = "" } = Astro.props;
+
+const withImage = !!image && hasPublicAsset(`industry/${image.file}`);
+const imageRight = image?.side === "right";
+---
+
+{
+  withImage ? (
+    <div
+      /*
+       * 本文側を広めに取る（1.28fr : 0.85fr）。狭くすると原稿が1行に収まらず、
+       * 「1行で見せるものは1行に」というトーンマナ §3 から外れていく。
+       *
+       * 列の比は**本文がどちらの列に来るかで入れ替える**。
+       * 左右の入れ替えは order でやっているので、比を固定にすると
+       * 画像が左のセクション（3・7）だけ本文が 0.85fr の狭い方に入り、
+       * STEPの説明行が2〜3行に折れていた（2026-08-06 修正）。
+       */
+      class:list={[
+        "grid grid-cols-1 gap-8 lg:gap-12 items-center",
+        imageRight
+          ? "lg:grid-cols-[minmax(0,1.28fr)_minmax(0,0.85fr)]"
+          : "lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.28fr)]",
+        className,
+      ]}
+    >
+      <div class:list={[imageRight ? "lg:order-1" : "lg:order-2"]}>
+        <slot />
+      </div>
+      <div class:list={["order-first", imageRight ? "lg:order-2" : "lg:order-1"]}>
+        <SectionImage image={image!} />
+      </div>
+    </div>
+  ) : (
+    <div class:list={[className]}>
+      <slot />
+    </div>
+  )
+}

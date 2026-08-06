@@ -1,0 +1,181 @@
+---
+/**
+ * 業種LPのファーストビュー。
+ * PC: コピー=左／画像=右（既存トップLPの構造）。素の画像は「被写体=左／余白=右」なので
+ *     CSSで左右反転して被写体を右へ送る（design-manual.md 4-2）。
+ * SP: 画像を上・コピーを下。可読性を優先して画像の上に文字を置かない。
+ *
+ * v2で削除: 英語ラベル / 日本語バッジ / カテゴリ表記 / 提供範囲ラベル
+ * （tone-manner.md §9。業種別LPでは使わない）。
+ */
+import Button from "../ui/Button.astro";
+import JaText from "../ui/JaText.astro";
+import CopyBlock from "./CopyBlock.astro";
+import { ctaUrl, type IndustryHero } from "../../data/industries";
+
+interface Props {
+  hero: IndustryHero;
+  ctaVersion: string;
+}
+
+const { hero, ctaVersion } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const imageSrc = `${base}/industry/${hero.image.file}`;
+const reserveHref = ctaUrl(base, "reserve", "hero", ctaVersion);
+const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
+---
+
+<section class="relative bg-white overflow-hidden" id="hero">
+  <!-- PC: 右側の画像（白地になじませる。コピーの背後まで回り込む） -->
+  <div class="ind-hero-visual hidden lg:block" aria-hidden="true">
+    <img
+      src={imageSrc}
+      alt=""
+      width="1672"
+      height="941"
+      decoding="async"
+      fetchpriority="high"
+      class:list={["ind-hero-image", hero.image.flip && "is-flipped"]}
+    />
+  </div>
+  <div class="ind-hero-overlay hidden lg:block" aria-hidden="true"></div>
+
+  <div
+    class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-24 pb-16 lg:pt-36 lg:pb-24"
+  >
+    <!-- SP: 画像を上に置く -->
+    <div class="lg:hidden -mx-6 mb-8" data-animate>
+      <img
+        src={imageSrc}
+        alt={hero.image.alt}
+        width="1672"
+        height="941"
+        decoding="async"
+        fetchpriority="high"
+        class:list={[
+          "ind-hero-image w-full h-auto",
+          hero.image.flip && "is-flipped",
+        ]}
+      />
+    </div>
+
+    <div class="max-w-[820px]">
+      {/* 改行位置は演出そのもの。1行=1ブロックで固定し、budouxに結合させない */}
+      <h1
+        class="text-[clamp(1.85rem,3.1vw+0.8rem,2.9rem)] leading-[1.45] tracking-[0.05em] font-bold text-ink mb-5"
+        data-animate
+      >
+        {hero.mainCatch.map((line) => (
+          <JaText tag="span" text={line} class="block" />
+        ))}
+      </h1>
+
+      <JaText
+        tag="p"
+        text={hero.subCatch}
+        class="text-ink font-bold text-lg sm:text-xl lg:text-2xl leading-snug mb-6"
+        data-animate
+        data-delay="60"
+      />
+
+      <div data-animate data-delay="100">
+        <CopyBlock
+          paragraphs={hero.subCopy}
+          class="mb-9"
+          lineClass="text-ink text-[15px] sm:text-[17px] leading-[1.95]"
+        />
+      </div>
+
+      {/* 横並びは lg から。sm〜lg は2本並べると幅が足りず、ラベルが折れるか画面から溢れる */}
+      <div
+        class="flex flex-col lg:flex-row items-stretch lg:items-center gap-4 mb-5"
+        data-animate
+        data-delay="140"
+      >
+        <Button
+          variant="primary"
+          href={reserveHref}
+          class="w-full lg:w-auto lg:whitespace-nowrap"
+        >
+          {hero.primaryCta}
+        </Button>
+        <Button
+          variant="white"
+          href={downloadHref}
+          class="w-full lg:w-auto lg:whitespace-nowrap"
+        >
+          {hero.secondaryCta}
+        </Button>
+      </div>
+
+      <div data-animate data-delay="180">
+        {hero.microCopy.map((line) => (
+          <JaText tag="p" text={line} class="text-mute text-[13px] leading-relaxed" />
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* PC: 右寄せの画像レイヤー */
+  .ind-hero-visual {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 880px;
+    max-width: 58%;
+    transform: translateY(-50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /*
+   * 白地へのなじませ。減彩・multiply・opacity は design-manual.md 4-1 の採用値のまま。
+   *
+   * maskだけ規定の radial（ellipse 86% 86% at 56% 50%, #000 54%, transparent 94%）から変えている。
+   * 規定値は 16:9 の写真に当てると端が alpha 0.72〜0.90 までしか落ちず、
+   * 「端をぼかして矩形の輪郭を殺す」という規定の目的が達成できなかった（実測）。
+   * 代わりに縦横の linear で端を確実に0まで落とす。全業種で同一の値＝業種ごとに変えないことは維持。
+   *
+   * maskは画像のローカル座標に効くので、反転の有無にかかわらず値は同じでよい
+   * （余白は常にローカル右38%。そこを落とすとコピー側が白に抜ける）。
+   */
+  .ind-hero-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: saturate(0.55) contrast(0.94) brightness(1.03);
+    mix-blend-mode: multiply;
+    opacity: 0.85;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, #000 8%, #000 70%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    mask-image:
+      linear-gradient(90deg, transparent 0%, #000 8%, #000 70%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+    pointer-events: none;
+  }
+
+  /* 左右反転して被写体を右へ送る（design-manual.md 4-2） */
+  .ind-hero-image.is-flipped {
+    transform: scaleX(-1);
+  }
+
+  /* 左（コピー側）を白く残して可読性を確保（既存 .hero-overlay と同値） */
+  .ind-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      #ffffff 28%,
+      rgba(255, 255, 255, 0.55) 55%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+</style>

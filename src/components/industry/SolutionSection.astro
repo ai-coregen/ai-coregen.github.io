@@ -1,0 +1,65 @@
+---
+/**
+ * 4. 解決策。画像は右。
+ * 納品物は3列グリッド。項目数は枠が埋まる数（3・6・9）にする＝空き枠を灰色で見せない。
+ */
+import SectionHeading from "../ui/SectionHeading.astro";
+import JaText from "../ui/JaText.astro";
+import CopyBlock from "./CopyBlock.astro";
+import SectionSplit from "./SectionSplit.astro";
+import type { IndustrySolution } from "../../data/industries";
+
+interface Props {
+  data: IndustrySolution;
+}
+
+const { data } = Astro.props;
+---
+
+<section class="bg-surface py-16 lg:py-24" id="solution">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading>
+      {data.heading.map((line) => <JaText tag="span" text={line} class="block" />)}
+    </SectionHeading>
+
+    <SectionSplit image={data.image}>
+      <div data-animate>
+        <CopyBlock
+          paragraphs={data.body}
+          emphasis={data.emphasis}
+          lineClass="text-ink text-[15px] sm:text-base leading-[1.95]"
+        />
+      </div>
+    </SectionSplit>
+
+    <div class="mt-14">
+      <JaText
+        tag="h3"
+        text={data.deliverablesHeading}
+        class="text-ink font-bold text-lg lg:text-xl mb-6"
+        data-animate
+      />
+      <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-line border border-line">
+        {data.deliverables.map((item, i) => (
+          <li class="bg-white p-6 lg:p-7" data-animate data-delay={i * 60}>
+            <div class="flex items-baseline gap-3 mb-3">
+              <span class="font-display font-bold text-mute text-lg leading-none">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <JaText
+                tag="span"
+                text={item.title}
+                class="text-ink font-bold text-base lg:text-lg leading-snug"
+              />
+            </div>
+            <JaText
+              tag="p"
+              text={item.body}
+              class="text-ink text-[15px] leading-[1.9]"
+            />
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>

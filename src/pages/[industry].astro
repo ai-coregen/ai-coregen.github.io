@@ -1,0 +1,58 @@
+---
+/**
+ * 業種別LP（承認済み11セクション構成）。
+ * src/data/industries.ts にデータを1件足すとページが1枚増える。
+ * 追加手順は knowledge/manuals/coding-manual.md を参照。
+ */
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/Footer.astro";
+import ProfileSection from "../components/ProfileSection.astro";
+import IndustryHeader from "../components/industry/IndustryHeader.astro";
+import IndustryHero from "../components/industry/IndustryHero.astro";
+import ChallengesSection from "../components/industry/ChallengesSection.astro";
+import EducationSection from "../components/industry/EducationSection.astro";
+import SolutionSection from "../components/industry/SolutionSection.astro";
+import TransparencySection from "../components/industry/TransparencySection.astro";
+import AfterSection from "../components/industry/AfterSection.astro";
+import ProcessSection from "../components/industry/ProcessSection.astro";
+import MidCtaSection from "../components/industry/MidCtaSection.astro";
+import FaqSection from "../components/industry/FaqSection.astro";
+import FinalCtaSection from "../components/industry/FinalCtaSection.astro";
+import { industries, type Industry } from "../data/industries";
+
+export function getStaticPaths() {
+  return Object.values(industries).map((industry) => ({
+    params: { industry: industry.slug },
+    props: { industry },
+  }));
+}
+
+interface Props {
+  industry: Industry;
+}
+
+const { industry } = Astro.props;
+---
+
+<Layout title={industry.meta.title} description={industry.meta.description}>
+  <IndustryHeader ctaVersion={industry.ctaVersion} />
+  <main>
+    <IndustryHero hero={industry.hero} ctaVersion={industry.ctaVersion} />
+    <ChallengesSection data={industry.challenges} />
+    <EducationSection data={industry.education} />
+    <SolutionSection data={industry.solution} />
+    <TransparencySection data={industry.transparency} />
+    <AfterSection data={industry.after} />
+    <ProcessSection data={industry.process} />
+    {/*
+      プロフィールはトップLPと同じものをそのまま使う（業種別に書き分けない）。
+      英語アイブロウ（Profile）だけは出さない＝業種LPは全セクションで使わない方針のため。
+    */}
+    <ProfileSection showEyebrow={false} />
+    <MidCtaSection data={industry.midCta} ctaVersion={industry.ctaVersion} />
+    <FaqSection data={industry.faq} />
+    <FinalCtaSection data={industry.finalCta} ctaVersion={industry.ctaVersion} />
+  </main>
+  {/* 価格の約束（完全成果報酬の一文）は業種LPでは出さない。FAQ Q1と矛盾するため */}
+  <Footer showRewardNote={false} />
+</Layout>
