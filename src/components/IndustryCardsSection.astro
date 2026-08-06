@@ -1,0 +1,192 @@
+---
+/**
+ * 業種別LPへの導線カード（トップLP）。
+ *
+ * **カードは `industries.ts` から自動生成する**。業種を1件足すとカードが1枚増えるので、
+ * このファイルにも content.ts にも業種を書き足す必要はない（2026-08-06 なおき決定の最小差し込み）。
+ *
+ * カードの中身は既存のコピーから引く（新しい文言を作らない）:
+ *   業種名  = industry.name
+ *   一言    = industry.hero.mainCatch（各業種で選定済みのキャッチ）
+ *   対象業務 = industry.hero.subCatch（誰向け・何をするかの1行）
+ * 文言の正本は knowledge/top-copy.md。着地したら industries.ts 側に上書き用の値を持たせる。
+ *
+ * 画像は業種ヒーローの流用。**素の画像は「被写体=左／余白=右」**なので、カードでは
+ * 反転せず左寄せで切り抜く（業種ページのヒーローだけがCSSで反転している）。
+ * ファイルが無ければ画像を描かず、カードの形だけ保つ（「準備中」の類は出さない）。
+ */
+import SectionHeading from "./ui/SectionHeading.astro";
+import JaText from "./ui/JaText.astro";
+import { industryCards } from "../data/content";
+import { industries } from "../data/industries";
+import { hasPublicAsset, webpSize } from "../lib/publicAsset";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const cards = Object.values(industries).map((industry) => {
+  const file = `industry/${industry.hero.image.file}`;
+  const size = webpSize(file);
+  return {
+    href: `${base}/${industry.slug}/`,
+    name: industry.name,
+    catch: industry.hero.mainCatch.join(""),
+    work: industry.hero.subCatch,
+    image: hasPublicAsset(file) ? `${base}/${file}` : null,
+    width: size?.width,
+    height: size?.height,
+  };
+});
+---
+
+<section class="bg-white py-16 lg:py-24" id="industries">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading eyebrow={industryCards.eyebrow}>
+      {industryCards.heading}
+    </SectionHeading>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+      {cards.map((card, i) => (
+        <div data-animate data-delay={i * 120} class="h-full">
+          {/* カード全体がリンク＝スマホは面のどこをタップしても遷移する */}
+          <a href={card.href} class="ind-link-card">
+            <span class="ind-link-visual">
+              {card.image && (
+                <img
+                  src={card.image}
+                  alt=""
+                  width={card.width}
+                  height={card.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+            </span>
+            <span class="ind-link-body">
+              <span class="ind-link-name">{card.name}</span>
+              <JaText tag="span" text={card.catch} class="ind-link-catch" />
+              <JaText tag="span" text={card.work} class="ind-link-work" />
+              <span class="ind-link-arrow" aria-hidden="true">→</span>
+            </span>
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 浮きカードの語彙は FeaturesSection と同じ（白地・1px罫線・上罫線3px・薄い影） */
+  .ind-link-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-ink);
+    box-shadow: 0 6px 16px rgba(18, 18, 19, 0.06);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-top-color 0.3s ease;
+  }
+
+  /*
+   * ホバーでふわっと浮く。**hoverできる装置だけ**に効かせる
+   * （スマホでは :hover が「タップ後に残る」ので当てない）。
+   */
+  @media (hover: hover) {
+    .ind-link-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(18, 18, 19, 0.14);
+      border-top-color: var(--color-brand-orange);
+    }
+  }
+
+  /* 動きを減らす設定の人には移動を出さない（浮きは影と罫線で見せる） */
+  @media (prefers-reduced-motion: reduce) {
+    .ind-link-card {
+      transition: box-shadow 0.3s ease, border-top-color 0.3s ease;
+    }
+    .ind-link-card:hover {
+      transform: none;
+    }
+  }
+
+  .ind-link-card:focus-visible {
+    outline: 2px solid var(--color-brand-orange);
+    outline-offset: 2px;
+  }
+
+  .ind-link-visual {
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  .ind-link-visual img {
+    width: 100%;
+    height: 100%;
+    /* 被写体は素の画像の左側。右の余白側を切り落とす */
+    object-fit: cover;
+    object-position: left center;
+    /* なじませはセクション画像と同値（design-manual §8-4） */
+    filter: saturate(0.55) contrast(0.96) brightness(1.02);
+    opacity: 0.92;
+  }
+
+  .ind-link-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .ind-link-name {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-mute);
+    margin-bottom: 0.6rem;
+  }
+
+  .ind-link-catch {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--color-ink);
+    margin-bottom: 0.6rem;
+  }
+
+  .ind-link-work {
+    display: block;
+    font-size: 0.8125rem;
+    line-height: 1.8;
+    color: var(--color-mute);
+  }
+
+  /* 押せることの合図。文言は足さず矢印だけ置く */
+  .ind-link-arrow {
+    display: block;
+    margin-top: auto;
+    padding-top: 1.1rem;
+    font-size: 0.875rem;
+    line-height: 1;
+    color: var(--color-ink);
+    transition: transform 0.3s ease;
+  }
+
+  @media (hover: hover) {
+    .ind-link-card:hover .ind-link-arrow {
+      transform: translateX(4px);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .ind-link-body {
+      padding: 1.75rem;
+    }
+  }
+</style>

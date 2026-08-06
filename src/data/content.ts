@@ -16,6 +16,19 @@ export const nav = [
   { label: "導入の流れ", href: "#flow" },
 ];
 
+/**
+ * 業種別LPへの導線カード（セクション見出しだけ）。
+ *
+ * カードの中身（業種名・キャッチ・対象業務・画像・リンク先）は **`industries.ts` から自動生成**する。
+ * 業種を1件足すとカードが1枚増えるので、ここに業種を書き足す必要はない。
+ *
+ * **文言の正本は `knowledge/top-copy.md`**（コピー担当）。着地したらここを差し替える。
+ */
+export const industryCards = {
+  eyebrow: "INDUSTRIES",
+  heading: "業種別のご案内",
+};
+
 export const hero = {
   mainCatch: "AIで売上を最大化する",
   subCatch: [
@@ -72,7 +85,7 @@ export const services = {
   eyebrow: "SERVICES",
   heading: "AI実装を一気通貫で支援する4つのサービス",
   leadCopy:
-    "すべてワンストップで、貴社に合わせたカスタマイズサポートをご提供します。",
+    "すべてワンストップで、御社に合わせたカスタマイズサポートをご提供します。",
   items: [
     {
       number: "01",
@@ -84,7 +97,7 @@ export const services = {
       number: "02",
       name: "AI導入支援",
       description:
-        "貴社の業務に合わせたAIの導入を、実装フェーズから直接サポートします。",
+        "御社の業務に合わせたAIの導入を、実装フェーズから直接サポートします。",
     },
     {
       number: "03",
@@ -118,7 +131,7 @@ export const features = {
     {
       title: "完全成果報酬モデル",
       description:
-        "完全成果報酬制を採用しているため、貴社は初期費用なしでAI実装を始められます。",
+        "完全成果報酬制を採用しているため、御社は初期費用なしでAI実装を始められます。",
     },
   ],
 };
@@ -143,9 +156,9 @@ export const curriculum = {
     { name: "Claude Code", description: "Claude Codeを使った業務自動化" },
   ],
   workshopTitle: "② カスタマイズワークショップ（全5回・計5時間）",
-  workshopLead: "基礎から応用まですべてを網羅した、貴社専用のカスタマイズワークショップです。",
+  workshopLead: "基礎から応用まですべてを網羅した、御社専用のカスタマイズワークショップです。",
   workshopPoints: [
-    "貴社の業務に直結する具体的な活用例を実践的に習得",
+    "御社の業務に直結する具体的な活用例を実践的に習得",
     "質問・相談に直接対応",
     "受講者全員が手を動かして、実務レベルまで到達することがゴール",
   ],
@@ -204,7 +217,7 @@ export const flow = {
     {
       number: "5",
       title: "AI導入支援",
-      description: "貴社の業務に合わせたAIの導入を実装フェーズから直接サポート",
+      description: "御社の業務に合わせたAIの導入を実装フェーズから直接サポート",
     },
     {
       number: "6",
@@ -224,7 +237,7 @@ export const finalCta = {
   eyebrow: "CONTACT",
   heading: "まずは無料オンライン相談から",
   subCopy:
-    "貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
+    "御社の現状をお伺いし、AI活用による売上最大化の具体的なプランをお伝えします。",
   note: "完全成果報酬のため、初期費用はかかりません。",
   disclaimer: "営業電話・しつこい勧誘は一切いたしません。",
   primaryCta: "無料相談を予約する",
@@ -302,7 +315,7 @@ export const downloadForm = {
 export const reserve = {
   eyebrow: "Reserve",
   heading: "無料オンライン相談のご予約",
-  lead: "ご希望の日時を選んでください。貴社の現状をお伺いし、AI活用による売上最大化の具体的なプランをご提案します。",
+  lead: "ご希望の日時を選んでください。御社の現状をお伺いし、AI活用による売上最大化の具体的なプランをご提案します。",
   timerexUrl: "https://timerex.net/s/Sokichi_Hoshino/3a56f516",
   note: "※ 営業電話・しつこい勧誘は一切いたしません。オンラインで実施します。",
 };

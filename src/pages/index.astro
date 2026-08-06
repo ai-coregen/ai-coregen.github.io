@@ -7,6 +7,7 @@ import ServicesSection from "../components/ServicesSection.astro";
 import FeaturesSection from "../components/FeaturesSection.astro";
 import ProfileSection from "../components/ProfileSection.astro";
 import CurriculumSection from "../components/CurriculumSection.astro";
+import IndustryCardsSection from "../components/IndustryCardsSection.astro";
 import CaseStudySection from "../components/CaseStudySection.astro";
 import FlowSection from "../components/FlowSection.astro";
 import CtaSection from "../components/CtaSection.astro";
@@ -16,13 +17,20 @@ import { site } from "../data/content";
 
 <Layout title={site.title} description={site.description}>
   <Header />
+  {/*
+    並び順は「理念 → 研修 → 業種カード → プロフィール」を連続させるための最小の入れ替え
+    （2026-08-06 なおき決定）。Services以下は相対順のまま後ろへ送っている。
+    ナビ（content.ts の nav）は #id へのフラグメントなので、並びを変えても壊れない。
+    順番を戻す・入れ替えるときはこの1行ずつを動かすだけでよい。
+  */}
   <main>
     <HeroSection />
     <SolutionSection />
+    <CurriculumSection />
+    <IndustryCardsSection />
+    <ProfileSection />
     <ServicesSection />
     <FeaturesSection />
-    <ProfileSection />
-    <CurriculumSection />
     <CaseStudySection />
     <FlowSection />
     <CtaSection />
