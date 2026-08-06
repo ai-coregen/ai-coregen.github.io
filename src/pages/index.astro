@@ -7,6 +7,7 @@ import ServicesSection from "../components/ServicesSection.astro";
 import FeaturesSection from "../components/FeaturesSection.astro";
 import ProfileSection from "../components/ProfileSection.astro";
 import CurriculumSection from "../components/CurriculumSection.astro";
+import IndustryCardsSection from "../components/IndustryCardsSection.astro";
 import CaseStudySection from "../components/CaseStudySection.astro";
 import FlowSection from "../components/FlowSection.astro";
 import CtaSection from "../components/CtaSection.astro";
@@ -16,12 +17,19 @@ import { site } from "../data/content";
 
 <Layout title={site.title} description={site.description}>
   <Header />
+  {/*
+    **元のトップの並びは変えない**。業種カードだけを研修の直前に差し込む
+    （2026-08-06 なおき決定。「業種別AI導入支援の概要 → AI導入研修の概要」で概要2枚を並べる）。
+    ナビ（content.ts の nav）は #id へのフラグメントなので、並びを変えても壊れない。
+    位置を動かすときは <IndustryCardsSection /> の1行を上下させるだけでよい。
+  */}
   <main>
     <HeroSection />
     <SolutionSection />
     <ServicesSection />
     <FeaturesSection />
     <ProfileSection />
+    <IndustryCardsSection />
     <CurriculumSection />
     <CaseStudySection />
     <FlowSection />

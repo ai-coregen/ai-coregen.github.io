@@ -1,0 +1,248 @@
+---
+/**
+ * 業種別LPへの導線カード（トップLP）。
+ *
+ * **カードは `industries.ts` から自動生成する**。業種を1件足すとカードが1枚増えるので、
+ * このファイルにも content.ts にも業種を書き足す必要はない（2026-08-06 なおき決定の最小差し込み）。
+ *
+ * カードの中身は既存のコピーから引く（新しい文言を作らない。正本 knowledge/top-copy.md §3）:
+ *   業種名  = industry.name
+ *   一言    = industry.hero.mainCatch（各業種LPで選定済みのメインキャッチ。**改行位置も維持する**）
+ *   対象業務 = industry.cardWork（体言止め・句点なし）
+ *   画像alt = industry.hero.image.alt
+ *
+ * 画像は業種ヒーローの流用。**素の画像は「被写体=左／余白=右」**なので、カードでは
+ * 反転せず左寄せで切り抜く（業種ページのヒーローだけがCSSで反転している）。
+ * ファイルが無ければ画像を描かず、カードの形だけ保つ（「準備中」の類は出さない）。
+ *
+ * **カードの中にボタンやリンク文言は置かない**（カード全体がリンク）。
+ * 計測はカード側に足さない＝内部遷移なので `?c=` は track.ts の sessionStorage が引き継ぐ。
+ */
+import SectionHeading from "./ui/SectionHeading.astro";
+import JaText from "./ui/JaText.astro";
+import { industryCards } from "../data/content";
+import { industries } from "../data/industries";
+import { hasPublicAsset, webpSize } from "../lib/publicAsset";
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+const cards = Object.values(industries).map((industry) => {
+  const file = `industry/${industry.hero.image.file}`;
+  const size = webpSize(file);
+  return {
+    href: `${base}/${industry.slug}/`,
+    name: industry.name,
+    catchLines: industry.hero.mainCatch,
+    work: industry.cardWork,
+    image: hasPublicAsset(file) ? `${base}/${file}` : null,
+    alt: industry.hero.image.alt,
+    width: size?.width,
+    height: size?.height,
+  };
+});
+---
+
+<section class="bg-white py-16 lg:py-24" id="industries">
+  <div class="max-w-[1100px] mx-auto px-6 lg:px-8">
+    <SectionHeading eyebrow={industryCards.eyebrow}>
+      {industryCards.heading}
+    </SectionHeading>
+
+    {/* リード文は置かない（正本 §2）。見出しの直後にカード3枚 */}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 items-stretch">
+      {cards.map((card, i) => (
+        <div data-animate data-delay={i * 120} class="h-full">
+          {/* カード全体がリンク＝スマホは面のどこをタップしても遷移する */}
+          <a href={card.href} class="ind-link-card">
+            <span class="ind-link-visual">
+              {card.image && (
+                <img
+                  src={card.image}
+                  alt={card.alt}
+                  width={card.width}
+                  height={card.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              {/*
+                ホバーで画像に薄い白をかけ、その上に業種名を浮かせる。
+                下のテキストブロックに同じ業種名があるので、読み上げからは外す。
+              */}
+              <span class="ind-link-veil" aria-hidden="true">
+                <span class="ind-link-veil-text">{card.name}</span>
+              </span>
+            </span>
+            <span class="ind-link-body">
+              <span class="ind-link-name">{card.name}</span>
+              {/*
+                一言は業種LPの改行位置をそのまま持ってくる（製造業だけ2行）。
+                枠は2行ぶんの高さで固定してあるので、1行の業種が縮んで並びが崩れない。
+              */}
+              <span class="ind-link-catch">
+                {card.catchLines.map((line) => (
+                  <JaText tag="span" text={line} class="block" />
+                ))}
+              </span>
+              <JaText tag="span" text={card.work} class="ind-link-work" />
+            </span>
+          </a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* 浮きカードの語彙は FeaturesSection と同じ（白地・1px罫線・上罫線3px・薄い影） */
+  .ind-link-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+    border-top: 3px solid var(--color-ink);
+    box-shadow: 0 6px 16px rgba(18, 18, 19, 0.06);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-top-color 0.3s ease;
+  }
+
+  /*
+   * ホバーでふわっと浮く。**hoverできる装置だけ**に効かせる
+   * （スマホでは :hover が「タップ後に残る」ので当てない）。
+   */
+  @media (hover: hover) {
+    .ind-link-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 30px rgba(18, 18, 19, 0.14);
+      border-top-color: var(--color-brand-orange);
+    }
+  }
+
+  /* 動きを減らす設定の人には移動を出さない（浮きは影と罫線・膜で見せる） */
+  @media (prefers-reduced-motion: reduce) {
+    .ind-link-card {
+      transition: box-shadow 0.3s ease, border-top-color 0.3s ease;
+    }
+    .ind-link-card:hover {
+      transform: none;
+    }
+    .ind-link-veil-text {
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* スマホはhoverが無いので、押した手応えは :active の軽い押し込みで返す */
+  .ind-link-card:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 10px rgba(18, 18, 19, 0.08);
+  }
+
+  .ind-link-card:focus-visible {
+    outline: 2px solid var(--color-brand-orange);
+    outline-offset: 2px;
+  }
+
+  .ind-link-visual {
+    position: relative;
+    display: block;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--color-surface);
+  }
+
+  /*
+   * ホバー時に画像へかける薄い膜と、その上に浮かぶ業種名（2026-08-06 なおき指示）。
+   * 白い膜にしているのは、このLPが白地のモノクロ基調で、画像もすでに減彩してあるため。
+   * 黒い膜だと明るい面の中に暗い矩形が1枚だけ立ち、浮くより先に目立ってしまう。
+   * 文字は本文と同じ ink。72%の白の上なので、地の写真によらず読める。
+   */
+  .ind-link-veil {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.72);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .ind-link-veil-text {
+    font-size: 1.375rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-ink);
+    transform: translateY(8px);
+    transition: transform 0.3s ease;
+  }
+
+  /* 膜と文字は**hoverできる装置だけ**に出す。タッチ端末では最初から出さない */
+  @media (hover: hover) {
+    .ind-link-card:hover .ind-link-veil {
+      opacity: 1;
+    }
+
+    .ind-link-card:hover .ind-link-veil-text {
+      transform: translateY(0);
+    }
+  }
+
+  .ind-link-visual img {
+    width: 100%;
+    height: 100%;
+    /* 被写体は素の画像の左側。右の余白側を切り落とす */
+    object-fit: cover;
+    object-position: left center;
+    /* なじませはセクション画像と同値（design-manual §8-4） */
+    filter: saturate(0.55) contrast(0.96) brightness(1.02);
+    opacity: 0.92;
+  }
+
+  .ind-link-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .ind-link-name {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--color-mute);
+    margin-bottom: 0.6rem;
+  }
+
+  /*
+   * 一言。**2行ぶんの高さで固定**する（正本 §4）。
+   * 製造業だけ2行・他は1行なので、固定しないとカードごとに対象業務の行の高さが変わる。
+   */
+  .ind-link-catch {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.6;
+    color: var(--color-ink);
+    min-height: calc(1.0625rem * 1.6 * 2);
+    margin-bottom: 0.6rem;
+  }
+
+  .ind-link-work {
+    display: block;
+    font-size: 0.8125rem;
+    line-height: 1.8;
+    color: var(--color-mute);
+  }
+
+  @media (min-width: 1024px) {
+    .ind-link-body {
+      padding: 1.75rem;
+    }
+  }
+</style>
