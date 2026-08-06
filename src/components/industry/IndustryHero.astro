@@ -11,6 +11,7 @@
 import Button from "../ui/Button.astro";
 import JaText from "../ui/JaText.astro";
 import CopyBlock from "./CopyBlock.astro";
+import { hasPublicAsset, webpSize } from "../../lib/publicAsset";
 import { ctaUrl, type IndustryHero } from "../../data/industries";
 
 interface Props {
@@ -21,44 +22,63 @@ interface Props {
 const { hero, ctaVersion } = Astro.props;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const imageSrc = `${base}/industry/${hero.image.file}`;
+/*
+ * ヒーロー画像も SectionImage と同じく**ビルド時に実在を見る**。
+ * 無ければ画像を描かない＝画像の生成を待たずにコピーとレイアウトを先に仕上げられる
+ * （旧実装は無条件に <img> を出していたので、未着の業種でリンク切れ画像が出ていた）。
+ * 実寸も画像から読む。**業種ごとに比率が違う**ので、決め打ちの width/height を書かない。
+ */
+const heroPath = `industry/${hero.image.file}`;
+const hasHeroImage = hasPublicAsset(heroPath);
+const heroSize = webpSize(heroPath);
+const imageSrc = `${base}/${heroPath}`;
 const reserveHref = ctaUrl(base, "reserve", "hero", ctaVersion);
 const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
 ---
 
 <section class="relative bg-white overflow-hidden" id="hero">
-  <!-- PC: 右側の画像（白地になじませる。コピーの背後まで回り込む） -->
-  <div class="ind-hero-visual hidden lg:block" aria-hidden="true">
-    <img
-      src={imageSrc}
-      alt=""
-      width="1672"
-      height="941"
-      decoding="async"
-      fetchpriority="high"
-      class:list={["ind-hero-image", hero.image.flip && "is-flipped"]}
-    />
-  </div>
-  <div class="ind-hero-overlay hidden lg:block" aria-hidden="true"></div>
+  {/*
+    PC: 右側の画像（白地になじませる。コピーの背後まで回り込む）。
+    画像と白かぶせは**コンテンツコンテナと同じ幅の土台**（.ind-hero-stage）の中に置く。
+    ビューポート基準で右に置くと、広い画面ほど画像だけが右端へ流れてコピーとの間が空く。
+  */}
+  {hasHeroImage && (
+    <div class="ind-hero-stage hidden lg:block" aria-hidden="true">
+      <div class="ind-hero-visual">
+        <img
+          src={imageSrc}
+          alt=""
+          width={heroSize?.width}
+          height={heroSize?.height}
+          decoding="async"
+          fetchpriority="high"
+          class:list={["ind-hero-image", hero.image.flip && "is-flipped"]}
+        />
+      </div>
+      <div class="ind-hero-overlay"></div>
+    </div>
+  )}
 
   <div
     class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-24 pb-16 lg:pt-36 lg:pb-24"
   >
-    <!-- SP: 画像を上に置く -->
-    <div class="lg:hidden -mx-6 mb-8" data-animate>
-      <img
-        src={imageSrc}
-        alt={hero.image.alt}
-        width="1672"
-        height="941"
-        decoding="async"
-        fetchpriority="high"
-        class:list={[
-          "ind-hero-image w-full h-auto",
-          hero.image.flip && "is-flipped",
-        ]}
-      />
-    </div>
+    {/* SP: 画像を上に置く */}
+    {hasHeroImage && (
+      <div class="lg:hidden -mx-6 mb-8" data-animate>
+        <img
+          src={imageSrc}
+          alt={hero.image.alt}
+          width={heroSize?.width}
+          height={heroSize?.height}
+          decoding="async"
+          fetchpriority="high"
+          class:list={[
+            "ind-hero-image w-full h-auto",
+            hero.image.flip && "is-flipped",
+          ]}
+        />
+      </div>
+    )}
 
     <div class="max-w-[820px]">
       {/* 改行位置は演出そのもの。1行=1ブロックで固定し、budouxに結合させない */}
@@ -119,15 +139,31 @@ const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
 </section>
 
 <style>
-  /* PC: 右寄せの画像レイヤー */
+  /*
+   * 画像と白かぶせの土台。**本文と同じ 1260px のコンテナに揃える**。
+   * 2026-08-06 なおきレビュー: 1800px級の画面で画像がビューポート右端に張り付き、
+   * コピーとの間に大きな余白ができていた（旧実装は left:50% + 幅880px のビューポート基準）。
+   * 土台をコンテナ幅にすると、画面がどれだけ広くなってもコピーと画像の距離が変わらない。
+   */
+  .ind-hero-stage {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100%;
+    max-width: 1260px;
+    transform: translateX(-50%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* PC: コンテナの右端に寄せた画像レイヤー */
   .ind-hero-visual {
     position: absolute;
     top: 50%;
-    left: 50%;
-    width: 880px;
-    max-width: 58%;
+    right: 0;
+    width: min(760px, 60%);
     transform: translateY(-50%);
-    z-index: 0;
     pointer-events: none;
   }
 
@@ -165,7 +201,11 @@ const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
     transform: scaleX(-1);
   }
 
-  /* 左（コピー側）を白く残して可読性を確保（既存 .hero-overlay と同値） */
+  /*
+   * 左（コピー側）を白く残して可読性を確保（既存 .hero-overlay と同値）。
+   * 土台と同じ幅なので、**画像と同じ座標系でかぶさる**（旧実装はビューポート幅だったため、
+   * 広い画面では白の切れる位置と画像の位置がずれていた）。
+   */
   .ind-hero-overlay {
     position: absolute;
     inset: 0;

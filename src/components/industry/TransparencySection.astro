@@ -132,12 +132,13 @@ const { data } = Astro.props;
       letter-spacing: 0.1em;
     }
 
+    /*
+     * 見出し行は2つとも中央寄せ（2026-08-06 なおきレビュー。
+     * 「工程」だけ中央で「内容」が左だと、同じ黒帯の中で揃っていないように見える）。
+     * **本文セルは「工程」列だけ中央・「内容」列は左寄せのまま**（読む文章なので左が正）。
+     */
     .ind-flow-head span {
       padding: 1rem 1.5rem;
-    }
-
-    /* 「工程」列は中央寄せ・「内容」列は左寄せ */
-    .ind-flow-head span:first-child {
       text-align: center;
     }
 
