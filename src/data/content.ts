@@ -97,7 +97,7 @@ export const services = {
     },
     {
       number: "02",
-      name: "AI導入支援",
+      name: "業務別AI導入支援",
       description:
         "御社の業務に合わせたAIの導入を、実装フェーズから直接サポートします。",
     },
@@ -218,7 +218,7 @@ export const flow = {
     },
     {
       number: "5",
-      title: "AI導入支援",
+      title: "業務別AI導入支援",
       description: "御社の業務に合わせたAIの導入を実装フェーズから直接サポート",
     },
     {
@@ -260,7 +260,7 @@ export const footer = {
   copyright: "© 2026 CoreGen",
   services: [
     "AI導入研修・組織への定着支援",
-    "AI導入支援",
+    "業務別AI導入支援",
     "実務特化型プログラム研修&支援",
     "AI経営戦略支援",
   ],
