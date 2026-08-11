@@ -7,6 +7,7 @@ import SectionHeading from "../ui/SectionHeading.astro";
 import JaText from "../ui/JaText.astro";
 import CopyBlock from "./CopyBlock.astro";
 import SectionSplit from "./SectionSplit.astro";
+import SampleFlowFigure from "./SampleFlowFigure.astro";
 import type { IndustrySolution } from "../../data/industries";
 
 interface Props {
@@ -60,6 +61,16 @@ const { data } = Astro.props;
           </li>
         ))}
       </ol>
+
+      {/*
+        納品物の見本は**1枚だけ**（納品物1「現行業務フロー図」）。正本 §4。
+        6項目すべての見本を並べると、納品物リスト自体が読まれなくなる。
+      */}
+      {data.sampleFlow && (
+        <div class="mt-10">
+          <SampleFlowFigure data={data.sampleFlow} />
+        </div>
+      )}
     </div>
   </div>
 </section>

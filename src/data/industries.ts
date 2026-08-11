@@ -77,12 +77,59 @@ export interface Deliverable {
   body: string;
 }
 
+/** 現行業務フロー図の1工程 */
+export interface SampleFlowStep {
+  /** 担当（例「営業事務」「見積担当」「社長」「誰も」）。工程箱の上に小さく出す */
+  owner: string;
+  /** 工程名 */
+  title: string;
+  /** 所要時間や手段の1行（例「15分／件」「FAX・メール」）。省略可 */
+  note?: string;
+  /**
+   * true = 時間が溶けている工程（AI化の対象候補）。オレンジ枠＋淡いオレンジ地で描く。
+   * **どの工程をhotにするかは正本（industry-copy）の指定に従う**。実装側で増やさない。
+   */
+  hot?: boolean;
+}
+
+/**
+ * 納品物「現行業務フロー図」のサンプル図（セクション4・納品物リストの直後に**1枚だけ**置く）。
+ *
+ * 役割は「1枚にまとめます」を実物で見せること。**6項目すべての見本は作らない**
+ * （枚数が増えると納品物リスト自体が読まれなくなる。正本 §4）。
+ *
+ * **SAMPLEバッジの文字はデータに持たない**（装飾記号をデータに入れないのと同じ理由で
+ * 描画側の固定文字列にしてある）。
+ */
+export interface IndustrySampleFlow {
+  /** 図タイトル（例「現行業務フロー図」）。納品物1の名前と一致させる */
+  title: string;
+  /** タイトル下の1行 */
+  subtitle: string;
+  /** 図の右下に小さく置く添え書き */
+  credit: string;
+  steps: SampleFlowStep[];
+  /** 下の黒帯。1行目（太字） */
+  summaryTitle: string;
+  /** 下の黒帯。2行目 */
+  summaryBody: string;
+  /** 凡例。オレンジ枠の意味 */
+  legendHot: string;
+  /** 凡例。黒枠の意味 */
+  legendNormal: string;
+}
+
 export interface IndustrySolution {
   heading: Heading;
   body: Paragraph[];
   deliverablesHeading: string;
   /** グリッドの枠が埋まる数にする（3列なら3・6・9個） */
   deliverables: Deliverable[];
+  /**
+   * 納品物のサンプル図（現行業務フロー図）。
+   * **省略可**＝正本が着地していない業種はサンプル図なしで描画される。
+   */
+  sampleFlow?: IndustrySampleFlow;
   emphasis: string[];
   image?: SectionImage;
 }
@@ -92,10 +139,59 @@ export interface FlowRow {
   body: string;
 }
 
+/**
+ * 役割設計図の1列。
+ * 入力・出力は黒箱の中に項目を並べ、AI・人は枠の中に箱を並べる（描画側が出し分ける）。
+ */
+export interface RoleMapColumn {
+  /** 列の見出し（8字以内）。入力・出力は箱の中、AI・人は枠の上辺に出る */
+  label: string;
+  /** 項目（12字以内。長い1つだけ2行に折れてよい） */
+  items: string[];
+}
+
+/** 図の下段に置くブロック（例外時の戻し先／最終承認） */
+export interface RoleMapNote {
+  /** 見出し6字以内 */
+  title: string;
+  /** 説明32字以内 */
+  body: string;
+}
+
+/**
+ * 5「AIがやること、人が決めること」の役割設計図（正本 §5・2026-08-11）。
+ *
+ * v3までは処理表（工程／内容の4行）だった。**表のままだと「AIが行う処理」と
+ * 「人が決めること」が上下に積まれ、どちらが先でどこで人が止められるのかが読めない**ため
+ * 図に置き換えた。見本は `knowledge/reference/rolemap-sample.jpg`。
+ * **中身は処理表の項目を置き直しただけで、新しい約束は足していない。**
+ *
+ * **図タイトル・SAMPLEバッジ・「御社版を作成します」の添え書きは付けない**（正本 §5）。
+ * h2が図タイトルの役割を果たしており、この図は納品物の見本ではなく提供内容そのものの説明なので、
+ * 見本として見せるのはセクション4の現行業務フロー図1枚だけにする。
+ */
+export interface IndustryRoleMap {
+  input: RoleMapColumn;
+  ai: RoleMapColumn;
+  human: RoleMapColumn;
+  output: RoleMapColumn;
+  /** 下段左（オレンジ破線枠）。AIの枠から破線矢印でつなぐ */
+  fallback: RoleMapNote;
+  /** 下段右（黒箱） */
+  approval: RoleMapNote;
+  /** 図の最下部に置く締め文。図の一部として図の中に置く */
+  closing: string;
+}
+
 export interface IndustryTransparency {
   heading: Heading;
   lead: Paragraph;
-  /** PCは2列表（工程列は中央寄せ・内容列は左寄せ）、SPは縦フロー */
+  /**
+   * 役割設計図。**省略可**＝正本が着地していない業種は下の処理表で描画される。
+   * 全業種に行き渡ったら `flowHeader` / `flow` とテーブル描画は消す。
+   */
+  roleMap?: IndustryRoleMap;
+  /** PCは2列表（工程列は中央寄せ・内容列は左寄せ）、SPは縦フロー。roleMap 未設定の業種だけが使う */
   flowHeader: [string, string];
   flow: FlowRow[];
   emphasisBlock: Paragraph;
@@ -367,6 +463,37 @@ const manufacturing: Industry = {
         body: "空いた時間を、誰のどの活動に戻すかを決める",
       },
     ],
+    /*
+     * 納品物1「現行業務フロー図」の見本。正本v4 §4。
+     * **所要時間の数値は入れない**（見本画像の「15分／件」「平均2日」等は全て外し、
+     * 定性表現に置き換えてある）。note に数値を書き足さないこと。
+     * セクション6の図と両方に出る工程（手が空くまで待つ／過去案件を探す／
+     * 技術に聞いて往復／追客）は**同じ言い回しにする**。片方だけ変えると別の業務に見える。
+     */
+    sampleFlow: {
+      title: "現行業務フロー図",
+      subtitle:
+        "製造業・見積り対応の例 ── 誰が・何を・どこで時間をかけているかを1枚に",
+      credit:
+        "CoreGen. ／ 無料相談でうかがった内容をもとに、御社版をこの形で作成します",
+      steps: [
+        { owner: "営業事務", title: "見積依頼が届く", note: "FAX・メール" },
+        { owner: "営業事務", title: "紙の内容を手で転記", note: "1件ずつ手入力" },
+        { owner: "見積担当", title: "手が空くまで待つ", note: "着手できずに滞留", hot: true },
+        { owner: "見積担当", title: "過去案件を探す", note: "探し先はばらばら", hot: true },
+        { owner: "見積担当⇄技術", title: "技術に聞いて往復", note: "返事待ちが挟まる", hot: true },
+        { owner: "見積担当", title: "原価と価格を決める", note: "条件を見ながら判断" },
+        { owner: "見積担当", title: "見積書を作成", note: "様式へ転記" },
+        { owner: "社長", title: "承認", note: "口頭・その場で" },
+        { owner: "営業事務", title: "回答を送信", note: "メール・FAX" },
+        { owner: "誰も", title: "追客", note: "できていない", hot: true },
+      ],
+      summaryTitle: "依頼から回答まで、日をまたぐのが当たり前になっている",
+      summaryBody:
+        "そのほとんどは「待ち」と「探し物」で、手を動かしている時間ではありません",
+      legendHot: "オレンジ枠 ＝ 時間が溶けている工程（AI化の対象候補）",
+      legendNormal: "黒枠 ＝ 人の判断・作業として残す工程",
+    },
     emphasis: ["御社の状況から決めます"],
     image: {
       file: "manufacturing-s4.webp",
@@ -382,6 +509,56 @@ const manufacturing: Industry = {
       "AIに任せると聞いて不安なのは、どこまで勝手に決めるのか分からないからです。",
       "価格と製造可否をAIが決めることは、ありません。",
     ],
+    /*
+     * 役割設計図（正本v4 §5）。処理表の項目を置き直しただけで、新しい約束は足していない。
+     * 「人が決めること」の5語（原価・価格・納期・製造可否・仕様）は**1語も落とさず**4箱に
+     * 収めている（原価と価格で1箱、仕様は「仕様の最終判断」で1箱）。
+     * **箱の数を揃えるために語を削らないこと。**
+     */
+    roleMap: {
+      input: {
+        label: "入力",
+        items: ["見積依頼", "顧客情報", "仕様", "数量・納期", "過去の似た案件"],
+      },
+      ai: {
+        label: "AIに任せる処理",
+        items: [
+          "内容の整理",
+          "不足情報の洗い出し",
+          "似た案件の検索",
+          /* この箱だけ20字。2行に折れてよい（正本 §5 実装メモ） */
+          "見積り・提案・確認メールの下書き",
+        ],
+      },
+      human: {
+        label: "人が決めること",
+        items: ["原価・価格", "納期", "製造可否", "仕様の最終判断"],
+      },
+      output: {
+        label: "出力",
+        items: [
+          "社内確認用サマリー",
+          "質問事項",
+          "見積り・提案のたたき",
+          "顧客への返信案",
+          "追客予定",
+        ],
+      },
+      /*
+       * 下段2ブロックは**新しい約束ではない**。納品物2の説明行と FAQ Q3 を図にしただけ。
+       * 文言をこれ以上強めないこと。
+       */
+      fallback: {
+        title: "例外時の戻し先",
+        body: "AIが判断に迷ったら、質問リストにして担当者へ戻す。勝手に進めない。",
+      },
+      approval: {
+        title: "最終承認",
+        body: "送信前に必ず人が確認。AIが顧客に直接送ることはない。",
+      },
+      closing:
+        "価格と製造可否をAIが決めることは、ありません。AIが揃えるのは「判断を速くするための材料」です。",
+    },
     flowHeader: ["工程", "内容"],
     flow: [
       {

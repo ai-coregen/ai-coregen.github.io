@@ -1,0 +1,380 @@
+---
+/**
+ * 「AIと人の役割設計図」（セクション5）。
+ * 見本は knowledge/reference/rolemap-sample.jpg。**画像は貼らずHTML/CSSで組む**
+ * （業種ごとにデータを差し替える・SPで文字が潰れない・budouxで折る、の3つのため）。
+ *
+ * v3までは処理表（工程／内容の4行）だった。表のままだと「AIが行う処理」と「人が決めること」が
+ * 上下に積まれ、**どちらが先で、どこで人が止められるのかが読めない**ため図に置き換えた。
+ * 中身は処理表の項目の再配置で、新しい約束は足していない（正本 §5）。
+ *
+ * **図タイトル・SAMPLEバッジ・添え書きは置かない**（正本 §5）。
+ * h2が図タイトルの役割を果たしており、この図は納品物の見本ではなく提供内容そのものの説明。
+ * 見本として見せるのはセクション4の現行業務フロー図1枚だけにする。
+ *
+ * PC: 入力 → AIに任せる処理 → 人が決めること → 出力 の4カラム横並び。
+ * SP: 同じ順で縦積み。矢印は下向きに変わる。**横スクロールはさせない**。
+ */
+import JaText from "../ui/JaText.astro";
+import type { IndustryRoleMap } from "../../data/industries";
+
+interface Props {
+  data: IndustryRoleMap;
+}
+
+const { data } = Astro.props;
+
+/**
+ * 描画は4列とも同じ関数で行う。違いは「黒箱に項目を並べる」か「枠に箱を並べる」かだけなので、
+ * 列ごとに種類を持たせて出し分ける（業種が増えても描き分けを足さない）。
+ */
+const columns = [
+  { key: "input", col: data.input, variant: "dark" },
+  { key: "ai", col: data.ai, variant: "ai" },
+  { key: "human", col: data.human, variant: "human" },
+  { key: "output", col: data.output, variant: "dark" },
+] as const;
+---
+
+<div class="rmf" data-animate>
+  <div class="rmf-cols">
+    {columns.map(({ key, col, variant }, i) => (
+      <>
+        {i > 0 && (
+          <div class="rmf-arrow" aria-hidden="true">
+            <span class="rmf-arrow-mark"></span>
+          </div>
+        )}
+        <div class:list={["rmf-col", `is-${variant}`]}>
+          {/*
+            入力・出力は見出しを黒箱の中に置く。AI・人は枠の上辺にラベルを載せる（見本どおり）。
+            ラベルは絶対配置にして、**全列に同じ padding-top を入れて**天端をそろえている。
+          */}
+          {variant === "dark" ? null : <span class="rmf-tag">{col.label}</span>}
+          <div class="rmf-panel">
+            {variant === "dark" && <p class="rmf-panel-title">{col.label}</p>}
+            <ul class="rmf-items">
+              {col.items.map((item) => (
+                <li class="rmf-item">
+                  <JaText tag="span" text={item} class="rmf-item-label" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </>
+    ))}
+  </div>
+
+  {/*
+    下段2ブロック。左=例外時の戻し先（オレンジ破線）／右=最終承認（黒）。
+    左には、上のAI枠から下りてくる破線の矢印を添える（PCのみ。SPは縦一列なので出さない）。
+  */}
+  <div class="rmf-notes">
+    <div class="rmf-note is-fallback">
+      <span class="rmf-drop" aria-hidden="true"></span>
+      <p class="rmf-note-title">{data.fallback.title}</p>
+      <JaText tag="p" text={data.fallback.body} class="rmf-note-body" />
+    </div>
+    <div class="rmf-note is-approval">
+      <p class="rmf-note-title">{data.approval.title}</p>
+      <JaText tag="p" text={data.approval.body} class="rmf-note-body" />
+    </div>
+  </div>
+
+  {/* 締め文は図の一部（正本 §5「図の中・最下部」） */}
+  <JaText tag="p" text={data.closing} class="rmf-closing" />
+</div>
+
+<style>
+  /*
+   * 図の中だけで使う色。**差し色そのものは既存トークン（--color-brand-orange）を使う**。
+   * 淡いオレンジの地と細い罫線は見本（reference/rolemap-sample.jpg）から実測した値で、
+   * 図の外へは持ち出さない（面で差し色を使うのはこの図の枠の中だけ）。
+   */
+  .rmf {
+    --fig-tint: #fcf1eb;
+    --fig-soft: #edb2a0;
+    --fig-frame: #fafafa;
+    border: 1px solid var(--color-line);
+    background: #ffffff;
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  /* SP: 縦積み（入力→AI→人→出力）。PC: 4カラム＋矢印の7カラム */
+  .rmf-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  /* ラベルが枠の上辺に食い込むぶんを、**全列に同じだけ**空けて天端をそろえる */
+  .rmf-col {
+    position: relative;
+    display: flex;
+    padding-top: 13px;
+  }
+
+  .rmf-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 枠の上辺に載るラベル */
+  .rmf-tag {
+    position: absolute;
+    top: 0;
+    left: 1rem;
+    z-index: 1;
+    padding: 0.2rem 0.7rem;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .is-ai .rmf-tag {
+    color: var(--color-ink);
+    background: #ffffff;
+    border: 1px solid var(--color-line);
+  }
+
+  .is-human .rmf-tag {
+    color: #ffffff;
+    background: var(--color-brand-orange);
+  }
+
+  /* 入力・出力＝黒箱。見出しは箱の中に置き、細い罫線で項目と分ける */
+  .is-dark .rmf-panel {
+    background: var(--color-ink);
+    padding: 1.1rem 1rem 1.25rem;
+  }
+
+  .rmf-panel-title {
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    text-align: center;
+    padding-bottom: 0.7rem;
+    margin-bottom: 0.7rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  }
+
+  /* AIに任せる処理＝破線グレー枠 */
+  .is-ai .rmf-panel {
+    background: var(--fig-frame);
+    border: 1px dashed var(--color-line);
+    padding: 0.85rem;
+  }
+
+  /* 人が決めること＝オレンジ枠・淡いオレンジ地 */
+  .is-human .rmf-panel {
+    background: var(--fig-tint);
+    border: 2px solid var(--color-brand-orange);
+    padding: 0.85rem;
+  }
+
+  .rmf-items {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.5rem;
+  }
+
+  /* 黒箱の中は「箱」ではなく行として並べる（見本どおり） */
+  .is-dark .rmf-items {
+    gap: 0.35rem;
+    justify-content: center;
+  }
+
+  .is-dark .rmf-item {
+    text-align: center;
+  }
+
+  .is-dark .rmf-item-label {
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  /* 枠の中は白い箱。縦の余りを等分して、4つが枠いっぱいに収まるようにする */
+  .is-ai .rmf-item,
+  .is-human .rmf-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 46px;
+    padding: 0.5rem 0.6rem;
+    background: #ffffff;
+  }
+
+  .is-ai .rmf-item {
+    border: 1px solid var(--color-tail);
+  }
+
+  .is-human .rmf-item {
+    border: 1px solid var(--fig-soft);
+  }
+
+  .rmf-item-label {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--color-ink);
+  }
+
+  /* 人が決めることの箱だけ太字＝ここが結論だと分かるようにする（見本どおり） */
+  .is-human .rmf-item-label {
+    font-weight: 700;
+  }
+
+  /* 列をつなぐ矢印。SPは下向き、PCは右向き（三角はCSSで描く＝どの環境でも同じ形になる） */
+  .rmf-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 0;
+  }
+
+  .rmf-arrow-mark {
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 11px solid var(--color-line);
+  }
+
+  /* 下段2ブロック */
+  .rmf-notes {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  .rmf-note {
+    position: relative;
+    padding: 1rem 1.1rem;
+  }
+
+  .rmf-note.is-fallback {
+    background: #ffffff;
+    border: 2px dashed var(--color-brand-orange);
+  }
+
+  .rmf-note.is-approval {
+    background: var(--color-ink);
+  }
+
+  .rmf-note-title {
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+
+  .is-fallback .rmf-note-title {
+    color: var(--color-brand-orange);
+  }
+
+  .is-approval .rmf-note-title {
+    color: #ffffff;
+  }
+
+  .rmf-note-body {
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--color-ink);
+  }
+
+  .is-approval .rmf-note-body {
+    color: #ffffff;
+  }
+
+  /*
+   * AI枠から「例外時の戻し先」へ下りる破線の矢印。
+   * SPは全体が縦一列で、直前の要素がすでに下向き矢印を出しているので**出さない**
+   * （AfterSection の .ind-auto-from と同じ判断）。
+   */
+  .rmf-drop {
+    display: none;
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 0;
+    height: 26px;
+    border-left: 2px dashed var(--color-brand-orange);
+  }
+
+  .rmf-drop::after {
+    content: "";
+    position: absolute;
+    left: -7px;
+    bottom: -1px;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--color-brand-orange);
+  }
+
+  .rmf-closing {
+    margin-top: 1.5rem;
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 1024px) {
+    .rmf {
+      padding: 1.75rem 1.75rem 2rem;
+    }
+
+    .rmf-cols {
+      grid-template-columns:
+        minmax(0, 1fr) 38px minmax(0, 1fr)
+        38px minmax(0, 1fr) 38px minmax(0, 1fr);
+    }
+
+    /* 右向きに倒す。三角の向きだけ差し替える */
+    .rmf-arrow {
+      padding: 0;
+    }
+
+    .rmf-arrow-mark {
+      border-left: 11px solid var(--color-line);
+      border-right: 0;
+      border-top: 9px solid transparent;
+      border-bottom: 9px solid transparent;
+    }
+
+    .rmf-notes {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1.25rem;
+      margin-top: 2.75rem;
+    }
+
+    /*
+     * 破線矢印は「AIに任せる処理」の枠の真下から下りてくる必要がある。
+     * 図の幅をW、列幅をc、矢印列を38pxとすると 4c + 3*38 = W なので、
+     * AI枠の中心は 1.5c + 38 ＝ **Wの約37%**（1024〜1900pxのどの幅でも37.0〜37.2%）。
+     * この矢印が乗っている枠は2等分の左側（幅 (W-20)/2）なので、
+     * 枠の中では 0.372W ÷ (W-20)/2 ＝ **約75%** の位置になる。
+     * 枠の中央（50%）に置くとAI枠より左から下りてきて、どこから戻すのかが読めない。
+     */
+    .rmf-drop {
+      display: block;
+      left: 75%;
+    }
+
+    .rmf-closing {
+      margin-top: 2rem;
+      font-size: 14px;
+    }
+  }
+</style>

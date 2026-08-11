@@ -1,12 +1,17 @@
 ---
 /**
  * 5. AIがやること、人が決めること。
- * 処理表は PC=2列テーブル（工程列は中央寄せ・内容列は左寄せ）／SP=縦フロー（矢印区切り）。
- * 横スクロールはさせない。写真は入れない（表が視覚要素なので、視線の行き先を2つにしない）。
+ * 視覚要素は**役割設計図**（RoleMapFigure。正本 §5・2026-08-11）。
+ * 写真は入れない（図が視覚要素なので、視線の行き先を2つにしない）。
+ *
+ * `roleMap` が未設定の業種は、**旧v3の処理表**（PC=2列テーブル／SP=縦フロー）で描く。
+ * これは正本が図の仕様へ移行するまでの橋渡しで、
+ * **全業種の正本が着地したら処理表の描画とデータ（flowHeader / flow）ごと消す。**
  */
 import SectionHeading from "../ui/SectionHeading.astro";
 import JaText from "../ui/JaText.astro";
 import EmText from "./EmText.astro";
+import RoleMapFigure from "./RoleMapFigure.astro";
 import type { IndustryTransparency } from "../../data/industries";
 
 interface Props {
@@ -33,30 +38,34 @@ const { data } = Astro.props;
       ))}
     </div>
 
-    <!-- 処理表 -->
-    <div class="ind-flow max-w-[940px]" data-animate>
-      <div class="ind-flow-head">
-        <span>{data.flowHeader[0]}</span>
-        <span>{data.flowHeader[1]}</span>
-      </div>
-      {data.flow.map((row, i) => (
-        <>
-          {i > 0 && (
-            <div class="ind-flow-arrow lg:hidden" aria-hidden="true">↓</div>
-          )}
-          <div class="ind-flow-row">
-            <div class="ind-flow-label">{row.label}</div>
-            <div class="ind-flow-body">
-              <JaText
-                tag="p"
-                text={row.body}
-                class="text-ink text-[15px] sm:text-base leading-[1.9]"
-              />
+    {/* 役割設計図。図は本文より広く使う（4カラム横並びのため 940px では詰まる） */}
+    {data.roleMap ? (
+      <RoleMapFigure data={data.roleMap} />
+    ) : (
+      <div class="ind-flow max-w-[940px]" data-animate>
+        <div class="ind-flow-head">
+          <span>{data.flowHeader[0]}</span>
+          <span>{data.flowHeader[1]}</span>
+        </div>
+        {data.flow.map((row, i) => (
+          <>
+            {i > 0 && (
+              <div class="ind-flow-arrow lg:hidden" aria-hidden="true">↓</div>
+            )}
+            <div class="ind-flow-row">
+              <div class="ind-flow-label">{row.label}</div>
+              <div class="ind-flow-body">
+                <JaText
+                  tag="p"
+                  text={row.body}
+                  class="text-ink text-[15px] sm:text-base leading-[1.9]"
+                />
+              </div>
             </div>
-          </div>
-        </>
-      ))}
-    </div>
+          </>
+        ))}
+      </div>
+    )}
 
     <!-- 表の下 -->
     <div class="max-w-[940px] mt-8 bg-ink text-white p-6 lg:p-8" data-animate>

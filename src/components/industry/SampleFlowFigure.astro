@@ -1,0 +1,318 @@
+---
+/**
+ * 納品物「現行業務フロー図」のサンプル（セクション4・納品物リストの直後に1枚だけ）。
+ * 見本は knowledge/reference/currentflow-sample.jpg。**画像は貼らずHTML/CSSで組む**
+ * （業種ごとにデータを差し替える・SPで文字が潰れない・budouxで折る、の3つのため）。
+ *
+ * 役割は「1枚にまとめます」を実物で見せること。**6項目すべての見本は作らない**
+ * （枚数が増えると納品物リスト自体が読まれなくなる。正本 §4）。
+ *
+ * **所要時間の数値は入れない**（2026-08-11 判定）。見本画像には「15分／件」「平均2日」等が
+ * 入っているが、①測定条件のない時短数字は禁止 ②業種研究に無い数字は書かない
+ * ③8/6に「測る数字」ブロックを全業種から削除した決定と矛盾する、の3点で全て外し、
+ * 定性表現に置き換えてある。**`note` に数値を書き足さないこと。**
+ * 「時間が溶けている」ことはオレンジ枠と凡例だけで言い切れる。
+ *
+ * PC: 5列×2段。SP: 1列の縦積みで矢印は全て下向き（段の折り返しは無くす）。
+ * **横スクロールはさせない。**
+ */
+import JaText from "../ui/JaText.astro";
+import type { IndustrySampleFlow } from "../../data/industries";
+
+interface Props {
+  data: IndustrySampleFlow;
+}
+
+const { data } = Astro.props;
+---
+
+<figure class="sfl" data-animate>
+  <figcaption class="sfl-head">
+    <span class="sfl-badge">SAMPLE</span>
+    <JaText tag="span" text={data.title} class="sfl-title" />
+    <JaText tag="p" text={data.subtitle} class="sfl-sub" />
+  </figcaption>
+  <div class="sfl-bar" aria-hidden="true"></div>
+
+  <ol class="sfl-steps">
+    {data.steps.map((step) => (
+      <li class:list={["sfl-step", step.hot && "is-hot"]}>
+        <span class="sfl-owner">{step.owner}</span>
+        <JaText tag="span" text={step.title} class="sfl-step-title" />
+        {step.note && <JaText tag="span" text={step.note} class="sfl-note" />}
+      </li>
+    ))}
+  </ol>
+
+  <div class="sfl-summary">
+    <JaText tag="p" text={data.summaryTitle} class="sfl-summary-title" />
+    <JaText tag="p" text={data.summaryBody} class="sfl-summary-body" />
+  </div>
+
+  <ul class="sfl-legend">
+    <li>
+      <span class="sfl-swatch is-hot" aria-hidden="true"></span>
+      <JaText tag="span" text={data.legendHot} class="sfl-legend-label" />
+    </li>
+    <li>
+      <span class="sfl-swatch" aria-hidden="true"></span>
+      <JaText tag="span" text={data.legendNormal} class="sfl-legend-label" />
+    </li>
+  </ul>
+
+  <JaText tag="p" text={data.credit} class="sfl-credit" />
+</figure>
+
+<style>
+  .sfl {
+    --fig-tint: #fcf1eb;
+    border: 1px solid var(--color-line);
+    background: #ffffff;
+    padding: 1.25rem 1rem 1.5rem;
+  }
+
+  /* SAMPLEバッジ＋図タイトル＋副題。バッジの文字は固定なのでデータに持たない */
+  .sfl-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .sfl-badge {
+    padding: 0.2rem 0.6rem;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.5;
+    color: #ffffff;
+    background: var(--color-brand-orange);
+  }
+
+  .sfl-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-ink);
+  }
+
+  /* 副題はバッジの下でなく、タイトルと同じ左端にそろえる */
+  .sfl-sub {
+    grid-column: 1 / -1;
+    margin-top: 0.5rem;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--color-mute);
+  }
+
+  /* トップLPの見出しと同じ4pxバー（SectionHeading の意匠を流用） */
+  .sfl-bar {
+    height: 4px;
+    margin: 0.85rem 0 1.5rem;
+    background: linear-gradient(
+      90deg,
+      var(--color-brand-orange) 50px,
+      var(--color-tail) 0
+    );
+  }
+
+  /* SP: 1列の縦積み。PC: 5列×2段 */
+  .sfl-steps {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.75rem 1.5rem;
+  }
+
+  .sfl-step {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.4rem;
+    padding: 0.85rem 0.7rem 0.95rem;
+    background: #ffffff;
+    border: 1px solid var(--color-ink);
+  }
+
+  /* 時間が溶けている工程（AI化の対象候補）。凡例の「オレンジ枠」と対応する */
+  .sfl-step.is-hot {
+    background: var(--fig-tint);
+    border: 2px solid var(--color-brand-orange);
+  }
+
+  /* 担当ラベル。工程箱の中の一番上に小さく出す */
+  .sfl-owner {
+    padding: 0.15rem 0.55rem;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.04em;
+    color: var(--color-ink);
+    background: #f0f0f0;
+  }
+
+  .is-hot .sfl-owner {
+    color: #ffffff;
+    background: var(--color-brand-orange);
+  }
+
+  .sfl-step-title {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--color-ink);
+  }
+
+  .sfl-note {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-mute);
+  }
+
+  /* 溶けている工程は補足行も差し色にする（枠だけだと一覧で拾いにくい） */
+  .is-hot .sfl-note {
+    font-weight: 700;
+    color: var(--color-brand-orange);
+  }
+
+  /*
+   * 工程をつなぐ矢印。SPは下向き。
+   * 段の右端では出さない（列数はブレークポイントで変わるので、nth-child を段ごとに切り替える）。
+   */
+  .sfl-step::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -1.15rem;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid var(--color-line);
+  }
+
+  .sfl-summary {
+    margin-top: 2rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--color-ink);
+  }
+
+  .sfl-summary-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.7;
+    color: #ffffff;
+  }
+
+  .sfl-summary-body {
+    margin-top: 0.35rem;
+    font-size: 13px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .sfl-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+
+  .sfl-legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .sfl-swatch {
+    flex: none;
+    width: 26px;
+    height: 18px;
+    background: #ffffff;
+    border: 1px solid var(--color-ink);
+  }
+
+  .sfl-swatch.is-hot {
+    background: var(--fig-tint);
+    border: 2px solid var(--color-brand-orange);
+  }
+
+  .sfl-legend-label {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--color-ink);
+  }
+
+  .sfl-credit {
+    margin-top: 1.5rem;
+    font-size: 11px;
+    line-height: 1.7;
+    color: var(--color-mute);
+    text-align: right;
+  }
+
+  @media (min-width: 640px) {
+    .sfl {
+      padding: 1.75rem 1.5rem 2rem;
+    }
+  }
+
+  /*
+   * 段組みは **1列（lg未満）か5列（lg以上）の2択**にしてある（正本 §4 実装注記）。
+   * 間に2列を挟むと、10字の工程名に対して箱だけが極端に横長になり、
+   * さらに左右のジグザグを5段たどることになって、1列より読みにくくなる（768pxで実測）。
+   */
+  @media (min-width: 1024px) {
+    .sfl {
+      padding: 2rem 2rem 2.25rem;
+    }
+
+    .sfl-steps {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 1.5rem 1.75rem;
+    }
+
+    .sfl-title {
+      font-size: 20px;
+    }
+
+    .sfl-sub {
+      font-size: 13px;
+    }
+
+    /* 横並びになったので矢印は右向き */
+    .sfl-step::after {
+      left: auto;
+      right: -1.05rem;
+      bottom: auto;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 9px solid var(--color-line);
+      border-right: 0;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+    }
+
+    /* 段の右端＝次の段へ折り返すところでは矢印を出さない */
+    .sfl-step:nth-child(5n)::after {
+      display: none;
+    }
+
+    .sfl-legend {
+      flex-direction: row;
+      gap: 2rem;
+    }
+  }
+
+  /*
+   * 最後の工程には矢印を出さない。
+   * **メディアクエリより後ろに置く**＝同じ詳細度なので、後から来たこの宣言が勝つ
+   * （工程数が5の倍数でない業種でも、末尾だけは確実に消える）。
+   */
+  .sfl-step:last-child::after {
+    display: none;
+  }
+</style>
