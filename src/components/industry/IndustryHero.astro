@@ -3,7 +3,8 @@
  * 業種LPのファーストビュー。
  * PC: コピー=左／画像=右（既存トップLPの構造）。素の画像は「被写体=左／余白=右」なので
  *     CSSで左右反転して被写体を右へ送る（design-manual.md 4-2）。
- * SP: 画像を上・コピーを下。可読性を優先して画像の上に文字を置かない。
+ * SP: 画像を見出しの背後に敷き、コピーを上に重ねる（トップLPの `.hero-video-mobile` と同じ構造）。
+ *     可読性は白かぶせ（design-manual.md 4-3 の `.hero-overlay` 系）で担保する。
  *
  * v2で削除: 英語ラベル / 日本語バッジ / カテゴリ表記 / 提供範囲ラベル
  * （tone-manner.md §9。業種別LPでは使わない）。
@@ -59,27 +60,33 @@ const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
     </div>
   )}
 
+  {/*
+    SP: 見出しの背後に敷く画像。PCの土台とは別レイヤーにして、**互いのCSSが干渉しないようにする**
+    （PC側は `hidden lg:block`／こちらは `lg:hidden` で、どちらか一方しか描かれない）。
+    トップLPの `.hero-video-mobile` と同じく、右へ寄せて上端をヘッダーの下に置き、
+    コピー（`relative z-10`）をその上に重ねる。
+  */}
+  {hasHeroImage && (
+    <div class="ind-hero-sp lg:hidden" aria-hidden="true">
+      <img
+        src={imageSrc}
+        alt=""
+        width={heroSize?.width}
+        height={heroSize?.height}
+        decoding="async"
+        fetchpriority="high"
+        class:list={[
+          "ind-hero-image ind-hero-sp-image",
+          hero.image.flip && "is-flipped",
+        ]}
+      />
+      <div class="ind-hero-sp-overlay"></div>
+    </div>
+  )}
+
   <div
     class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-24 pb-16 lg:pt-36 lg:pb-24"
   >
-    {/* SP: 画像を上に置く */}
-    {hasHeroImage && (
-      <div class="lg:hidden -mx-6 mb-8" data-animate>
-        <img
-          src={imageSrc}
-          alt={hero.image.alt}
-          width={heroSize?.width}
-          height={heroSize?.height}
-          decoding="async"
-          fetchpriority="high"
-          class:list={[
-            "ind-hero-image w-full h-auto",
-            hero.image.flip && "is-flipped",
-          ]}
-        />
-      </div>
-    )}
-
     <div class="max-w-[820px]">
       {/* 改行位置は演出そのもの。1行=1ブロックで固定し、budouxに結合させない */}
       <h1
@@ -217,5 +224,93 @@ const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
       rgba(255, 255, 255, 0.55) 55%,
       rgba(255, 255, 255, 0) 100%
     );
+  }
+
+  /*
+   * ===== SP（lg未満）: 画像を背景にしてコピーを重ねる =====
+   * ここから下は **すべて max-width:1023px の中**にある。lg以上の出力は1pxも動かさない。
+   */
+  @media (max-width: 1023px) {
+    .ind-hero-sp {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    /*
+     * 上端はヘッダー（h-20=80px）の直下に置く。ヘッダーは bg-white/90 の半透明なので、
+     * 画像を潜り込ませると帯の中で像が透けて見える。
+     * 右へ 8% はみ出させて矩形の右辺を画面外へ逃がす（トップLPの `right:-2%` と同じ考え方）。
+     */
+    .ind-hero-sp-image {
+      position: absolute;
+      top: 84px;
+      right: -8%;
+      width: 112%;
+      /*
+       * Tailwindのpreflightが `img { max-width: 100% }` を当てるので、これが無いと
+       * 112%が100%に丸められ、**左辺が画面内（x=+31px）に残って縦の継ぎ目になる**（実測）。
+       */
+      max-width: none;
+      height: auto;
+      opacity: 0.72;
+      /*
+       * SPは像の上に本文が乗るので、ヒーロー既定（0.85）より沈める。
+       *
+       * maskは**縦1本のlinear**にする。左右の辺は上の `right:-8% / width:112%` で
+       * 常に画面の外（左-4%・右+8%）にあり、見えるのは上辺と下辺だけだから。
+       * PC既定の radial や横linearをここへ当てると、画面内に入っていない左右を削るだけで
+       * 肝心の下辺が alpha 0.7 のまま残り、**本文の手前に横一直線の切れ目が出る**（実測）。
+       *   - 上辺: ヘッダー直下で 0 から立ち上げる
+       *   - 下辺: 画像の下端で完全に 0。サブキャッチの下＝本文が始まる手前で像が消える
+       */
+      -webkit-mask-image: linear-gradient(
+        180deg,
+        transparent 0%,
+        #000 16%,
+        #000 58%,
+        transparent 100%
+      );
+      mask-image: linear-gradient(
+        180deg,
+        transparent 0%,
+        #000 16%,
+        #000 58%,
+        transparent 100%
+      );
+      -webkit-mask-composite: source-over;
+      mask-composite: add;
+    }
+
+    /*
+     * 白かぶせ（design-manual.md 4-3）。SPはコピーが画像の全幅に乗るので、
+     * PCの横1本のグラデーションでは足りない。**縦と横の2枚を重ねる**:
+     *   - 縦 = 本文とCTAが始まる高さから下を完全な白に戻す（読む文章は素の白地に置く）
+     *   - 横 = 行頭側（左）を厚く、被写体のいる右を薄くして像を残す
+     * 合成の不透明度は 1-(1-a縦)(1-a横)。h1の帯で 0.55〜0.78 になり、
+     * 実測の背景輝度は最小 0.62（コントラスト 11.9:1）まで持ち上がる。
+     */
+    .ind-hero-sp-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.36) 0%,
+          rgba(255, 255, 255, 0.36) 34%,
+          rgba(255, 255, 255, 0.86) 62%,
+          #ffffff 74%
+        ),
+        linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.66) 0%,
+          rgba(255, 255, 255, 0.42) 52%,
+          rgba(255, 255, 255, 0.3) 100%
+        );
+    }
   }
 </style>
