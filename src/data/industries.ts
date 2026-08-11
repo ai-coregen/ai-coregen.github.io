@@ -1063,7 +1063,7 @@ const construction: Industry = {
       {
         number: "01",
         title: "無料相談",
-        body: "見積り・案件対応の流れをうかがい、どこにAIを入れられるかを整理",
+        body: "見積り・案件対応の流れをうかがい、どこにAIを入れるかを整理",
       },
       {
         number: "02",
