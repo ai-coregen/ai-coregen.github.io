@@ -51,11 +51,17 @@ TABLE_SKIP = {
     "順", "状態", "導入前のラベル", "導入後のラベル", "通常", "消滅",
     # 工程フロー図の「導入後の見せ方」列は描き方の指示で、ページに出す文言ではない
     "導入後の見せ方", "グレー枠（人は触らない）", "記号で対比",
+    # 現行業務フロー図の「枠」列＝オレンジ枠か黒枠かの指定。ページに出す文言ではない
+    "黒", "オレンジ",
 }
 
-# 見出し行にこれらの語を含む表は、丸ごと仕様の表とみなして突合しない
-# （例: セクションと視覚要素の対応表。ページに出す文言ではない）。
-SPEC_TABLE_HEADERS = ("セクション", "視覚要素", "画像", "強調する語", "確認事項")
+# 見出し行にこれらの語を含む表は**仕様の表**とみなす。
+# 仕様の表からは、**バッククォートで囲まれた部分だけ**を突合対象にする
+# （正本は仕様の表の中でも「ページに出す文言」だけを `…` で囲んで書いている。
+#   例: 現行業務フロー図の `| 位置 | 要素 | 中身 |` の表は、説明文の中に副題と添え書きの
+#   実文言が `…` で入っている。表ごと飛ばすとこの2行が検品から漏れる）。
+SPEC_TABLE_HEADERS = ("セクション", "視覚要素", "画像", "強調する語", "確認事項",
+                      "位置", "要素")
 
 JA = r"[぀-ゟ゠-ヿ一-鿿]"
 
@@ -77,8 +83,12 @@ LEAD_MAX_WIDTH = 55
 
 
 def norm(s):
-    """空白（全角含む）を落として比較用に正規化する"""
-    return re.sub(r"\s+", "", s)
+    """空白（全角含む）と罫線飾りを落として比較用に正規化する
+
+    罫線（`──` など）は**正本とページの両方から同じように落とす**。
+    片側だけで落とすと、副題のように罫線を含む行が永久に一致しなくなる。
+    """
+    return re.sub(r"[\s─━—―]+", "", s)
 
 
 def page_text(page_html):
@@ -114,18 +124,33 @@ def copy_lines(md_text):
         # 表のセル（コードブロックの外）も突合する
         if not in_block and raw.strip().startswith("|"):
             if not in_table:
-                # 表の1行目＝見出し行。仕様の表ならこの表は丸ごと飛ばす
+                # 表の1行目＝見出し行。**列名はページに出す文言ではないので突合しない**
+                # （旧実装は見出し行のセルも拾っており、`位置` `要素` `中身` `担当ラベル` が
+                #   そのまま未描画として並んでいた）。
                 in_table = True
                 table_is_spec = any(w in raw for w in SPEC_TABLE_HEADERS)
-            if table_is_spec:
                 continue
             for cell in raw.strip().strip("|").split("|"):
                 c = cell.replace("**", "").strip()
                 if not c or not re.search(JA, c):
                     continue
+                if table_is_spec:
+                    # 仕様の表は `…` で囲まれた実文言だけを見る
+                    for quoted in re.findall(r"`([^`]+)`", c):
+                        if re.search(JA, quoted):
+                            lines.append((i, quoted.replace("─", "")))
+                    continue
                 if c in TABLE_SKIP or c.startswith("（"):
                     continue
                 if "✕" in c or "◯" in c or "差し色" in c:
+                    continue
+                # 表のセルは「A／B／C」で項目を並べるので、項目ごとに分けて突合する
+                # （役割設計図の「各枠の中身」が この書き方）
+                if "／" in c:
+                    for part in c.split("／"):
+                        part = part.strip()
+                        if part and re.search(JA, part):
+                            lines.append((i, part))
                     continue
                 lines.append((i, c))
             continue
