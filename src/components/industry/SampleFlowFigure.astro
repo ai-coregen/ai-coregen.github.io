@@ -44,11 +44,7 @@ const { data } = Astro.props;
     ))}
   </ol>
 
-  <div class="sfl-summary">
-    <JaText tag="p" text={data.summaryTitle} class="sfl-summary-title" />
-    <JaText tag="p" text={data.summaryBody} class="sfl-summary-body" />
-  </div>
-
+  <!-- 凡例は黒サマリーバーの上に置く（2026-08-11 なおき指示） -->
   <ul class="sfl-legend">
     <li>
       <span class="sfl-swatch is-hot" aria-hidden="true"></span>
@@ -59,6 +55,11 @@ const { data } = Astro.props;
       <JaText tag="span" text={data.legendNormal} class="sfl-legend-label" />
     </li>
   </ul>
+
+  <div class="sfl-summary">
+    <JaText tag="p" text={data.summaryTitle} class="sfl-summary-title" />
+    <JaText tag="p" text={data.summaryBody} class="sfl-summary-body" />
+  </div>
 
   <JaText tag="p" text={data.credit} class="sfl-credit" />
 </figure>
@@ -195,7 +196,7 @@ const { data } = Astro.props;
   }
 
   .sfl-summary {
-    margin-top: 2rem;
+    margin-top: 1.25rem;
     padding: 1.1rem 1.25rem;
     background: var(--color-ink);
   }
@@ -218,7 +219,7 @@ const { data } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    margin-top: 1.25rem;
+    margin-top: 2rem;
   }
 
   .sfl-legend li {
@@ -272,7 +273,26 @@ const { data } = Astro.props;
 
     .sfl-steps {
       grid-template-columns: repeat(5, minmax(0, 1fr));
+      /* 2段の高さを1frで強制的に揃える＝段間の中心が常にコンテナの50%になる（コネクタの前提） */
+      grid-auto-rows: 1fr;
       gap: 1.5rem 1.75rem;
+      position: relative;
+    }
+
+    /*
+     * 段の折り返しコネクタの水平線（2026-08-11 なおき指示）。
+     * 端点は列幅から厳密に導出: 1列目の中心 = (100% - ギャップ7rem) / 10。
+     * 箱の枠線太さ（業種でhot/黒が変わる）に依存しない。
+     * 縦位置は grid-auto-rows:1fr の前提で段間中心 = 50%。
+     */
+    .sfl-steps::after {
+      content: "";
+      position: absolute;
+      top: calc(50% - 1px);
+      left: calc((100% - 7rem) / 10);
+      right: calc((100% - 7rem) / 10);
+      height: 2px;
+      background: var(--color-line);
     }
 
     .sfl-title {
@@ -296,9 +316,48 @@ const { data } = Astro.props;
       border-bottom: 7px solid transparent;
     }
 
-    /* 段の右端＝次の段へ折り返すところでは矢印を出さない */
+    /* 段の右端＝次の段へ折り返すところでは右向き矢印を出さない */
     .sfl-step:nth-child(5n)::after {
       display: none;
+    }
+
+    /*
+     * 段の折り返しコネクタ（2026-08-11 なおき指示「つながっている場合はつなげる」）。
+     * 参考画像 currentflow-sample.jpg のL字: 上段5個目の下から線を落とし、
+     * 水平線を左へ渡って、下段1個目の上へ矢印で入る。
+     * **段間50%のような行高さ依存の座標は使わない**（行の高さがズレると途切れる。
+     * 初版がそれで途切れた）。L字は上段5個目の箱に、矢印は下段1個目の箱に固定し、
+     * 水平距離は「4列ぶん＋4ギャップ」= calc(400% + 7rem) で列幅から導出する。
+     * 列数・ギャップ（1.75rem）を変えたらここも直す。工程数が10（5列×2段）で
+     * ない業種を作る場合はこのnth-childを見直すこと。
+     */
+
+    /* 上段5個目: 右向き矢印の代わりに、水平線まで下ろす縦線（線と数px重ねて途切れを防ぐ） */
+    .sfl-step:nth-child(5)::after {
+      display: block;
+      left: 50%;
+      right: auto;
+      top: 100%;
+      bottom: auto;
+      transform: translateX(-50%);
+      width: 2px;
+      height: calc(0.75rem + 3px);
+      border: 0;
+      background: var(--color-line);
+    }
+
+    /* 下段1個目: 上から入る下向き矢印（三角の頂点が水平線に届く高さにする） */
+    .sfl-step:nth-child(6)::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 1px);
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 11px solid var(--color-line);
     }
 
     .sfl-legend {
