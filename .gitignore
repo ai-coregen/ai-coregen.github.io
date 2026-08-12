@@ -29,3 +29,6 @@ gas/.clasp.json
 
 # GAS秘匿値（webhook URL等）: claspはpushするがgitにはコミットしない
 gas/secrets.gs
+
+# Python cache
+__pycache__/

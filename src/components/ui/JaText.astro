@@ -4,27 +4,81 @@
  * Uses Google's budoux to insert <wbr> at phrase boundaries.
  * Combined with word-break: keep-all, text only breaks at natural points.
  * Works on ALL browsers (Safari, Chrome, Firefox).
+ *
+ * `keep` に語句を渡すと、**その語句の内側には改行位置を作らない**（budouxの `<wbr>` を落として
+ * 前後のチャンクを1つに繋ぐ）。キャッチのように**折り位置そのものが演出**で、文節単位の
+ * 自動折り返しでは割れてほしくない箇所に使う。
+ * 例: 運送の `次の依頼につながる` は因果の着地点なので、`次の／依頼につながる` と割れてはいけない。
  */
 import { loadDefaultJapaneseParser } from "budoux";
 
 interface Props {
   text: string;
+  /**
+   * 途中で折ってはいけない語句。`text` に**そのままの表記で含まれていること**が条件で、
+   * 見つからなければビルドを止める（黙って効かないと、崩れた折り返しが本番に出るため）。
+   */
+  keep?: string[];
   class?: string;
   tag?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "li";
   [key: string]: any;
 }
 
-const { text, class: className = "", tag: Tag = "p", ...attrs } = Astro.props;
+const {
+  text,
+  keep = [],
+  class: className = "",
+  tag: Tag = "p",
+  ...attrs
+} = Astro.props;
 
 const parser = loadDefaultJapaneseParser();
 const chunks = parser.parse(text);
+
+/**
+ * `keep` の語句の内側に落ちる改行位置を潰して、残った位置だけを `<wbr>` にする。
+ *
+ * budouxのチャンク境界は文字位置で表せるので、**語句が占める範囲の内側の境界だけ**を
+ * 禁止集合に入れ、禁止された境界でチャンクを連結する。語句が文節の途中から始まっていても
+ * （`次の依頼に` のように文節をまたいでいても）、境界の位置だけで判定できるので影響を受けない。
+ */
+function applyKeep(parts: string[], phrases: string[]): string[] {
+  if (phrases.length === 0) return parts;
+
+  const blocked = new Set<number>();
+  for (const phrase of phrases) {
+    let from = text.indexOf(phrase);
+    if (from === -1) {
+      throw new Error(
+        `JaText: keep に渡した「${phrase}」が text「${text}」に含まれていません。` +
+          `表記が1文字でも違うと折り位置の固定が効かないので、正本の表記に揃えてください。`
+      );
+    }
+    while (from !== -1) {
+      /* 語句の内側＝開始位置より後・終了位置より前の境界だけを禁止する */
+      for (let i = from + 1; i < from + phrase.length; i++) blocked.add(i);
+      from = text.indexOf(phrase, from + 1);
+    }
+  }
+
+  const merged: string[] = [];
+  let at = 0;
+  for (const part of parts) {
+    if (at > 0 && blocked.has(at)) merged[merged.length - 1] += part;
+    else merged.push(part);
+    at += part.length;
+  }
+  return merged;
+}
+
+const segments = applyKeep(chunks, keep);
 ---
 
 <Tag class:list={["break-keep", className]} {...attrs}>
-  {chunks.map((chunk, i) => (
+  {segments.map((segment, i) => (
     <>
       {i > 0 && <wbr />}
-      {chunk}
+      {segment}
     </>
   ))}
 </Tag>

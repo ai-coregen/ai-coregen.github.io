@@ -13,7 +13,11 @@ import Button from "../ui/Button.astro";
 import JaText from "../ui/JaText.astro";
 import CopyBlock from "./CopyBlock.astro";
 import { hasPublicAsset, webpSize } from "../../lib/publicAsset";
-import { ctaUrl, type IndustryHero } from "../../data/industries";
+import {
+  ctaUrl,
+  mainCatchKeepFor,
+  type IndustryHero,
+} from "../../data/industries";
 
 interface Props {
   hero: IndustryHero;
@@ -88,13 +92,26 @@ const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
     class="relative z-10 max-w-[1260px] mx-auto px-6 lg:px-8 pt-24 pb-16 lg:pt-36 lg:pb-24"
   >
     <div class="max-w-[820px]">
-      {/* 改行位置は演出そのもの。1行=1ブロックで固定し、budouxに結合させない */}
+      {/*
+        改行位置は演出そのもの。1行=1ブロックで固定し、budouxに結合させない。
+        `mainCatchKeep` を持つ業種は、**行の中で折ってよい位置も業種側が決める**
+        （幅が足りたときは1行のまま＝行を割らずに折り位置だけ縛る）。
+      */}
       <h1
-        class="text-[clamp(1.85rem,3.1vw+0.8rem,2.9rem)] leading-[1.45] tracking-[0.05em] font-bold text-ink mb-5"
+        class:list={[
+          "text-[clamp(1.85rem,3.1vw+0.8rem,2.9rem)] leading-[1.45] tracking-[0.05em] font-bold text-ink mb-5",
+          /* 折り位置を縛っている業種だけに、最小幅での縮小を効かせる（下の <style> 参照） */
+          hero.mainCatchKeep?.length && "has-keep",
+        ]}
         data-animate
       >
         {hero.mainCatch.map((line) => (
-          <JaText tag="span" text={line} class="block" />
+          <JaText
+            tag="span"
+            text={line}
+            keep={mainCatchKeepFor(hero, line)}
+            class="block"
+          />
         ))}
       </h1>
 
@@ -224,6 +241,26 @@ const downloadHref = ctaUrl(base, "download", "hero", ctaVersion);
       rgba(255, 255, 255, 0.55) 55%,
       rgba(255, 255, 255, 0) 100%
     );
+  }
+
+  /*
+   * **360px未満だけ h1 を1段落とす。`mainCatchKeep` を持つ業種にだけ効かせる**（2026-08-12）。
+   *
+   * h1のclampは542px以下で下限の1.85rem（29.6px）に張り付く。320px幅だと本文の入る幅は272pxで、
+   * 運送の `スポット便の一本が、` が10字＝308pxを要求して**入りきらない**。
+   * 入りきらない行は `overflow-wrap: anywhere` が任意位置で折るので、
+   * **`次の依頼につながる` が `次の依頼につなが` ／ `る` に割れていた**（実測）。
+   * 1.55rem（24.8px）なら260pxで収まり、折り位置は読点の後の1箇所だけになる。
+   *
+   * **`.has-keep` に限定するのは、既存3業種の描画を1pxも動かさないため。**
+   * 折り位置を縛っていない業種は、幅が足りなければ budoux が文節で折ればよく、
+   * 縮める理由が無い（製造・建設・人材は320pxでも文節で自然に3行へ折れている）。
+   * **360px以上は縛っている業種でも変えない**（360pxで既に幅312px > 308pxと足りている）。
+   */
+  @media (max-width: 359px) {
+    h1.has-keep {
+      font-size: 1.55rem;
+    }
   }
 
   /*

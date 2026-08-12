@@ -44,10 +44,10 @@ const { data } = Astro.props;
     ) : (
       <div class="ind-flow max-w-[940px]" data-animate>
         <div class="ind-flow-head">
-          <span>{data.flowHeader[0]}</span>
-          <span>{data.flowHeader[1]}</span>
+          <span>{data.flowHeader?.[0]}</span>
+          <span>{data.flowHeader?.[1]}</span>
         </div>
-        {data.flow.map((row, i) => (
+        {(data.flow ?? []).map((row, i) => (
           <>
             {i > 0 && (
               <div class="ind-flow-arrow lg:hidden" aria-hidden="true">↓</div>
