@@ -19,6 +19,15 @@ interface Props {
    * 見つからなければビルドを止める（黙って効かないと、崩れた折り返しが本番に出るため）。
    */
   keep?: string[];
+  /**
+   * 読点（`、`）を**約物半角**で組む。読点は全角枠の左半分にしか字面が無いので、
+   * 既定のままだと右に半角ぶんの空きが残る。それを `margin-right: -0.5em` で詰める。
+   *
+   * **行末に読点が来たときの「宙に浮く」見え方を半分にする**のが目的（2026-08-12 なおきFB）。
+   * 1行に収まっているときは、和文の標準的な約物詰めとして自然に見える。
+   * **既定はオフ**＝渡さなければ従来と同じ組版になる。
+   */
+  tightComma?: boolean;
   class?: string;
   tag?: "p" | "span" | "h1" | "h2" | "h3" | "h4" | "li";
   [key: string]: any;
@@ -27,6 +36,7 @@ interface Props {
 const {
   text,
   keep = [],
+  tightComma = false,
   class: className = "",
   tag: Tag = "p",
   ...attrs
@@ -72,13 +82,23 @@ function applyKeep(parts: string[], phrases: string[]): string[] {
 }
 
 const segments = applyKeep(chunks, keep);
+
+/**
+ * `tightComma` のとき、読点だけを `<span>` に切り出すために区切る。
+ * 読点を含まない文字列は1要素のまま返るので、**オフのときと同じ描画**になる。
+ */
+function splitComma(segment: string): string[] {
+  return tightComma ? segment.split(/(、)/).filter(Boolean) : [segment];
+}
 ---
 
 <Tag class:list={["break-keep", className]} {...attrs}>
   {segments.map((segment, i) => (
     <>
       {i > 0 && <wbr />}
-      {segment}
+      {splitComma(segment).map((piece) =>
+        piece === "、" ? <span class="ja-tight-comma">{piece}</span> : piece
+      )}
     </>
   ))}
 </Tag>
@@ -89,5 +109,21 @@ const segments = applyKeep(chunks, keep);
     /* はみ出す場合のみ任意位置で改行（min-content も縮みブローアウト防止）。
        通常は budoux の <wbr> による文節改行が優先される */
     overflow-wrap: anywhere;
+  }
+
+  /*
+   * 約物半角。読点は全角枠の**左半分にしか字面が無い**ので、右の半角ぶんを詰める。
+   *
+   * - 1行に収まっているとき: 読点と次の字の間隔が和文の標準的な詰めになる
+   * - 行末に来たとき: **空いていた右半分が版面に残らない**ので、浮いて見える量が半分になる
+   *
+   * `hanging-punctuation: allow-end`（Safariのみ対応）や、折り返す幅だけを
+   * メディアクエリで狙って `-1em` する案は採らない。前者はChrome/Firefoxで何も起きず、
+   * 後者は**1行に収まる幅で次の字と重なる**ため、折り返す幅の飛び地を正確に言い当てる必要がある
+   * （カードは 320-375 / 768-1022 / 1024以上 と飛び飛びで、幅の条件が変わるたびに壊れる）。
+   * -0.5em は**どちらの状態でも成立する唯一の値**なので、条件分岐を持たない。
+   */
+  .ja-tight-comma {
+    margin-right: -0.5em;
   }
 </style>

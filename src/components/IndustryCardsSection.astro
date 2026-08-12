@@ -43,6 +43,8 @@ const cards = Object.values(industries).map((industry) => {
     })),
     /* 折り位置を縛っている業種だけ、md窓で字を1段落とす（<style> の `.has-keep` 参照） */
     hasKeep: Boolean(industry.hero.mainCatchKeep?.length),
+    /* 読点の約物半角も業種LPと同じ指定を通す（カードのほうが折り返しやすい） */
+    tightComma: industry.hero.mainCatchTightComma,
     work: industry.cardWork,
     image: hasPublicAsset(file) ? `${base}/${file}` : null,
     alt: industry.hero.image.alt,
@@ -108,7 +110,13 @@ const rows = Array.from(
               */}
               <span class:list={["ind-link-catch", card.hasKeep && "has-keep"]}>
                 {card.catchLines.map((line) => (
-                  <JaText tag="span" text={line.text} keep={line.keep} class="block" />
+                  <JaText
+                    tag="span"
+                    text={line.text}
+                    keep={line.keep}
+                    tightComma={card.tightComma}
+                    class="block"
+                  />
                 ))}
               </span>
               <JaText tag="span" text={card.work} class="ind-link-work" />
