@@ -38,8 +38,21 @@ const { data } = Astro.props;
           <EmText tag="span" text={line} emphasis={data.emphasis} class="block" />
         ))}
       </h3>
+      {/*
+        **教育の核にも強調を効かせる**（2026-08-14）。
+        旧実装は小見出しにしか `emphasis` を渡しておらず、**強調語が小見出しにある業種しか
+        描画できなかった**。印刷v2は小見出しの文言がFVへ昇格したため、正本の強調語
+        （`削った時間を誰のどの活動に戻すか`）が本文側に移り、そのまま黙って効かなくなっていた
+        （検品で「強調の数 5」＝他業種の6に足りず発覚）。
+
+        **既存5業種の描画は1文字も変わらない**——5業種とも強調語は小見出しにあり、
+        **本文には1つも含まれない**ことを実データで確認済み（マッチしないので `EmText` は
+        素通しになる）。他セクション（悩み・解決策・FAQ・最終CTA）は元から本文へ渡しており、
+        **ここだけが渡していなかった**ので、実装の抜けを揃えた形。
+      */}
       <CopyBlock
         paragraphs={data.subBody}
+        emphasis={data.emphasis}
         lineClass="text-ink text-[15px] sm:text-base leading-[1.95]"
       />
     </div>
