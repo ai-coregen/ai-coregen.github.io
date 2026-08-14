@@ -21,7 +21,11 @@
 import SectionHeading from "./ui/SectionHeading.astro";
 import JaText from "./ui/JaText.astro";
 import { industryCards } from "../data/content";
-import { industries, mainCatchKeepFor } from "../data/industries";
+import {
+  industries,
+  mainCatchKeepFor,
+  mainCatchKeepLength,
+} from "../data/industries";
 import { hasPublicAsset, webpSize } from "../lib/publicAsset";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
@@ -45,6 +49,8 @@ const cards = Object.values(industries).map((industry) => {
     hasKeep: Boolean(industry.hero.mainCatchKeep?.length),
     /* 読点の約物半角も業種LPと同じ指定を通す（カードのほうが折り返しやすい） */
     tightComma: industry.hero.mainCatchTightComma,
+    /* 保護語の字数。カードの一言が保護語を割らない大きさに抑えるのに使う（<style> 参照） */
+    keepLen: mainCatchKeepLength(industry.hero),
     work: industry.cardWork,
     image: hasPublicAsset(file) ? `${base}/${file}` : null,
     alt: industry.hero.image.alt,
@@ -108,7 +114,10 @@ const rows = Array.from(
                 一言は業種LPの改行位置をそのまま持ってくる（製造業だけ2行）。
                 枠は2行ぶんの高さで固定してあるので、1行の業種が縮んで並びが崩れない。
               */}
-              <span class:list={["ind-link-catch", card.hasKeep && "has-keep"]}>
+              <span
+                class:list={["ind-link-catch", card.hasKeep && "has-keep"]}
+                style={`--catch-len:${card.keepLen}`}
+              >
                 {card.catchLines.map((line) => (
                   <JaText
                     tag="span"
@@ -298,11 +307,17 @@ const rows = Array.from(
     opacity: 0.92;
   }
 
+  /*
+   * `container-type: inline-size` を付けて、**この箱の内寸を `cqw` で参照できるようにする**
+   * （下の `.has-keep` の上限式が使う）。内寸＝一言が実際に入る幅そのもの。
+   * 幅はグリッドが決めていて中身に依存しないので、コンテナ化しても寸法は変わらない。
+   */
   .ind-link-body {
     display: flex;
     flex-direction: column;
     flex: 1;
     padding: 1.5rem;
+    container-type: inline-size;
   }
 
   .ind-link-name {
@@ -320,7 +335,9 @@ const rows = Array.from(
    */
   .ind-link-catch {
     display: block;
-    font-size: 1.0625rem;
+    /* 大きさの正本はこの変数。**上限式が参照するので、font-size を直に書かない** */
+    --catch-size: 1.0625rem;
+    font-size: var(--catch-size);
     font-weight: 700;
     line-height: 1.6;
     color: var(--color-ink);
@@ -330,7 +347,7 @@ const rows = Array.from(
   }
 
   /*
-   * **md窓（768〜1023px）だけ字を1段落とす。折り位置を縛っている業種のカードにだけ効かせる**
+   * **md窓（768〜1023px）だけ基準の字を1段落とす。折り位置を縛っている業種のカードにだけ効かせる**
    * （2026-08-12）。
    *
    * ここは3列の中でカードがいちばん細く、一言の入る幅が実測 **176.7px**（768px時）しかない。
@@ -339,23 +356,37 @@ const rows = Array.from(
    * 正本の「折れるのは読点の後で1回だけ」に反する。
    * 16px・字間0.05emなら168.0pxで、8.7pxの余裕をもって前半が1行に収まる。
    *
-   * **一言そのものを1行に収めることは、この窓では不可能**（16字で252.9px必要／幅176.7px）。
-   * ここで守るのは「読点の後で1回だけ折る」であって、1行化ではない。
-   * **数字はキャッチを差し替えるたびに測り直すこと。**
-   *
-   * **`.has-keep` に限定するのは、既存3業種のカードを1pxも動かさないため。**
-   * 縛っていない業種の一言は budoux が文節で折るので、md窓で字を落とす理由が無い。
-   * **1024px以上は縛っている業種でも変えない**（そちらは幅246pxで元から余っている）。
-   *
-   * 副作用として、md窓では**運送のカードだけ一言が16px**になる（他は17px）。
-   * 4枚のときは運送が単独の段に入るので横並びの比較は起きないが、
-   * **段の中に縛っている業種と縛っていない業種が並ぶ枚数になったら、ここは見直す**。
+   * **これは「読点の後で1回だけ折る」を守るための調整で、1行化ではない**
+   * （一言そのものを1行に収めるのは、この窓では16字で252.9px要るため不可能）。
+   * **`.has-keep` に限定するのは、縛っていない業種のカードを1pxも動かさないため。**
    */
   @media (min-width: 768px) and (max-width: 1023px) {
     .ind-link-catch.has-keep {
-      font-size: 1rem;
+      --catch-size: 1rem;
       letter-spacing: 0.05em;
     }
+  }
+
+  /*
+   * **保護語（`mainCatchKeep`）が入る大きさまで、さらに字を抑える**（2026-08-13）。
+   *
+   * `overflow-wrap: anywhere` は**入りきらなければ任意位置で折る**ので、
+   * 保護語より版面が狭いと `来月の入庫予定に変わ／る` のように割れる。**カードは幅がいちばん狭く、
+   * 実際に割れるのはここ**——自動車整備（保護語11字）が768pxで割れていた。
+   *
+   * 上限＝**一言の入る幅 ÷ 保護語の字数**。`100cqw` は `.ind-link-body` の内寸＝一言が入る幅、
+   * `--catch-len` は業種のデータから渡る（半角は0.5字）、`1.12` は字間0.12emぶん。
+   *
+   * **`min()` なので、上限が基準より大きい業種では何も起きない**
+   * （運送は保護語5字ぶんで上限が十分大きく、md窓の16pxがそのまま出る）。
+   * コンテナクエリが使えない環境では式が無効になり、**上の `--catch-size` にそのまま戻る**
+   * ＝安全側に倒れる。
+   */
+  .ind-link-catch.has-keep {
+    font-size: min(
+      var(--catch-size),
+      calc(100cqw / (var(--catch-len) * 1.12))
+    );
   }
 
   .ind-link-work {
