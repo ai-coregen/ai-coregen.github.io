@@ -301,10 +301,13 @@ def main():
 
     # CTAの計測パラメータ
     page_raw = page_path.read_text(encoding="utf-8")
-    ctas = sorted(set(re.findall(r'/(reserve|download)\?cta=([a-z]+)&(?:amp;)?v=([a-z0-9_]+)', page_raw)))
+    # 末尾スラッシュは任意（2026-08-27 に ctaUrl が /reserve/ 形式へ変わった。
+    # 旧形式のビルド成果物を検品しても落ちないよう、どちらも通す）
+    ctas = sorted(set(re.findall(
+        r'/(reserve|download)/?\?cta=([a-z]+)&(?:amp;)?v=([a-z0-9_]+)', page_raw)))
     print("[INFO] CTAリンク        : %d" % len(ctas))
     for page, pos, ver in ctas:
-        print("       - /%s?cta=%s&v=%s" % (page, pos, ver))
+        print("       - /%s/?cta=%s&v=%s" % (page, pos, ver))
     if not ctas:
         print("  [NG] CTAに計測パラメータが付いていない")
 

@@ -358,15 +358,32 @@ export interface Industry {
  */
 export type CtaPosition = "hero" | "flow" | "bottom" | "header";
 
-/** CTAリンクを組み立てる。例: /reserve?cta=hero&v=mfg_v1 */
+/**
+ * CTAリンクを組み立てる。例: /reserve/?cta=hero&v=mfg_v1
+ *
+ * **末尾スラッシュを付ける**（2026-08-27）。Astroは `/reserve/index.html` を出すので、
+ * スラッシュ無しの `/reserve` は GitHub Pages が 301 で `/reserve/` へ飛ばしていた。
+ * 実測ではクエリも保持されて到達していたが、**クエリが残るかはリダイレクト側の挙動**なので、
+ * 計測パラメータ(cta= / v=)と `?c=` トークンを預ける先としてはリダイレクトを挟まないほうがよい。
+ */
 export function ctaUrl(
   base: string,
   page: "reserve" | "download",
   position: CtaPosition,
   version: string
 ): string {
-  return `${base}/${page}?cta=${position}&v=${version}`;
+  return `${base}/${page}/?cta=${position}&v=${version}`;
 }
+
+/**
+ * トップLP（業種を持たないページ）のCTA版。業種の `ctaVersion` と同じ役割で、
+ * 「どのLPから来たCTAか」を計測で区別するためだけに存在する。
+ *
+ * トップLPのCTAにもこれを付けるのは、**位置(cta=)が空だと委譲リスナーが
+ * position を空文字で送ることになり、hero/header/bottom の区別が付かない**ため
+ * （Layout.astro のCTA計測はリンク自身のクエリから位置を読む）。
+ */
+export const TOP_CTA_VERSION = "top_v1";
 
 /**
  * メインキャッチの1行に効かせる「折ってはいけない語句」を返す（`JaText` の `keep` に渡す）。

@@ -41,3 +41,48 @@ export function trackVisit(logUrl: string, token: string | null, page: string): 
     // 送信失敗は許容（代理指標）
   }
 }
+
+/**
+ * LP内のCTAクリックを記録（2026-08-27 新設）。
+ *
+ * **なぜ visit と別経路なのか**: CTAクリックは押した直後にページが遷移するので、
+ * `fetch` は送信途中でも破棄されうる（`keepalive` は保険でしかなく、遷移では取りこぼす）。
+ * `navigator.sendBeacon` は**ブラウザ側が遷移後も送信を引き継ぐ**ので確実に届く。
+ * Blobの type を `text/plain` にするのは、これがCORSセーフリストの Content-Type だから
+ * ＝プリフライトが飛ばない。GASはCORSヘッダを返さないので、プリフライトが起きると
+ * 送信そのものが失敗する（`trackVisit` が Content-Type を付けていないのと同じ理由）。
+ *
+ * **`trackVisit` は書き換えない**。あちらは本番で動いている実績のある経路なので、
+ * 送信方式を変えて壊すリスクを取らない（重複しているのは承知のうえ）。
+ *
+ * 抑止は入れない＝同じCTAを2回押したことも記録する（押し直しは意味のある信号）。
+ */
+export function trackCta(
+  logUrl: string,
+  token: string | null,
+  info: { page: string; position: string; dest: string; version: string }
+): void {
+  if (!logUrl || !token) return;
+  const body = JSON.stringify({
+    event: "cta",
+    token,
+    page: info.page,
+    position: info.position,
+    dest: info.dest,
+    v: info.version,
+    ts: new Date().toISOString(),
+  });
+  try {
+    if (typeof navigator !== "undefined" && navigator.sendBeacon) {
+      const blob = new Blob([body], { type: "text/plain;charset=UTF-8" });
+      if (navigator.sendBeacon(logUrl, blob)) return;
+    }
+  } catch {
+    // sendBeacon が使えない/キューが一杯 → 下のfetchへ落とす
+  }
+  try {
+    fetch(logUrl, { method: "POST", mode: "no-cors", keepalive: true, body });
+  } catch {
+    // 送信失敗は許容（代理指標）
+  }
+}

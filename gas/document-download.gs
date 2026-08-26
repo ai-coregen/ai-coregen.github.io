@@ -32,7 +32,9 @@ var TEXT = {
   FROM_NAME: 'CoreGen',
   SUBJECT: '【CoreGen】サービス詳細資料をお送りします',
   ATTACHMENT_NAME: 'CoreGen_サービス詳細資料.pdf',
-  RESERVE_URL: 'https://ai-coregen.github.io/reserve'  // 無料相談予約ページ
+  // 無料相談予約ページ。末尾スラッシュ付き＝GitHub Pagesの 301 リダイレクトを挟まない
+  // （リダイレクトでクエリが保持されるかは相手側の挙動なので、?c= を預ける先としては避ける）
+  RESERVE_URL: 'https://ai-coregen.github.io/reserve/'
 };
 
 function prop_(key, def) {
@@ -50,6 +52,14 @@ function stamp_() {
 function safeToken_(t) {
   t = String(t || '').trim();
   return /^[A-Za-z0-9_-]{1,32}$/.test(t) ? t : '';
+}
+
+// CTAの位置・遷移先・LP版など、こちらが決め打ちで送っている短い識別子用（2026-08-27）。
+// 公開エンドポイントなので、外から任意の文字列を書き込まれないよう形を縛る。
+// 空文字は許す（旧いLPからのビーコンには v= が無いことがある）。
+function safeSlug_(s) {
+  s = String(s || '').trim();
+  return /^[A-Za-z0-9_-]{0,32}$/.test(s) ? s : '';
 }
 
 // シート名で取得（無ければヘッダ付きで作成）。getSheets()[0] の位置依存を廃止
@@ -82,6 +92,7 @@ function doPost(e) {
       if (prop_('SHEET_ID')) {
         sheetByName_('資料DL', ['日時', '会社名', 'メール', 'トークン']);
         sheetByName_('クリック', ['日時', 'トークン', 'ページ']);
+        sheetByName_('CTA', ['日時', 'トークン', 'ページ', '位置', '遷移先', '版']);
       }
       return json_({ ok: true, setup: true });
     }
@@ -100,6 +111,32 @@ function doPost(e) {
       return json_({ ok: true });
     }
 
+    /*
+     * LP内のCTAクリック（2026-08-27 追加）: 「CTA」タブに1行だけ。
+     *
+     * 「クリック」タブ（event:'visit'）が記録するのは**ページに着いたこと**なので、
+     * 「業種LP → /download/」という並びが LP内のCTAを押した結果なのか、
+     * 営業文の▼資料リンクを別々に押しただけなのかが区別できなかった。
+     * こちらは**押した瞬間**を、位置(hero/header/flow/bottom)と遷移先(reserve/download)つきで残す。
+     *
+     * 送信元は navigator.sendBeacon（Content-Type: text/plain）なので、
+     * doPost からは e.postData.contents に同じくJSONとして入る＝既存の読み取りのまま動く。
+     * 上の visit / 下の資料DL の処理には一切触れていない。
+     */
+    if (event === 'cta') {
+      if (prop_('SHEET_ID') && token) {
+        sheetByName_('CTA', ['日時', 'トークン', 'ページ', '位置', '遷移先', '版']).appendRow([
+          stamp_(),
+          token,
+          String(body.page || '').slice(0, 64),
+          safeSlug_(body.position),
+          safeSlug_(body.dest),
+          safeSlug_(body.v)
+        ]);
+      }
+      return json_({ ok: true });
+    }
+
     if (!companyName) return json_({ ok: false, error: 'companyName required' });
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return json_({ ok: false, error: 'invalid email' });
@@ -112,7 +149,7 @@ function doPost(e) {
     // 1) 申込者へ資料メール（PDF添付）
     var options = {
       name: prop_('FROM_NAME', TEXT.FROM_NAME),
-      htmlBody: applicantHtml_(companyName)
+      htmlBody: applicantHtml_(companyName, token)
     };
     // 送信元を星野さんのアドレスに。確認済みエイリアスの時だけ From に反映（未確認でも送信は壊さない）。
     var sendAs = prop_('SEND_AS');
@@ -128,7 +165,7 @@ function doPost(e) {
       if (attachName) blob.setName(attachName);
       options.attachments = [blob];
     }
-    GmailApp.sendEmail(email, prop_('SUBJECT', TEXT.SUBJECT), applicantText_(companyName), options);
+    GmailApp.sendEmail(email, prop_('SUBJECT', TEXT.SUBJECT), applicantText_(companyName, token), options);
 
     // 2) 運営へ通知（Discord優先。webhook未設定/失敗時のみメール = quota消費を1通/申込に抑える）
     var notified = notifyDiscord_(
@@ -234,8 +271,26 @@ function json_(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-function applicantText_(companyName) {
-  var reserveUrl = prop_('RESERVE_URL', TEXT.RESERVE_URL);
+/**
+ * 資料メールに載せる予約URL。申込時に受け取った token を ?c= で引き継ぐ（2026-08-27）。
+ *
+ * **なぜ必要か**: LP内の遷移は sessionStorage が token を運ぶが、メールは別のセッション
+ * （別の日・別の端末でも開かれる）なので、URLに載せない限り「資料を請求したどの会社が
+ * 予約ページまで来たか」が繋がらない。`cta=mail` は営業文・LP内CTA由来と区別するため。
+ *
+ * token が無い申込（LPに直接来た人など）でも壊れない＝その場合は cta=mail だけ付く。
+ */
+function reserveUrlFor_(token) {
+  var url = prop_('RESERVE_URL', TEXT.RESERVE_URL);
+  if (url.indexOf('?') !== -1) return url;   // 既にクエリ付きなら手を加えない
+  if (url.charAt(url.length - 1) !== '/') url += '/';
+  var q = 'cta=mail';
+  if (token) q = 'c=' + encodeURIComponent(token) + '&' + q;
+  return url + '?' + q;
+}
+
+function applicantText_(companyName, token) {
+  var reserveUrl = reserveUrlFor_(token);
   return [
     companyName + ' ご担当者様',
     '',
@@ -257,8 +312,8 @@ function applicantText_(companyName) {
   ].join('\n');
 }
 
-function applicantHtml_(companyName) {
-  var reserveUrl = prop_('RESERVE_URL', TEXT.RESERVE_URL);
+function applicantHtml_(companyName, token) {
+  var reserveUrl = reserveUrlFor_(token);
   return ''
     + '<div style="font-family:\'Yu Gothic\',sans-serif;color:#121213;line-height:1.8;">'
     + '<p>' + escapeHtml_(companyName) + ' ご担当者様</p>'

@@ -1,8 +1,10 @@
 ---
 import { nav } from "../data/content";
+import { ctaUrl, TOP_CTA_VERSION } from "../data/industries";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const reserveHref = `${base}/reserve`;
+/* 計測パラメータは業種LPと同じ ctaUrl() で組む（URLの形の正本を1箇所に保つ） */
+const reserveHref = ctaUrl(base, "reserve", "header", TOP_CTA_VERSION);
 ---
 
 <header

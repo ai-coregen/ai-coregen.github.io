@@ -105,9 +105,56 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     </script>
     <script>
       // ユニークリンク(?c=token)の訪問ビーコン。全ページで1回。token無ければ何もしない。
-      import { getToken, trackVisit } from "../lib/track";
+      import { getToken, trackCta, trackVisit } from "../lib/track";
       import { tracking } from "../data/content";
-      trackVisit(tracking.logUrl, getToken(), location.pathname);
+      const cgToken = getToken();
+      trackVisit(tracking.logUrl, cgToken, location.pathname);
+
+      /*
+       * LP内のCTAクリック計測（2026-08-27 新設）。
+       *
+       * **個々のボタンには手を入れず、document 1本の委譲リスナーで拾う。**
+       * CTAは `ui/Button.astro`（トップLPと業種LPの共用部品）を含む5コンポーネント・
+       * 計8箇所に散っているので、個別に onclick を足すと共用部品にまで手が入る。
+       * 委譲ならマークアップは1文字も変わらず、トップ・業種・ヘッダーを一度に拾える。
+       *
+       * 位置(cta=)とLP版(v=)は**リンク自身のクエリから読む**＝リンクを増やしても
+       * ここを直さなくてよい（値の正本は industries.ts の ctaUrl() 側にある）。
+       *
+       * なぜ計測が要るのか: ビーコンが送っているのは pathname だけなので、
+       * 「業種LP → /download/」という並びが**LP内CTAを押した結果**なのか
+       * **営業文の▼資料リンクを別に押しただけ**なのかが区別できなかった
+       * （実測で逆順の並びも実在した）。dest と position を送って初めて分かれる。
+       */
+      const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+      const CTA_PATH = new RegExp(`^${base}/(reserve|download)/?$`);
+      document.addEventListener(
+        "click",
+        (ev) => {
+          const target = ev.target;
+          if (!(target instanceof Element)) return;
+          const a = target.closest("a[href]");
+          if (!a) return;
+          let url: URL;
+          try {
+            url = new URL(a.getAttribute("href") || "", location.href);
+          } catch {
+            return; // mailto: や tel: など
+          }
+          if (url.origin !== location.origin) return;
+          const m = CTA_PATH.exec(url.pathname);
+          if (!m) return;
+          trackCta(tracking.logUrl, cgToken, {
+            page: location.pathname,
+            position: url.searchParams.get("cta") || "",
+            dest: m[1],
+            version: url.searchParams.get("v") || "",
+          });
+        },
+        // capture: 途中の要素が stopPropagation しても取りこぼさない
+        // passive: preventDefault は一切しない（遷移を邪魔しない）
+        { capture: true, passive: true }
+      );
     </script>
   </body>
 </html>

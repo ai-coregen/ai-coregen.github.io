@@ -2,8 +2,12 @@
 import Button from "./ui/Button.astro";
 import JaText from "./ui/JaText.astro";
 import { hero } from "../data/content";
+import { ctaUrl, TOP_CTA_VERSION } from "../data/industries";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+/* 計測パラメータは業種LPと同じ ctaUrl() で組む（URLの形の正本を1箇所に保つ） */
+const reserveHref = ctaUrl(base, "reserve", "hero", TOP_CTA_VERSION);
+const downloadHref = ctaUrl(base, "download", "hero", TOP_CTA_VERSION);
 const videoSrc = `${base}/hero.mp4`;
 const mobileVideoSrc = `${base}/hero-mobile.mp4`;
 const posterSrc = `${base}/hero-poster.jpg`;
@@ -59,10 +63,10 @@ const posterSrc = `${base}/hero-poster.jpg`;
       />
 
       <div class="hero-anim hero-anim-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-5">
-        <Button variant="primary" href={`${base}/reserve`} class="w-full sm:w-auto">
+        <Button variant="primary" href={reserveHref} class="w-full sm:w-auto">
           {hero.primaryCta}
         </Button>
-        <Button variant="secondary" href={`${base}/download`} class="w-full sm:w-auto">
+        <Button variant="secondary" href={downloadHref} class="w-full sm:w-auto">
           {hero.secondaryCta}
         </Button>
       </div>
