@@ -106,9 +106,25 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <script>
       // ユニークリンク(?c=token)の訪問ビーコン。全ページで1回。token無ければ何もしない。
       import { getToken, trackCta, trackVisit } from "../lib/track";
+      import { initEngage, markCtaClick } from "../lib/engage";
       import { tracking } from "../data/content";
       const cgToken = getToken();
       trackVisit(tracking.logUrl, cgToken, location.pathname);
+
+      /*
+       * LP内の行動計測（2026-08-27 新設）。どのセクションまで読んで帰ったか・
+       * どれだけ見ていたかを、離脱時にまとめて1回だけ送る。詳細は lib/engage.ts。
+       * ページのLP版(?v=)は、このページのCTAリンクが持っている値から拾う
+       * （業種LPなら mfg_v1 等・トップLPなら top_v1。値の正本は industries.ts の ctaUrl 側）。
+       */
+      const ctaHref = document.querySelector("a[href*='cta=']")?.getAttribute("href") || "";
+      const pageVersion = new URLSearchParams(ctaHref.split("?")[1] || "").get("v") || "";
+      initEngage({
+        logUrl: tracking.logUrl,
+        token: cgToken,
+        page: location.pathname,
+        version: pageVersion,
+      });
 
       /*
        * LP内のCTAクリック計測（2026-08-27 新設）。
@@ -144,6 +160,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           if (url.origin !== location.origin) return;
           const m = CTA_PATH.exec(url.pathname);
           if (!m) return;
+          markCtaClick(); // 行動計測の側にも「このページでCTAを押した」を残す
           trackCta(tracking.logUrl, cgToken, {
             page: location.pathname,
             position: url.searchParams.get("cta") || "",

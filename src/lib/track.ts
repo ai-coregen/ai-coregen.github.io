@@ -63,15 +63,68 @@ export function trackCta(
   info: { page: string; position: string; dest: string; version: string }
 ): void {
   if (!logUrl || !token) return;
-  const body = JSON.stringify({
+  beacon(logUrl, {
     event: "cta",
     token,
     page: info.page,
     position: info.position,
     dest: info.dest,
     v: info.version,
-    ts: new Date().toISOString(),
   });
+}
+
+/**
+ * LP内での行動（どこまで読んだか・どれだけ見ていたか）を記録（2026-08-27 新設）。
+ *
+ * 「LPに来たが何もせず帰った人」が**どのセクションまで見て帰ったか**を残すためのもの。
+ * 実際に何を測るか・いつ送るかは `engage.ts` が持ち、ここは送信だけを担う。
+ * 送信経路は `trackCta` と同じ（離脱時に送るので sendBeacon でなければ届かない）。
+ */
+export function trackEngage(logUrl: string, token: string | null, info: EngagePayload): void {
+  if (!logUrl || !token) return;
+  beacon(logUrl, { event: "engage", token, ...info });
+}
+
+export interface EngagePayload {
+  /** どのページか（pathname） */
+  page: string;
+  /** LP版（?v= の値。トップLPは top_v1） */
+  v: string;
+  /** 到達したうちで**最も下にある**セクションのid（＝どこで帰ったか） */
+  last_section: string;
+  /** 到達したセクションの数 */
+  sections: number;
+  /** 最大スクロール到達率（0-100） */
+  depth: number;
+  /** 表示されていた時間の累計（秒）。バックグラウンドの時間は含めない */
+  dwell: number;
+  /** この滞在中にCTAを押したか（0/1） */
+  clicked: number;
+  /** 資料DLページの到達段階（他のページでは空） */
+  stage: string;
+  /** 最後に出た入力エラーの種類（資料DLページのみ・入力値は含めない） */
+  err: string;
+  /** 送信ボタンを押した回数 */
+  submits: number;
+  /** 送信通番。分析は (token,page) ごとに seq 最大の行を採る */
+  seq: number;
+}
+
+/**
+ * ビーコン送信の共通処理（cta / engage が使う）。
+ *
+ * **なぜ fetch ではなく `navigator.sendBeacon` なのか**: どちらもページを離れる瞬間に送るので、
+ * `fetch` は送信途中でも破棄されうる（`keepalive` は保険でしかなく、遷移では取りこぼす）。
+ * `sendBeacon` は**ブラウザ側が遷移後も送信を引き継ぐ**ので確実に届く。
+ * Blobの type を `text/plain` にするのは、これがCORSセーフリストの Content-Type だから
+ * ＝プリフライトが飛ばない。GASはCORSヘッダを返さないので、プリフライトが起きると
+ * 送信そのものが失敗する（`trackVisit` が Content-Type を付けていないのと同じ理由）。
+ *
+ * **`trackVisit` はこの関数を使わない**。あちらは本番で動いている実績のある経路なので、
+ * 送信方式を変えて壊すリスクを取らない（重複しているのは承知のうえ）。
+ */
+function beacon(logUrl: string, payload: Record<string, unknown>): void {
+  const body = JSON.stringify({ ...payload, ts: new Date().toISOString() });
   try {
     if (typeof navigator !== "undefined" && navigator.sendBeacon) {
       const blob = new Blob([body], { type: "text/plain;charset=UTF-8" });

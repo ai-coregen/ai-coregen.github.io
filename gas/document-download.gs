@@ -62,6 +62,14 @@ function safeSlug_(s) {
   return /^[A-Za-z0-9_-]{0,32}$/.test(s) ? s : '';
 }
 
+// 行動計測の数値（深度・滞在秒・回数）用。負値と桁あふれを潰して 0〜99999 に丸める。
+// 公開エンドポイントなので、外から巨大な値や文字列を入れられても表計算を壊さない。
+function safeInt_(n) {
+  n = parseInt(n, 10);
+  if (isNaN(n) || n < 0) return 0;
+  return n > 99999 ? 99999 : n;
+}
+
 // シート名で取得（無ければヘッダ付きで作成）。getSheets()[0] の位置依存を廃止
 function sheetByName_(name, header) {
   var ss = SpreadsheetApp.openById(prop_('SHEET_ID'));
@@ -93,6 +101,9 @@ function doPost(e) {
         sheetByName_('資料DL', ['日時', '会社名', 'メール', 'トークン']);
         sheetByName_('クリック', ['日時', 'トークン', 'ページ']);
         sheetByName_('CTA', ['日時', 'トークン', 'ページ', '位置', '遷移先', '版']);
+        sheetByName_('行動', ['日時', 'トークン', 'ページ', '最深セクション', '到達数',
+                              '深度%', '滞在秒', 'CTA押下', '段階', 'エラー',
+                              '送信押下回数', '版', 'seq']);
       }
       return json_({ ok: true, setup: true });
     }
@@ -132,6 +143,42 @@ function doPost(e) {
           safeSlug_(body.position),
           safeSlug_(body.dest),
           safeSlug_(body.v)
+        ]);
+      }
+      return json_({ ok: true });
+    }
+
+    /*
+     * LP内の行動（2026-08-27 追加）: 「行動」タブに1行。
+     *
+     * 「クリック」タブは着いたこと、「CTA」タブは押したことしか残さないので、
+     * **何もせず帰った人が何も残さない**状態だった。ここには
+     * 「どのセクションまで読んだか」「どれだけ見ていたか」を離脱時にまとめて残す。
+     *
+     * 同じ滞在で複数行が入ることがある（タブを離れて戻ってまた読んだ場合）。
+     * 分析側は (トークン, ページ) ごとに **seq が最大の行**を採ること。
+     *
+     * 記録するのは行動の指標だけで、入力値・個人情報・IPは1つも含まない。
+     * 上の visit / cta / 下の資料DL の処理には一切触れていない。
+     */
+    if (event === 'engage') {
+      if (prop_('SHEET_ID') && token) {
+        sheetByName_('行動', ['日時', 'トークン', 'ページ', '最深セクション', '到達数',
+                              '深度%', '滞在秒', 'CTA押下', '段階', 'エラー',
+                              '送信押下回数', '版', 'seq']).appendRow([
+          stamp_(),
+          token,
+          String(body.page || '').slice(0, 64),
+          safeSlug_(body.last_section),
+          safeInt_(body.sections),
+          safeInt_(body.depth),
+          safeInt_(body.dwell),
+          safeInt_(body.clicked),
+          safeSlug_(body.stage),
+          safeSlug_(body.err),
+          safeInt_(body.submits),
+          safeSlug_(body.v),
+          safeInt_(body.seq)
         ]);
       }
       return json_({ ok: true });

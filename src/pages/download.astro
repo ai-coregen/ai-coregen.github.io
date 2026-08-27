@@ -146,6 +146,10 @@ const ready = !!downloadForm.gasUrl;
 
 <script>
   import { getToken } from "../lib/track";
+  // 「資料DLページに来たのにDLしていない」がどこで止まったのかを残す（lib/engage.ts）。
+  // フォームの表示・フォーカス・入力の検知は engage.ts 側が担うので、ここでは
+  // **送信を押してから先**の段階だけを記録する。入力値は一切渡さない。
+  import { markStage } from "../lib/engage";
   const form = document.getElementById("dl-form") as HTMLFormElement | null;
   const successBox = document.getElementById("dl-success");
   const errorEl = document.getElementById("dl-error");
@@ -168,6 +172,9 @@ const ready = !!downloadForm.gasUrl;
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       errorEl?.classList.add("hidden");
+      // ここを通った回数が「送信ボタンを押した数」。この先の submit_ok まで進まない人が
+      // 多ければ、押しているのに送れていない＝直せる不具合ということになる
+      markStage("submit_attempt");
 
       const data = new FormData(form);
       const companyName = String(data.get("companyName") || "").trim();
@@ -175,9 +182,18 @@ const ready = !!downloadForm.gasUrl;
       const honeypot = String(data.get("_gotcha") || "");
 
       if (honeypot) return; // bot
-      if (!companyName) return showError("会社名をご入力ください。");
-      if (!EMAIL_RE.test(email)) return showError("メールアドレスの形式をご確認ください。");
-      if (!gasUrl) return showError("現在準備中です。しばらくお待ちください。");
+      if (!companyName) {
+        markStage("submit_error", "company_empty");
+        return showError("会社名をご入力ください。");
+      }
+      if (!EMAIL_RE.test(email)) {
+        markStage("submit_error", "email_format");
+        return showError("メールアドレスの形式をご確認ください。");
+      }
+      if (!gasUrl) {
+        markStage("submit_error", "gas_missing");
+        return showError("現在準備中です。しばらくお待ちください。");
+      }
 
       submitBtn.disabled = true;
       if (submitLabel) submitLabel.textContent = sendingText;
@@ -195,11 +211,15 @@ const ready = !!downloadForm.gasUrl;
             event: "download_submit",
           }),
         });
+        markStage("submit_ok");
         form.classList.add("hidden");
         successBox?.classList.remove("hidden");
         successBox?.scrollIntoView({ behavior: "smooth", block: "center" });
       } catch {
-        // no-cors では基本ここに来ないが、保険として成功扱い（送信自体は実行される）
+        // no-cors では基本ここに来ないが、保険として成功扱い（送信自体は実行される）。
+        // 計測も画面表示に揃える＝ここを submit_ok にしないと、
+        // 「成功画面を見たのに段階は submit_attempt」という辻褄の合わない行が残る
+        markStage("submit_ok");
         form.classList.add("hidden");
         successBox?.classList.remove("hidden");
       } finally {
