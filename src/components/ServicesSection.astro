@@ -30,6 +30,23 @@ import { services } from "../data/content";
           <div class="flex-1">
             <JaText tag="h3" text={item.name} class="text-ink font-bold text-lg lg:text-xl mb-2" />
             <JaText tag="p" text={item.description} class="text-ink text-[15px] sm:text-base leading-relaxed" />
+            {/*
+              専用LPを持つサービスにだけ導線を出す。`href` を持たない項目は
+              この分岐に入らないので、**既存4件の描画は変わらない**。
+            */}
+            {"href" in item && item.href && (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 mt-3 text-ink text-[15px] font-bold underline underline-offset-4 hover:opacity-60 transition-opacity"
+              >
+                {item.linkLabel}
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+              </a>
+            )}
           </div>
         </div>
       ))}

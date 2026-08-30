@@ -85,7 +85,7 @@ export const profile = {
 
 export const services = {
   eyebrow: "SERVICES",
-  heading: "AI実装を一気通貫で支援する4つのサービス",
+  heading: "AI実装を一気通貫で支援する5つのサービス",
   leadCopy:
     "すべてワンストップで、御社に合わせたカスタマイズサポートをご提供します。",
   items: [
@@ -112,6 +112,19 @@ export const services = {
       name: "AI経営戦略支援",
       description:
         "AI戦略の策定から業務プロセスの改善まで、長期伴走型で支援します（AI戦略・業務改革・AIコンサル）。",
+    },
+    /*
+     * 05だけ外部LP（AI顧問・Cloudflare Pages）を持つ。`href` を持つ項目にだけ
+     * 導線が描かれるので、**01〜04の描画は1pxも変わらない**（ServicesSection.astro）。
+     * 価格はここに書かない（3プランの金額はAI顧問LP側にあり、踏めば分かる。なおき判断）。
+     */
+    {
+      number: "05",
+      name: "AI顧問（経営者・事業者向け）",
+      description:
+        "経営・営業・マーケティングの課題から逆算し、AIエージェントを実際に動く仕組みとして実装します（SNS自動運用・AI社員構築・営業支援）。",
+      href: "https://coregen.pages.dev/",
+      linkLabel: "AI顧問の詳細を見る",
     },
   ],
 };
@@ -258,12 +271,23 @@ export const finalCta = {
 
 export const footer = {
   copyright: "© 2026 CoreGen",
+  /*
+   * **この4件は触らない。** Footer.astro は業種LP6本と download/privacy/reserve/tokushoho
+   * からも読まれているので、ここに足すと全ページのフッターに出てしまう。
+   * トップLPだけに出したいものは下の `advisorService` に置き、
+   * `Footer.astro` の `showAdvisorLink`（既定false）で出し分ける。
+   */
   services: [
     "AI導入研修・組織への定着支援",
     "業務別AI導入支援",
     "実務特化型プログラム研修&支援",
     "AI経営戦略支援",
   ],
+  /** サービス欄の5件目。**トップLPでのみ描画**（`showAdvisorLink` で明示的に有効化したときだけ） */
+  advisorService: {
+    label: "AI顧問（経営者・事業者向け）",
+    href: "https://coregen.pages.dev/",
+  },
   company: [
     { label: "特定商取引法に基づく表記", slug: "tokushoho" },
     { label: "プライバシーポリシー", slug: "privacy" },

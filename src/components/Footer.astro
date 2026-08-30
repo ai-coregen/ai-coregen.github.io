@@ -10,12 +10,33 @@ interface Props {
    * 「金額を一律に掲載していません。価格・進め方は無料相談で」と矛盾するため）。
    */
   showRewardNote?: boolean;
+  /**
+   * サービス欄に5件目「AI顧問」（外部LP）を出すか。
+   * **既定 false＝トップLP以外は従来どおり4件のまま。**
+   * このFooterは業種LP6本と download/privacy/reserve/tokushoho からも読まれているので、
+   * `footer.services` に直接足すと全ページに波及する。出し先を選べる形にしてある。
+   */
+  showAdvisorLink?: boolean;
 }
 
-const { showRewardNote = true } = Astro.props;
+const { showRewardNote = true, showAdvisorLink = false } = Astro.props;
 
 // base path を含めたページリンク（Astro の base 設定に追従）
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+/*
+ * サービス欄の項目。**リストの中身を先に組んでから1回だけ描く。**
+ * テンプレート側に `{showAdvisorLink && (...)}` を置くと、条件が false のときも
+ * 式のぶんの空白が `</li>` と `</ul>` の間に残り、**業種LPのHTMLが2バイト変わる**
+ * （実測。表示には影響しないが、「フッターは1バイトも変えていない」と言い切れなくなる）。
+ * ここで配列にしておけば、5件目が無いときの出力は従来と完全に同一になる。
+ */
+const serviceLinks: { label: string; href: string; external: boolean }[] = [
+  ...footer.services.map((label) => ({ label, href: `${base}/#services`, external: false })),
+  ...(showAdvisorLink
+    ? [{ label: footer.advisorService.label, href: footer.advisorService.href, external: true }]
+    : []),
+];
 ---
 
 <footer class="bg-gradient-footer pt-16 pb-8" id="footer">
@@ -27,11 +48,26 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, "");
           サービス
         </h4>
         <ul class="space-y-2.5">
-          {footer.services.map((service) => (
+          {serviceLinks.map((service) => (
             <li>
-              <a href={`${base}/#services`} class="text-white/50 text-sm hover:text-white transition-colors block py-1.5">
-                {service}
-              </a>
+              {service.external ? (
+                /* 外部LPへ飛ぶ項目は、関連リンク欄と同じ作法（新しいタブ＋外部アイコン） */
+                <a
+                  href={service.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-white/50 text-sm hover:text-white transition-colors inline-flex items-center gap-1 py-1.5"
+                >
+                  {service.label}
+                  <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                </a>
+              ) : (
+                <a href={service.href} class="text-white/50 text-sm hover:text-white transition-colors block py-1.5">
+                  {service.label}
+                </a>
+              )}
             </li>
           ))}
         </ul>
