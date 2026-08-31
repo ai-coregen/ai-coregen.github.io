@@ -27,7 +27,9 @@ const { number, title, description, isLast = false } = Astro.props;
   </div>
   <!-- Content -->
   <div class:list={["pb-8 lg:pb-10", isLast && "pb-0"]}>
-    <h4 class="text-ink font-bold text-lg lg:text-xl mb-1">
+    {/* 375pxでは見出し幅が256px。明朝は同ptでも横幅が出るので、本文と同じ字間(0.12em)だと
+        「無料オンライン相談（30分）」が溢れて2行になる。STEP見出しだけ詰めて1行を保つ */}
+    <h4 class="text-ink font-bold text-lg lg:text-xl mb-1 tracking-[0.04em]">
       {title}
     </h4>
     <JaText tag="p" text={description} class="text-ink text-[15px] sm:text-base" />

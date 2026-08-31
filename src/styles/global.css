@@ -55,8 +55,12 @@
   --color-danger: #E64B18;
 
   /* ----- Fonts ----- */
-  --font-sans: "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", Meiryo, sans-serif;
-  --font-display: "Satoshi", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", sans-serif;
+  /* 本文。AI顧問LPと同じ Zen Kaku Gothic New を先頭に置く */
+  --font-sans: "Zen Kaku Gothic New", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+  /* 英字ラベル・ボタン・Q./A.・丸囲み番号。AI顧問の .sec__label--small と同じくゴシックに落とす */
+  --font-display: "Zen Kaku Gothic New", "Yu Gothic", YuGothic, "Hiragino Kaku Gothic ProN", sans-serif;
+  /* 日本語の大見出しと大きい数字だけ明朝。AI顧問の --mincho と対応 */
+  --font-mincho: "Shippori Mincho", "Yu Mincho", YuMincho, "Hiragino Mincho ProN", serif;
 
   /* ----- Shadows (フラット基調。最小限) ----- */
   --shadow-card: 0 1px 2px rgba(18, 18, 19, 0.04);
@@ -98,6 +102,10 @@
    ============================================================ */
 @utility font-display {
   font-family: var(--font-display);
+}
+
+@utility font-mincho {
+  font-family: var(--font-mincho);
 }
 
 /* タイトル下線バー: 黒(50px)→薄グレー */
@@ -155,6 +163,13 @@
 
   h4, p, li, span {
     text-wrap: pretty;
+  }
+
+  /* 日本語の見出しは明朝（AI顧問LPの `h1,h2,h3,.mincho` と同じ思想）。
+     base に置くので、英字ラベルとして扱う見出し（フッターの4本）は
+     utilities の font-display が勝ってゴシックのまま残る */
+  h1, h2, h3, h4 {
+    font-family: var(--font-mincho);
   }
 }
 

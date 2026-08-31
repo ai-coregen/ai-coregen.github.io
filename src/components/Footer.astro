@@ -167,3 +167,12 @@ const serviceLinks: { label: string; href: string; external: boolean }[] = [
     </div>
   </div>
 </footer>
+
+<style>
+  /* リンク欄は1列239px。本文と同じ字間(0.12em)だと、外部リンクアイコンぶんの
+     18pxが効いて「オンラインサロン「アイサロ」」が語中で2行に割れる。
+     この欄だけ字間を詰めて1行に戻す（列幅・文言は触らない） */
+  footer ul a {
+    letter-spacing: 0.04em;
+  }
+</style>

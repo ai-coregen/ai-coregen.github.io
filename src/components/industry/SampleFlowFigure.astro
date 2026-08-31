@@ -213,6 +213,9 @@ const { data } = Astro.props;
     font-size: 13px;
     line-height: 1.75;
     color: rgba(255, 255, 255, 0.86);
+    /* 375pxでは本文幅238pxで、本文と同じ字間(0.12em)だと1行あたり13文字までしか入らず
+       要約が4行に伸びる。ここだけ詰めて3行に収める（人材紹介の要約が最長） */
+    letter-spacing: 0.06em;
   }
 
   .sfl-legend {

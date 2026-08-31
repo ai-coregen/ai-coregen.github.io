@@ -50,7 +50,8 @@ const { data } = Astro.props;
               <JaText
                 tag="span"
                 text={item.title}
-                class="text-ink font-bold text-base lg:text-lg leading-snug"
+                {/* 番号とペアのカード見出し。h3/h4 と同じ役割なので明朝に揃える */}
+                class="font-mincho text-ink font-bold text-base lg:text-lg leading-snug"
               />
             </div>
             <JaText

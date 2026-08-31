@@ -47,7 +47,8 @@ import { solution } from "../data/content";
                   tag="p"
                   text={text}
                   class:list={[
-                    "font-bold text-[15px] sm:text-base lg:text-base",
+                    /* カードの見出し（本文ではない）なので、h3/h4 と同じ明朝に揃える */
+                    "font-mincho font-bold text-[15px] sm:text-base lg:text-base",
                     i === solution.flowSteps.length - 1 ? "text-white" : "text-ink",
                   ]}
                 />
