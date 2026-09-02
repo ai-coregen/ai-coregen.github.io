@@ -295,7 +295,8 @@ export const footer = {
   companyInfo: {
     name: "CoreGen",
     rep: "星野 創吉",
-    address: "東京都北区堀船 1-25-5 サンハイツ 201",
+    // 特定商取引法に基づく表記でのみ使用。建物名・部屋番号は非掲載
+    address: "東京都北区堀船 1-25-5",
     tel: "080-8041-0861",
     email: "sokichi0614@gmail.com",
   },
