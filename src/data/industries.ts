@@ -354,9 +354,10 @@ export interface Industry {
 
 /**
  * CTAの位置。営業文のURLから来る ?c= トークンは track.ts が sessionStorage で貫通させる。
- * hero=セクション1 / flow=セクション9 / bottom=セクション11 / header=最小ヘッダー
+ * hero=セクション1 / flow=セクション9 / bottom=セクション11 / header=最小ヘッダー /
+ * below-form=資料DLページのフォーム直下（2026-09-03 新設。予約への迂回導線）
  */
-export type CtaPosition = "hero" | "flow" | "bottom" | "header";
+export type CtaPosition = "hero" | "flow" | "bottom" | "header" | "below-form";
 
 /**
  * CTAリンクを組み立てる。例: /reserve/?cta=hero&v=mfg_v1
@@ -384,6 +385,13 @@ export function ctaUrl(
  * （Layout.astro のCTA計測はリンク自身のクエリから位置を読む）。
  */
 export const TOP_CTA_VERSION = "top_v1";
+
+/**
+ * 資料DLページ自体が出す二次CTA（フォーム直下の「先に直接聞きたい方は」リンク）のCTA版。
+ * 資料DLページは業種LP・トップLPのどちらからも来訪されるため、`TOP_CTA_VERSION` を流用すると
+ * 業種LP経由の相談予約が誤って「トップLP由来」に計測される。専用の版を持たせて区別する。
+ */
+export const DOWNLOAD_CTA_VERSION = "dl_v1";
 
 /**
  * メインキャッチの1行に効かせる「折ってはいけない語句」を返す（`JaText` の `keep` に渡す）。

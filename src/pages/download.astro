@@ -1,16 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { footer, downloadForm } from "../data/content";
+import Button from "../components/ui/Button.astro";
+import JaText from "../components/ui/JaText.astro";
+import { footer, downloadForm, profile } from "../data/content";
+import { ctaUrl, DOWNLOAD_CTA_VERSION } from "../data/industries";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const home = `${base}/`;
 const privacyHref = `${base}/privacy`;
 const ready = !!downloadForm.gasUrl;
+
+/*
+ * このページはトップLP・業種LPのどちらからも来訪される共有ページなので、
+ * TOP_CTA_VERSION は流用せず専用の DOWNLOAD_CTA_VERSION を使う
+ * （industries.ts 参照。誤って「トップLP由来」に計測されるのを防ぐ）。
+ */
+const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
 ---
 
 <Layout
-  title="サービス詳細資料ダウンロード｜CoreGen"
-  description="CoreGenのサービス詳細資料を無料でダウンロードいただけます。"
+  title="AI自動化の業務例と、導入の流れ｜資料ダウンロード｜CoreGen"
+  description="AI自動化の業務例と導入の流れをまとめた無料資料（PDF・全25ページ）を、メールでお送りします。"
 >
   <header class="border-b border-line">
     <div class="max-w-[800px] mx-auto px-6 h-20 flex items-center">
@@ -27,34 +37,25 @@ const ready = !!downloadForm.gasUrl;
     </div>
   </header>
 
-  <main class="max-w-[640px] mx-auto px-6 py-16 lg:py-24">
-    <p class="font-display font-bold text-base sm:text-lg tracking-[0.14em] text-ink mb-4">
+  <main class="max-w-[640px] mx-auto px-6 py-8 lg:py-24">
+    <p class="font-display font-bold text-base sm:text-lg tracking-[0.14em] text-ink mb-2 lg:mb-4">
       {downloadForm.eyebrow}
     </p>
-    <h1 class="font-mincho text-ink font-bold text-2xl lg:text-3xl mb-5 tracking-[0.04em] leading-snug">
-      {downloadForm.heading}
-    </h1>
-    <p class="text-ink text-base leading-relaxed mb-10">
-      {downloadForm.lead}
-    </p>
+    <JaText
+      tag="h1"
+      text={downloadForm.heading}
+      class="font-mincho text-ink font-bold text-2xl lg:text-3xl mb-3 lg:mb-5 tracking-[0.04em] leading-snug"
+    />
+    <JaText
+      tag="p"
+      text={downloadForm.lead}
+      class="text-ink text-base leading-relaxed mb-6 lg:mb-10"
+    />
 
-    <!-- 資料の内容 -->
-    <div class="bg-surface border border-line p-6 lg:p-7 mb-10">
-      <p class="text-ink font-bold text-base mb-4">{downloadForm.materialsTitle}</p>
-      <ul class="space-y-2.5">
-        {downloadForm.materials.map((item) => (
-          <li class="flex items-start gap-3">
-            <span class="w-1.5 h-1.5 rounded-full bg-ink shrink-0 mt-2.5"></span>
-            <p class="text-ink text-[15px] leading-relaxed">{item}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-
-    <!-- フォーム -->
-    <form id="dl-form" data-gas-url={downloadForm.gasUrl} class="space-y-6" novalidate>
+    <!-- フォーム（フォールドの上に収める＝営業文の「▼資料」リンクの直行先） -->
+    <form id="dl-form" data-gas-url={downloadForm.gasUrl} class="space-y-4 lg:space-y-6" novalidate>
       <div>
-        <label for="dl-company" class="block text-ink font-bold text-[15px] mb-2">
+        <label for="dl-company" class="block text-ink font-bold text-[15px] mb-1.5 lg:mb-2">
           {downloadForm.companyLabel}<span class="text-brand-orange ml-1">*</span>
         </label>
         <input
@@ -68,7 +69,7 @@ const ready = !!downloadForm.gasUrl;
         />
       </div>
       <div>
-        <label for="dl-email" class="block text-ink font-bold text-[15px] mb-2">
+        <label for="dl-email" class="block text-ink font-bold text-[15px] mb-1.5 lg:mb-2">
           {downloadForm.emailLabel}<span class="text-brand-orange ml-1">*</span>
         </label>
         <input
@@ -93,7 +94,7 @@ const ready = !!downloadForm.gasUrl;
         id="dl-submit"
         type="submit"
         disabled={!ready}
-        class="group relative inline-flex w-full items-center justify-center bg-ink text-white font-display font-bold text-base tracking-[0.02em] rounded-full pl-8 pr-14 py-[18px] transition-all duration-300 hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
+        class="group relative inline-flex w-full items-center justify-center bg-ink text-white font-display font-bold text-base tracking-[0.02em] rounded-full pl-8 pr-14 py-4 lg:py-[18px] transition-all duration-300 hover:opacity-80 disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <span id="dl-submit-label">{downloadForm.submit}</span>
         <svg class="absolute right-4 sm:right-5 top-1/2 -translate-y-1/2 w-7 h-7" viewBox="0 0 32 32" fill="none" aria-hidden="true">
@@ -102,13 +103,67 @@ const ready = !!downloadForm.gasUrl;
         </svg>
       </button>
 
-      <p class="text-mute text-[13px] leading-relaxed">
+      <p class="text-mute text-[14px] leading-relaxed">
+        {downloadForm.noSalesNote}<br />
         ご入力いただいた個人情報は、<a href={privacyHref} class="underline hover:opacity-60">{footer.company[1].label}</a>に基づき大切に取り扱います。
       </p>
       {!ready && (
         <p class="text-brand-orange text-[13px] font-bold">{downloadForm.preparingNote}</p>
       )}
     </form>
+
+    <!-- 資料の内容 -->
+    <div class="bg-surface border border-line p-6 lg:p-7 mt-12 mb-10" data-animate>
+      <div class="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
+        <img
+          src={`${base}/images/deck-cover.jpg`}
+          alt="サービス詳細資料の表紙"
+          width="800"
+          height="566"
+          loading="lazy"
+          decoding="async"
+          class="w-full max-w-[240px] lg:max-w-[220px] mx-auto lg:mx-0 shrink-0 border border-line shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
+        />
+        <div class="flex-1">
+          <p class="text-ink font-bold text-base mb-4">{downloadForm.materialsTitle}</p>
+          <ul class="space-y-2.5">
+            {downloadForm.materials.map((item) => (
+              <li class="flex items-start gap-3">
+                <span class="w-1.5 h-1.5 rounded-full bg-ink shrink-0 mt-2.5"></span>
+                <p class="text-ink text-[15px] leading-relaxed">{item}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 代表プロフィール -->
+    <div class="flex items-start gap-4 mb-10" data-animate>
+      <img
+        src={`${base}/hoshino.jpg`}
+        alt={profile.name}
+        width="72"
+        height="72"
+        loading="lazy"
+        decoding="async"
+        class="w-[72px] h-[72px] rounded-full object-cover border border-line shrink-0"
+      />
+      <div>
+        <p class="text-ink font-bold text-[15px]">{profile.name}</p>
+        <p class="text-mute text-[14px] mb-2">CoreGen 代表</p>
+        <p class="text-ink text-[14px] leading-relaxed">{profile.career[1]}</p>
+        <p class="text-ink text-[14px] leading-relaxed mt-1">{profile.career[2]}</p>
+      </div>
+    </div>
+
+    <!-- 二次CTA：先に直接聞きたい方 -->
+    <div class="mb-12" data-animate>
+      <p class="text-ink text-[14px] font-bold mb-3 text-center">{downloadForm.secondaryLead}</p>
+      <Button variant="white" href={reserveHref} class="w-full">
+        {downloadForm.secondaryCta}
+      </Button>
+    </div>
 
     <!-- 送信完了 -->
     <div id="dl-success" class="hidden text-center py-10">
@@ -119,6 +174,10 @@ const ready = !!downloadForm.gasUrl;
       </div>
       <h2 class="text-ink font-bold text-xl mb-3">{downloadForm.successTitle}</h2>
       <p class="text-ink text-[15px] leading-relaxed max-w-[440px] mx-auto">{downloadForm.successBody}</p>
+      <p class="text-ink text-[15px] leading-relaxed max-w-[440px] mx-auto mt-3">
+        {downloadForm.successFollowUp}
+        <a href={reserveHref} class="underline hover:opacity-60">無料オンライン相談へ</a>
+      </p>
       <a href={home} class="inline-flex items-center gap-2 text-ink text-sm font-bold hover:opacity-60 transition-opacity mt-8">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
