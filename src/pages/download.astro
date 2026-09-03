@@ -154,8 +154,8 @@ const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
     </div>
 
     <!-- 二次CTA：直接個別相談したい方 -->
-    <div class="mb-12" data-animate>
-      <p class="text-ink text-[14px] font-bold mb-3 text-center">{downloadForm.secondaryLead}</p>
+    <div class="mt-16 lg:mt-20 mb-12" data-animate>
+      <h2 class="font-mincho text-ink font-bold text-xl lg:text-2xl tracking-[0.04em] mb-6 text-center">{downloadForm.secondaryLead}</h2>
       <Button variant="white" href={reserveHref} class="w-full">
         {downloadForm.secondaryCta}
       </Button>
