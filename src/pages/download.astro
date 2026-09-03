@@ -114,7 +114,7 @@ const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
 
     <!-- 資料の内容：見出し → PDF表紙 → 箇条書き（2026-09-03 なおき指定の順） -->
     <div class="bg-surface border border-line p-6 lg:p-7 mt-12 mb-10" data-animate>
-      <p class="text-ink font-bold text-base mb-5">{downloadForm.materialsTitle}</p>
+      <p class="text-ink font-bold text-base mb-5 text-center">{downloadForm.materialsTitle}</p>
       <img
         src={`${base}/images/deck-cover.jpg`}
         alt="資料の表紙"
@@ -124,7 +124,7 @@ const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
         decoding="async"
         class="w-full max-w-[280px] mx-auto mb-6 border border-line shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
       />
-      <ul class="space-y-2.5">
+      <ul class="space-y-2.5 w-fit max-w-full mx-auto text-left">
         {downloadForm.materials.map((item) => (
           <li class="flex items-start gap-3">
             <span class="w-1.5 h-1.5 rounded-full bg-ink shrink-0 mt-2.5"></span>
