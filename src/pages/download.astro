@@ -124,36 +124,36 @@ const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
         decoding="async"
         class="w-full max-w-[280px] mx-auto mb-6 border border-line shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
       />
-      <ul class="space-y-2.5 w-fit max-w-full mx-auto text-left">
+      <ul class="space-y-2.5 w-full lg:w-fit max-w-full mx-auto text-left">
         {downloadForm.materials.map((item) => (
           <li class="flex items-start gap-3">
             <span class="w-1.5 h-1.5 rounded-full bg-ink shrink-0 mt-2.5"></span>
-            <p class="text-ink text-[15px] leading-relaxed">{item}</p>
+            <p class="text-ink text-[15px] leading-relaxed [text-wrap:wrap]">{item}</p>
           </li>
         ))}
       </ul>
     </div>
 
     <!-- 代表プロフィール -->
-    <div class="flex items-start gap-4 mb-10" data-animate>
-      <img
-        src={`${base}/hoshino.jpg`}
-        alt={profile.name}
-        width="72"
-        height="72"
-        loading="lazy"
-        decoding="async"
-        class="w-[72px] h-[72px] rounded-full object-cover border border-line shrink-0"
-      />
-      <div>
-        <p class="text-ink font-bold text-[15px]">{profile.name}</p>
-        <p class="text-mute text-[14px] mb-2">CoreGen 代表</p>
-        <p class="text-ink text-[14px] leading-relaxed">{profile.career[1]}</p>
-        <p class="text-ink text-[14px] leading-relaxed mt-1">{profile.career[2]}</p>
+    <div class="mb-10" data-animate>
+      <div class="flex flex-col items-center text-center">
+        <img
+          src={`${base}/hoshino.jpg`}
+          alt={profile.name}
+          width="80"
+          height="80"
+          loading="lazy"
+          decoding="async"
+          class="w-[80px] h-[80px] rounded-full object-cover border border-line mb-3"
+        />
+        <p class="text-ink font-bold text-base">{profile.name}</p>
+        <p class="text-mute text-[14px]">CoreGen 代表</p>
       </div>
+      <p class="text-ink text-[14px] leading-relaxed [text-wrap:wrap] mt-4">{profile.career[1]}</p>
+      <p class="text-ink text-[14px] leading-relaxed [text-wrap:wrap] mt-1">{profile.career[2]}</p>
     </div>
 
-    <!-- 二次CTA：先に直接聞きたい方 -->
+    <!-- 二次CTA：直接個別相談したい方 -->
     <div class="mb-12" data-animate>
       <p class="text-ink text-[14px] font-bold mb-3 text-center">{downloadForm.secondaryLead}</p>
       <Button variant="white" href={reserveHref} class="w-full">

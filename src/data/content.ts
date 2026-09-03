@@ -262,7 +262,6 @@ const downloadMaterials = [
   "そのまま使えるAI文例集（税理士・社労士・建設不動産）",
   "助成金の活用と自己負担額の試算",
   "研修・ワークショップ・伴走支援の中身",
-  "代表プロフィール",
 ];
 
 export const finalCta = {
@@ -346,7 +345,7 @@ export const downloadForm = {
   preparingNote: "※ ダウンロードフォームは現在準備中です。公開までお待ちください。",
   materialsTitle: "資料の内容",
   noSalesNote: "営業電話・しつこいメールは一切いたしません。",
-  secondaryLead: "資料より先に直接聞きたい方は",
+  secondaryLead: "直接個別相談したい方は",
   secondaryCta: "無料オンライン相談を予約する",
   materials: downloadMaterials,
 };
