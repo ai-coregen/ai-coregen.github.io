@@ -19,7 +19,7 @@ const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
 ---
 
 <Layout
-  title="AI自動化の業務例と、導入の流れ｜資料ダウンロード｜CoreGen"
+  title="AI自動化の業務例と導入の流れ｜資料ダウンロード｜CoreGen"
   description="AI自動化の業務例と導入の流れをまとめた無料資料（PDF・全25ページ）を、メールでお送りします。"
 >
   <header class="border-b border-line">
@@ -112,30 +112,26 @@ const reserveHref = ctaUrl(base, "reserve", "below-form", DOWNLOAD_CTA_VERSION);
       )}
     </form>
 
-    <!-- 資料の内容 -->
+    <!-- 資料の内容：見出し → PDF表紙 → 箇条書き（2026-09-03 なおき指定の順） -->
     <div class="bg-surface border border-line p-6 lg:p-7 mt-12 mb-10" data-animate>
-      <div class="flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
-        <img
-          src={`${base}/images/deck-cover.jpg`}
-          alt="サービス詳細資料の表紙"
-          width="800"
-          height="566"
-          loading="lazy"
-          decoding="async"
-          class="w-full max-w-[240px] lg:max-w-[220px] mx-auto lg:mx-0 shrink-0 border border-line shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
-        />
-        <div class="flex-1">
-          <p class="text-ink font-bold text-base mb-4">{downloadForm.materialsTitle}</p>
-          <ul class="space-y-2.5">
-            {downloadForm.materials.map((item) => (
-              <li class="flex items-start gap-3">
-                <span class="w-1.5 h-1.5 rounded-full bg-ink shrink-0 mt-2.5"></span>
-                <p class="text-ink text-[15px] leading-relaxed">{item}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+      <p class="text-ink font-bold text-base mb-5">{downloadForm.materialsTitle}</p>
+      <img
+        src={`${base}/images/deck-cover.jpg`}
+        alt="資料の表紙"
+        width="800"
+        height="566"
+        loading="lazy"
+        decoding="async"
+        class="w-full max-w-[280px] mx-auto mb-6 border border-line shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
+      />
+      <ul class="space-y-2.5">
+        {downloadForm.materials.map((item) => (
+          <li class="flex items-start gap-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-ink shrink-0 mt-2.5"></span>
+            <p class="text-ink text-[15px] leading-relaxed">{item}</p>
+          </li>
+        ))}
+      </ul>
     </div>
 
     <!-- 代表プロフィール -->
