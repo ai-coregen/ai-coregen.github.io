@@ -1,12 +1,12 @@
 ---
 /*
  * 所在地の表示。フッター／特定商取引法／プライバシーポリシーで共用する。
- * 各要素を inline-block にして、折り返しは要素の間でだけ起こす
- * （幅が足りれば1行、足りなければ「郵便番号＋区まで／番地／建物名」で折れる）。
- * タグの間に空白を入れない＝要素どうしは詰めて並ぶ（郵便番号の後ろだけ余白で空ける）。
+ * オフィス側の表記どおり「拠点名／郵便番号／住所」の3行で出す。
+ * 住所の行は各要素を inline-block にして、折り返しは要素の間でだけ起こす
+ * （幅が足りれば1行、足りなければ「区まで／番地／建物名」で折れる）。
  */
 import { footer } from "../../data/content";
 
-const { postal, addressParts } = footer.companyInfo;
+const { officeName, postal, addressParts } = footer.companyInfo;
 ---
-<span class="inline-block mr-[0.5em]">{postal}</span>{addressParts.map((part) => <span class="inline-block">{part}</span>)}
+{officeName}<br />{postal}<br />{addressParts.map((part) => <span class="inline-block">{part}</span>)}

@@ -109,7 +109,11 @@ const sections: { title: string; body: string[]; showAddress?: boolean }[] = [
             <p class="text-ink text-sm leading-relaxed mb-1.5 last:mb-0">{line}</p>
           ))}
           {sec.showAddress && (
-            <p class="text-ink text-sm leading-relaxed mb-1.5 last:mb-0">・所在地：<Address /></p>
+            /* 所在地は3行。2行目以降が「・所在地：」の右に揃うよう、見出しと値を横に並べる */
+            <p class="text-ink text-sm leading-relaxed mb-1.5 last:mb-0 flex">
+              <span class="shrink-0">・所在地：</span>
+              <span><Address /></span>
+            </p>
           )}
         </section>
       ))}
