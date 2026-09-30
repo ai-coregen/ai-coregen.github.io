@@ -1,5 +1,6 @@
 ---
 import JaText from "./ui/JaText.astro";
+import Address from "./ui/Address.astro";
 import { footer } from "../data/content";
 
 interface Props {
@@ -140,6 +141,10 @@ const serviceLinks: { label: string; href: string; external: boolean }[] = [
         <div class="flex gap-3">
           <dt class="text-white shrink-0 w-20">代表者</dt>
           <dd class="text-white">{footer.companyInfo.rep}</dd>
+        </div>
+        <div class="flex gap-3">
+          <dt class="text-white shrink-0 w-20">所在地</dt>
+          <dd class="text-white"><Address /></dd>
         </div>
         <div class="flex gap-3">
           <dt class="text-white shrink-0 w-20">電話番号</dt>

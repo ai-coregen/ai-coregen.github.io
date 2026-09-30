@@ -1,14 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Address from "../components/ui/Address.astro";
 import { footer } from "../data/content";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const home = `${base}/`;
 
-const rows = [
+const rows: { label: string; value?: string; isAddress?: boolean }[] = [
   { label: "販売事業者", value: "CoreGen" },
   { label: "運営統括責任者", value: footer.companyInfo.rep },
-  { label: "所在地", value: footer.companyInfo.address },
+  // 所在地は value を持たず、描画側で <Address /> を出す（折り返し位置を共通部品に任せる）
+  { label: "所在地", isAddress: true },
   {
     label: "電話番号",
     value: "080-8041-0861",
@@ -63,7 +65,7 @@ const rows = [
       {rows.map((row) => (
         <div class="flex flex-col sm:flex-row gap-1 sm:gap-6 py-5 border-b border-line">
           <dt class="text-ink font-bold text-sm sm:w-48 shrink-0">{row.label}</dt>
-          <dd class="text-ink text-sm leading-relaxed flex-1">{row.value}</dd>
+          <dd class="text-ink text-sm leading-relaxed flex-1">{row.isAddress ? <Address /> : row.value}</dd>
         </div>
       ))}
     </dl>
