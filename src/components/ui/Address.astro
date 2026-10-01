@@ -1,14 +1,12 @@
 ---
 /*
  * 所在地の表示。フッター／特定商取引法／プライバシーポリシーで共用する。
- * オフィス側の表記どおり「拠点名／郵便番号／住所／注意書き」の順で出す。
+ * オフィス側の表記どおり「拠点名／郵便番号／住所」の3行で出す。
  * 住所の行は各要素を inline-block にして、折り返しは要素の間でだけ起こす
  * （幅が足りれば1行、足りなければ「区まで／番地／建物名」で折れる）。
- * 注意書きは長いので JaText に任せ、文節の切れ目で折る。
  */
-import JaText from "./JaText.astro";
 import { footer } from "../../data/content";
 
-const { officeName, postal, addressParts, addressNote } = footer.companyInfo;
+const { officeName, postal, addressParts } = footer.companyInfo;
 ---
-{officeName}<br />{postal}<br />{addressParts.map((part) => <span class="inline-block">{part}</span>)}<JaText tag="span" text={addressNote} class="block" />
+{officeName}<br />{postal}<br />{addressParts.map((part) => <span class="inline-block">{part}</span>)}
