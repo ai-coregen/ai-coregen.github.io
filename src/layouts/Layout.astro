@@ -14,10 +14,10 @@ const GA_ID = tracking.ga4Id;
 // base path を含めた favicon パス（Astro の base 設定に追従）
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 // ?v= はキャッシュ無効化用（ファビコン更新時にバージョンを上げる）
-// 2026-10-12「C.」マーク（黒のC＋オレンジの点・白の角丸タイル）へ差し替え。PNGで出す（SafariはSVGファビコン非対応）
-const faviconVer = "coregen-c1";
+// 2026-10-12「C.」マーク（黒のC＋オレンジの点・影つき・白の角丸タイル）へ差し替え。PNGで出す（SafariはSVGファビコン非対応）
+const faviconVer = "coregen-c2";
 // OGP画像（絶対URL。SNSは相対パス不可）。?v= は更新時のキャッシュ無効化用
-const ogImage = new URL(`${base}/ogp.png?v=2`, Astro.site).href;
+const ogImage = new URL(`${base}/ogp.png?v=3`, Astro.site).href;
 // 現在ページの正規URL（canonical / og:url 用。クエリ・末尾は正規化）
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
