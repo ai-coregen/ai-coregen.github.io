@@ -14,9 +14,10 @@ const GA_ID = tracking.ga4Id;
 // base path を含めた favicon パス（Astro の base 設定に追従）
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 // ?v= はキャッシュ無効化用（ファビコン更新時にバージョンを上げる）
-const faviconHref = `${base}/favicon.svg?v=coregen-dots2`;
+// 2026-10-12「C.」マーク（黒のC＋オレンジの点・白の角丸タイル）へ差し替え。PNGで出す（SafariはSVGファビコン非対応）
+const faviconVer = "coregen-c1";
 // OGP画像（絶対URL。SNSは相対パス不可）。?v= は更新時のキャッシュ無効化用
-const ogImage = new URL(`${base}/ogp.png?v=1`, Astro.site).href;
+const ogImage = new URL(`${base}/ogp.png?v=2`, Astro.site).href;
 // 現在ページの正規URL（canonical / og:url 用。クエリ・末尾は正規化）
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
@@ -39,8 +40,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content={ogImage} />
-    <link rel="icon" type="image/svg+xml" href={faviconHref} />
-    <link rel="alternate icon" href={faviconHref} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${base}/favicon-32.png?v=${faviconVer}`} />
+    <link rel="icon" type="image/png" sizes="192x192" href={`${base}/favicon-192.png?v=${faviconVer}`} />
+    <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png?v=${faviconVer}`} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- AI顧問LP（campaigns/ai-advisor）と同一の書体。明朝=見出し／ゴシック=本文・英字ラベル -->
