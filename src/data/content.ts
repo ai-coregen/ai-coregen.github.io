@@ -120,11 +120,11 @@ export const services = {
      */
     {
       number: "05",
-      name: "AI顧問（経営者・事業者向け）",
+      name: "AI経営顧問（経営者・事業者向け）",
       description:
         "経営・営業・マーケティングの課題から逆算し、AIエージェントを実際に動く仕組みとして実装します（SNS自動運用・AI社員構築・営業支援）。",
       href: "https://coregen.pages.dev/",
-      linkLabel: "AI顧問の詳細を見る",
+      linkLabel: "AI経営顧問の詳細を見る",
     },
   ],
 };
@@ -293,7 +293,7 @@ export const footer = {
   ],
   /** サービス欄の5件目。**トップLPでのみ描画**（`showAdvisorLink` で明示的に有効化したときだけ） */
   advisorService: {
-    label: "AI顧問（経営者・事業者向け）",
+    label: "AI経営顧問（経営者・事業者向け）",
     href: "https://coregen.pages.dev/",
   },
   company: [
